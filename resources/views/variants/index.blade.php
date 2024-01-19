@@ -44,7 +44,6 @@
                     <th>Title</th>
 					<th>Code</th>
                     <th>Status</th>
-					<th>Is Price</th>
 					<th>Is Slot</th>
 					<th>Is Canellation</th>
                     <th>Created</th>
@@ -60,11 +59,7 @@
                     <option value="1" @if(request('status') ==1) {{'selected="selected"'}} @endif>Active</option>
 					          <option value="2" @if(request('status') ==2) {{'selected="selected"'}} @endif >Inactive</option>
                  </select></th>
-				   <th><select name="is_price" id="is_price" class="form-control">
-                    <option value="" @if(request('is_price') =='') {{'selected="selected"'}} @endif>Select</option>
-                    <option value="1" @if(request('is_price') ==1) {{'selected="selected"'}} @endif>Yes</option>
-					          <option value="2" @if(request('is_price') ==2) {{'selected="selected"'}} @endif >No</option>
-                 </select></th>
+				   
 				 <th><select name="is_slot" id="is_slot" class="form-control">
                     <option value="" @if(request('is_slot') =='') {{'selected="selected"'}} @endif>Select</option>
                     <option value="1" @if(request('is_slot') ==1) {{'selected="selected"'}} @endif>Yes</option>
@@ -92,7 +87,6 @@
                     <td>{{ $record->title}}</td>
 					<td>{{ $record->code}}</td>
                     <td>{!! SiteHelpers::statusColor($record->status) !!}</td>
-					<td>{!! SiteHelpers::statusColorYesNo($record->is_price) !!}</td>
 					<td>{!! SiteHelpers::statusColorYesNo($record->is_slot) !!}</td>
 					<td>{!! SiteHelpers::statusColorYesNo($record->is_canellation) !!}</td>
                     <td>{{ $record->created_at ? date(config('app.date_format'),strtotime($record->created_at)) : null }}</td>
