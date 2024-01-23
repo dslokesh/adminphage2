@@ -91,14 +91,14 @@
               </div>
 			  <div class="form-group col-md-2">
                 <label for="inputName">Longitute:</label>
-                <input type="text" id="longitute" name="longitute" value="{{ old('longitute') ?: $record->longitute }}" class="form-control"  placeholder="Longitute" />
+                <input type="text" id="longitute" name="longitute" value="{{ old('longitute') ?: $record->longitute }}" class="form-control onlynumbrf"  placeholder="Longitute" />
                 @if ($errors->has('longitute'))
                     <span class="text-danger">{{ $errors->first('longitute') }}</span>
                 @endif
               </div>
 			   <div class="form-group col-md-2">
                 <label for="inputName">Latitude:</label>
-                <input type="text" id="latitude" name="latitude" value="{{ old('latitude') ?: $record->latitude }}" class="form-control"  placeholder="Latitude" />
+                <input type="text" id="latitude" name="latitude" value="{{ old('latitude') ?: $record->latitude }}" class="form-control onlynumbrf"  placeholder="Latitude" />
                 @if ($errors->has('latitude'))
                     <span class="text-danger">{{ $errors->first('latitude') }}</span>
                 @endif
@@ -292,7 +292,15 @@
         }, 900);
     });;
 
+$(document).on('input', '.onlynumbrf', function() {
+		$(this).val(function(index, value) {
+			return value.replace(/[^0-9.]/g, '');
+		});
 
+		if (isNaN(parseFloat($(this).val()))) {
+			$(this).val('');
+		}
+	});
 });
        
 
