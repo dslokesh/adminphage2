@@ -118,6 +118,20 @@ class VariantPriceController extends Controller
 		$record->infant_end_age = $request->input('infant_end_age');
 		$record->save();
 		
+		$activityVariantCount = VariantPrice::where("activity_variant_id",$activity_variant_id)->count();
+		$activityVariant = ActivityVariant::find($vid);
+		$variant = Variant::find($activityVariant->variant_id);
+		
+			if($activityVariantCount > 0){
+			$variant->is_price = 1;
+			$variant->save();
+			} else {
+				$variant->is_price = 0;
+				$variant->save();
+			}
+			
+			
+			
         return redirect('activity-variant/prices/'.$activity_variant_id)->with('success', 'Prices Created Successfully.');
     }
 
@@ -221,6 +235,21 @@ class VariantPriceController extends Controller
 		$record->infant_start_age = $request->input('infant_start_age');
 		$record->infant_end_age = $request->input('infant_end_age');
 		$record->save();
+		
+		$activityVariantCount = VariantPrice::where("activity_variant_id",$vid)->count();
+		$activityVariant = ActivityVariant::find($vid);
+		$variant = Variant::find($activityVariant->variant_id);
+		
+			if($activityVariantCount > 0){
+			$variant->is_price = 1;
+			$variant->save();
+			} else {
+				$variant->is_price = 0;
+				$variant->save();
+			}
+			
+			
+			
         return redirect('activity-variant/prices/'.$vid)->with('success', 'Prices Created Successfully.');
     }
 
@@ -233,7 +262,21 @@ class VariantPriceController extends Controller
     public function destroy($id)
     {
         $record = VariantPrice::find($id);
+		$activity_variant_id = $record->activity_variant_id;
         $record->delete();
+		$activityVariantCount = VariantPrice::where("activity_variant_id",$activity_variant_id)->count();
+		$activityVariant = ActivityVariant::find($vid);
+		$variant = Variant::find($activityVariant->variant_id);
+		
+			if($activityVariantCount > 0){
+			$variant->is_price = 1;
+			$variant->save();
+			} else {
+				$variant->is_price = 0;
+				$variant->save();
+			}
+			
+			
 		return redirect('activity-variant/prices/'.$record->activity_variant_id)->with('success', 'Prices Deleted Successfully.');
     }
 	

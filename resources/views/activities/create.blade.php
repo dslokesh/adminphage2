@@ -37,9 +37,15 @@
                     <span class="text-danger">{{ $errors->first('title') }}</span>
                 @endif
               </div>
-			
+			<div class="form-group col-md-2">
+                <label for="inputName">Min Starting Price <span class="red">*</span>:</label>
+                <input type="text" id="min_price" name="min_price" value="{{ old('min_price') }}" class="form-control onlynumbrf"  placeholder="Min Starting Price" />
+                @if ($errors->has('min_price'))
+                    <span class="text-danger">{{ $errors->first('min_price') }}</span>
+                @endif
+              </div>
                 
-				<div class="form-group col-md-4">
+				<div class="form-group col-md-2">
                 <label for="inputName">Product Type: <span class="red">*</span></label>
                 <select name="product_type" id="product_type" class="form-control">
 				<option value="">--select--</option>
@@ -65,7 +71,7 @@
                     <span class="text-danger">{{ $errors->first('entry_type') }}</span>
                 @endif
               </div>
-			  
+			   
 			   <div class="form-group col-md-4">
                 <label for="inputName">Vat %:</label>
                 <select  id="vat" name="vat" class="form-control">
@@ -175,18 +181,18 @@
                     <span class="text-danger">{{ $errors->first('bundle_product_cancellation') }}</span>
                 @endif
               </div>
-			   <div class="form-group col-md-6">
+			   <div class="form-group col-md-12">
                 <label for="inputName">Description: <span class="red">*</span></label>
 				
-                <textarea placeholder="Description" name="description" cols="50" rows="10" id="content" class="form-control box-size text-editor">{{ old('description') }}</textarea>
+                <textarea placeholder="Description" name="description"  rows="10" id="content" class="form-control box-size text-editor">{{ old('description') }}</textarea>
                 @if ($errors->has('description'))
                     <span class="text-danger">{{ $errors->first('description') }}</span>
                 @endif
               </div>
-			   <div class="form-group col-md-6">
+			   <div class="form-group col-md-12">
                 <label for="inputName">Notes:</label>
 				
-                <textarea placeholder="Notes" id="notes" name="notes" cols="50" rows="15" id="notes" class="form-control box-size text-editor2">{{ old('notes') }}</textarea>
+                <textarea placeholder="Notes" id="notes" name="notes"  rows="15" id="notes" class="form-control box-size text-editor2">{{ old('notes') }}</textarea>
                 @if ($errors->has('notes'))
                     <span class="text-danger">{{ $errors->first('notes') }}</span>
                 @endif
@@ -214,7 +220,7 @@
           </div>
           <!-- /.card -->
         </div>
-      </div>
+     
       <div class="row mb-3">
         <div class="col-12 mb-3">
           <a href="{{ route('activities.index') }}" class="btn btn-secondary">Cancel</a>

@@ -18,6 +18,12 @@ class ActivityVariant extends Model
         return $this->belongsTo(Variant::class, 'variant_id', 'id');
     }
 	
+	public function prices()
+    {
+        return $this->hasMany('App\Models\VariantPrice', 'activity_variant_id', 'id');
+    }
+	
+	
 	public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by', 'id');

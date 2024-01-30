@@ -42,6 +42,7 @@
                   <thead>
                   <tr>
                     <th>Title</th>
+					<th>Min Starting Price</th>
 					<th>Product Type</th>
 					<th>Entry Type</th>
                     <th>Status</th>
@@ -53,7 +54,9 @@
 				  <tr>
                     <form id="filterForm" method="get" action="{{route('activities.index')}}" >
                     <th><input type="text" name="name" value="{{request('name')}}" class="form-control"  placeholder="Title" /></th>
+					<th><input type="text" name="min_price" value="{{request('min_price')}}" class="form-control"  placeholder="Min Starting Price" /></th>
                   <th></th>
+				  
 				  <th></th>
 					 <th><select name="status" id="status" class="form-control">
                     <option value="" @if(request('status') =='') {{'selected="selected"'}} @endif>Select</option>
@@ -76,6 +79,7 @@
                   <tr>
 					
                     <td>{{ $record->title}}</td>
+					<td>{{ $record->min_price}}</td>
 					<td>{{ $record->product_type}}</td>
 					<td>{{ $record->entry_type}}</td>
                     <td>{!! SiteHelpers::statusColor($record->status) !!}</td>

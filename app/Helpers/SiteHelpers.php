@@ -11,8 +11,11 @@ use App\Models\VoucherActivity;
 use App\Models\VoucherHotel;
 use App\Models\ActivityPrices;
 use App\Models\AgentPriceMarkup;
+use App\Models\ActivityVariant;
+use App\Models\VariantPrice;
 use App\Models\Zone;
 use App\Models\TransferData;
+use App\Models\Variant;
 use App\Models\Activity;
 use App\Models\Voucher;
 use App\Models\Ticket;
@@ -155,11 +158,16 @@ class SiteHelpers
 		return $zone;
     }
 	
-	public static function getDateList($startDate,$endDate,$blackoutDates='')
+	public static function getDateList($startDate,$endDate,$blackoutDates='',$soldoutDates='')
     {
 			$blackDate = [];
+			$soldDate = [];
 			if(!empty($blackoutDates)){
 				$blackDate = explode(",",$blackoutDates);
+			}
+			
+			if(!empty($soldoutDates)){
+				$soldDate = explode(",",$soldoutDates);
 			}
 			// Create DateTime objects from the start and end dates
 			$start = new \DateTime($startDate);
@@ -176,7 +184,7 @@ class SiteHelpers
 			$period = new \DatePeriod($start, $interval, $end);
 			foreach ($period as $date) {
 				$dt = $date->format('Y-m-d');
-				if(!in_array($dt,$blackDate)){
+				if((!in_array($dt,$blackDate)) OR (!in_array($dt,$soldoutDates))){
 				$dates[] = $dt;
 				}
 			}
@@ -184,11 +192,15 @@ class SiteHelpers
 		return $dates;
     }
 	
-	public static function getDateListBoth($startDate,$endDate,$blackoutDates='')
+	public static function getDateListBoth($startDate,$endDate,$blackoutDates='',$soldOutDates='')
     {
 			$blackDate = [];
+			$soldOutDate = [];
 			if(!empty($blackoutDates)){
 				$blackDate = explode(",",$blackoutDates);
+			}
+			if(!empty($soldOutDates)){
+				$soldOutDate = explode(",",$blackoutDates);
 			}
 			// Create DateTime objects from the start and end dates
 			$start = new \DateTime($startDate);
@@ -206,11 +218,13 @@ class SiteHelpers
 			$period = new \DatePeriod($start, $interval, $end);
 			foreach ($period as $date) {
 				$dt = $date->format('Y-m-d');
-				if(!in_array($dt,$blackDate)){
+				if(!in_array($dt,$blackDate) OR !in_array($dt,$soldOutDate)){
 				$availableDates[] = $dt;
 				} else {
 					$disabledDates[] = $dt;
 				}
+				
+				
 			}
 		
 		$dateData['availableDates'] = json_encode($availableDates);
@@ -296,7 +310,7 @@ class SiteHelpers
 		 return $color;
 	}
 	
-	public static function getActivityLowPrice($activity_id,$agent_id,$voucher)
+	public static function getActivityLowPrice($activity_variant_id,$agent_id,$voucher)
     {
 		$minPrice = 0;
 		$zonePrice = 0;
@@ -307,20 +321,23 @@ class SiteHelpers
 		$startDate = $voucher->travel_from_date;
 		$endDate = $voucher->travel_to_date;
 		$user = auth()->user();
+		$activityVariant = ActivityVariant::where('id', $activity_variant_id)->first();
+		$variant = Variant::where('id', $activityVariant->variant_id)->select('sic_TFRS','pvt_TFRS','zones','transfer_plan')->first();
+		$activity = Activity::where('id', $activityVariant->activity_id)->select('entry_type','vat')->first();
 		
-		$activity = Activity::where('id', $activity_id)->select('entry_type','sic_TFRS','pvt_TFRS','zones','transfer_plan','vat')->first();
 		$avat = 0;
 		if($activity->vat > 0){
 		$avat = $activity->vat;	
 		}
 		
-		$query = ActivityPrices::where('activity_id', $activity_id)->where('rate_valid_from', '<=', $startDate)->where('rate_valid_to', '>=', $endDate);
-		if($user->role_id == '3'){
+		$query = VariantPrice::where('activity_variant_id', $activityVariant->id)->where('rate_valid_from', '<=', $startDate)->where('rate_valid_to', '>=', $endDate);
+		/* if($user->role_id == '3'){
 			$query->where('for_backend_only', '0');
-		}
+		} */
+		
 		if($vat_invoice == 1){
 			$ap = $query->orderByRaw('CAST(adult_rate_without_vat AS DECIMAL(10, 2))')
-    ->select('adult_rate_without_vat', 'variant_code')
+    ->select('adult_rate_without_vat')
     ->first();
 	if(isset($ap->variant_code)){
 	$adult_rate = $ap->adult_rate_without_vat;
@@ -329,43 +346,43 @@ class SiteHelpers
 	
 	} else {
 	$ap = $query->orderByRaw('CAST(adult_rate_with_vat AS DECIMAL(10, 2))')
-    ->select('adult_rate_with_vat', 'variant_code')
+    ->select('adult_rate_with_vat')
     ->first();
 	
 	if(isset($ap->adult_rate_with_vat)){
 	$adult_rate = $ap->adult_rate_with_vat;
 	}
 	}
-		if(isset($ap->variant_code)){
+		/* if(isset($ap->variant_code)){
 		$markup = self::getAgentMarkup($agent_id,$activity_id, $ap->variant_code);
-		}else{
+		}else{ */
 			$markup['ticket_only'] = 0;
 			$markup['sic_transfer'] = 0;
 			$markup['pvt_transfer'] = 0;
 			$markup['ticket_only_m'] = 1;
 			$markup['sic_transfer_m'] = 1;
 			$markup['pvt_transfer_m'] = 1;
-		}
+		//}
 		
 		
 		 
-			if($activity->sic_TFRS==1){
+			if($variant->sic_TFRS==1){
 				
-				 $actZone = self::getZone($activity->zones,$activity->sic_TFRS);
+				 $actZone = self::getZone($variant->zones,$variant->sic_TFRS);
 				 if(!empty($actZone))
 				 {
 					  $zonePrice = $actZone[0]['zoneValue'];
 				 }
 			}
-			if($activity->pvt_TFRS==1){
-					$td = TransferData::where('transfer_id', $activity->transfer_plan)->where('qty', 1)->first();
+			if($variant->pvt_TFRS==1){
+					$td = TransferData::where('transfer_id', $variant->transfer_plan)->where('qty', 1)->first();
 					if(!empty($td))
 					{
 					 $transferPrice = $td->price;
 					}
 			}
 			
-			$adultPriceMarkupTotal = $markup['ticket_only'] * 1; // ticket_only as adult
+		$adultPriceMarkupTotal = $markup['ticket_only'] * 1; // ticket_only as adult
 		$childPriceMarkupTotal = $markup['sic_transfer'] * 0; // sic_transfer as child
 		$infentPriceMarkupTotal = $markup['pvt_transfer'] * 0; // pvt_transfer as infent
 		$markupTotal = $adultPriceMarkupTotal + $childPriceMarkupTotal + $infentPriceMarkupTotal;
@@ -376,20 +393,20 @@ class SiteHelpers
 			if($activity->entry_type=='Ticket Only'){
 				$minPrice = $adult_rate;
 			} else {
-				if($activity->sic_TFRS==1){
+				if($variant->sic_TFRS==1){
 					$minPrice =  $adult_rate + $zonePrice;
-				}elseif($activity->pvt_TFRS==1){
+				}elseif($variant->pvt_TFRS==1){
 					  $minPrice = $adult_rate + $transferPrice;
 				}
 			}
 			
 		} else {
 			
-			if($activity->sic_TFRS==1){
+			if($variant->sic_TFRS==1){
 			
 				$minPrice =  $zonePrice;
 				
-			}elseif($activity->pvt_TFRS==1){
+			}elseif($variant->pvt_TFRS==1){
 				$minPrice =   $transferPrice;
 			}
 			
@@ -401,6 +418,7 @@ class SiteHelpers
 		}
 		
 		$total = $minP+$vatPrice;
+		
 		return number_format($total, 2, '.', "");
     }
 	
@@ -812,5 +830,8 @@ class SiteHelpers
 		$totalprice = VoucherActivity::where('voucher_id',$voucherId)->sum("totalprice");
 		return $totalprice;
     }
+	
+	
+	
 	
 }

@@ -39,11 +39,11 @@ class VariantsController extends Controller
                 $query->where('status', 0);
         }
 		
-		if (isset($data['is_price']) && !empty($data['is_price'])) {
-            if ($data['is_price'] == 1)
-                $query->where('is_price', 1);
-            if ($data['is_price'] == 2)
-                $query->where('is_price', 0);
+		if (isset($data['is_slot']) && !empty($data['is_slot'])) {
+            if ($data['is_slot'] == 1)
+                $query->where('is_slot', 1);
+            if ($data['is_slot'] == 2)
+                $query->where('is_slot', 0);
         }
 		
 		if (isset($data['is_canellation']) && !empty($data['is_canellation'])) {

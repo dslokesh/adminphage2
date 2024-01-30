@@ -13,6 +13,11 @@ class Activity extends Model
     {
         return $this->hasMany('App\Models\Files', 'model_id', 'id')->where("model", "Activity");
     }
+	
+	public function activityVariants()
+    {
+        return $this->hasMany('App\Models\ActivityVariant', 'activity_id', 'id');
+    }
    
 	 public function state()
     {
@@ -35,7 +40,7 @@ class Activity extends Model
         return $this->belongsTo(Currency::class);
     }
 	
-	 public function createdBy()
+	public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by', 'id');
     }

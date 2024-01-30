@@ -38,9 +38,15 @@
                     <span class="text-danger">{{ $errors->first('title') }}</span>
                 @endif
               </div>
-			
+			<div class="form-group col-md-2">
+                <label for="inputName">Min Starting Price <span class="red">*</span>:</label>
+                <input type="text" id="min_price" name="min_price" value="{{ old('min_price') ?: $record->min_price }}" class="form-control onlynumbrf"  placeholder="Min Starting Price" />
+                @if ($errors->has('min_price'))
+                    <span class="text-danger">{{ $errors->first('min_price') }}</span>
+                @endif
+              </div>
                 
-				<div class="form-group col-md-4">
+				<div class="form-group col-md-2">
                 <label for="inputName">Product Type: <span class="red">*</span></label>
                 <select name="product_type" id="product_type" class="form-control">
 				<option value="">--select--</option>
@@ -218,7 +224,7 @@
         </div>
       </div>
       <div class="row mb-3">
-        <div class="col-12 ">
+        <div class="col-12  mb-3">
           <a href="{{ route('activities.index') }}" class="btn btn-secondary">Cancel</a>
           <button type="submit" class="btn btn-success float-right">Update</button>
         </div>

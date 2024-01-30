@@ -53,7 +53,10 @@
               <div class="col-lg-12 mb-3">
 				<h4>Activity Details</h4>
 				 </div>
-			     
+			     <div class="col-lg-6 mb-3">
+                <label for="inputName">Min Starting Price:</label>
+                {{ $activity->min_price }}
+              </div>
 			  <div class="col-lg-6 mb-3">
                 <label for="inputName">Product Type:</label>
                 {{ $activity->product_type }}

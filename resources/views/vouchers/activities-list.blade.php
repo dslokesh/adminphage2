@@ -78,7 +78,7 @@
               </thead>
                   @foreach ($records as $record)
 				  @php
-            $minPrice = SiteHelpers::getActivityLowPrice($record->id,$voucher->agent_id,$voucher);
+            $minPrice = $record->min_price;
 			$cutoffTime = SiteHelpers::getActivityVarByCutoffCancellation($record->id);
           @endphp
           <tr><td>
@@ -156,7 +156,6 @@
 					@if(!empty($voucherActivity))
 					  @foreach($voucherActivity as $ap)
 				  @php
-					$activity = SiteHelpers::getActivity($ap->activity_id);
           $total += $ap->totalprice;
 					@endphp
             <div class="card">
@@ -167,7 +166,7 @@
               <div class="row">
               <div class="col-10">
               <span class="cart-title font-size-21 text-dark">
-              {{$activity->title}}
+              {{$record->title}}
               </span>
               </div>
               <div class="col-2  text-right">
@@ -193,7 +192,7 @@
              
                                   <div class="row" >
 				  <div class="col-md-3" style="padding: 5px 0px 5px 5px; ">
-              <img src="{{asset('uploads/activities/'.$activity->image)}}" class="img-fluid" style="border-radius: 5px;" />
+              <img src="{{asset('uploads/activities/'.$record->image)}}" class="img-fluid" style="border-radius: 5px;" />
             </div>
 			<div class="col-md-9">
               <ul class="list-unstyled" style="">

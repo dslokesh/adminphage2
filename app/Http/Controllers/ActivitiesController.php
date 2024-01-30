@@ -33,6 +33,10 @@ class ActivitiesController extends Controller
             $query->where('title', 'like', '%' . $data['name'] . '%');
         }
        
+	   if (isset($data['min_price']) && !empty($data['min_price'])) {
+            $query->where('min_price', 'like', '%' . $data['name'] . '%');
+        }
+		
         if (isset($data['status']) && !empty($data['status'])) {
             if ($data['status'] == 1)
                 $query->where('status', 1);
@@ -76,6 +80,7 @@ class ActivitiesController extends Controller
 			'description' => 'required',
 			'product_type' => 'required',
 			'entry_type' => 'required',
+			'min_price' => 'required',
 			'country_id' => 'required',
 			'state_id' => 'required',
 			'city_id' => 'required',
@@ -83,6 +88,7 @@ class ActivitiesController extends Controller
 			'image.*' => 'nullable|image|max:' . ($options['allow_img_size'] * 1024),
         ], [
             'title.sanitize_scripts' => 'Invalid value entered for title field.',
+			'min_price.required' => 'Min Price field is required.',
 			'image.*.max' => 'The image must not be greater than '. $options['allow_img_size'] .' MB.',
 			'featured_image.max' => 'The featured image must not be greater than '.$options['allow_img_size'].' MB.',
 			'image.*.image' => 'The image must be an image.',
@@ -115,6 +121,7 @@ class ActivitiesController extends Controller
 		$record->notes = $request->input('notes');
 		$record->longitute = $request->input('longitute');
 		$record->latitude = $request->input('latitude');
+		$record->min_price = $request->input('min_price');
 		$record->description = $request->input('description');
         $record->status = $request->input('status');
 		$record->created_by = Auth::user()->id;
@@ -210,6 +217,7 @@ class ActivitiesController extends Controller
 			'description' => 'required',
 			'product_type' => 'required',
 			'entry_type' => 'required',
+			'min_price' => 'required',
 			'country_id' => 'required',
 			'state_id' => 'required',
 			'city_id' => 'required',
@@ -218,6 +226,7 @@ class ActivitiesController extends Controller
         ], [
 		'featured_image.max' => 'The featured image must not be greater than '.$options['allow_img_size'].' MB.',
          'title.sanitize_scripts' => 'Invalid value entered for title field.',
+		 'min_price.required' => 'Min Price field is required.',
         ]);
 
         $record = Activity::find($id);
@@ -247,6 +256,7 @@ class ActivitiesController extends Controller
 		$record->longitute = $request->input('longitute');
 		$record->latitude = $request->input('latitude');
 		$record->description = $request->input('description');
+		$record->min_price = $request->input('min_price');
         $record->status = $request->input('status');
 		$record->updated_by = Auth::user()->id;
 		if($request->has('tags') && !empty($request->tags)){

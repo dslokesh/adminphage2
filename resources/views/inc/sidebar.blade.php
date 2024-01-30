@@ -412,7 +412,7 @@ $controller = preg_replace('/.*\\\/', '', $controller);
             $active = 'active';
           }
           @endphp     
-			  <li class="nav-item hide">
+			  <li class="nav-item">
                 <a href="{{ route('vouchers.index') }}" class="nav-link {{$active}}">
                <i class="nav-icon fas fa-gift"></i>
               <p>
