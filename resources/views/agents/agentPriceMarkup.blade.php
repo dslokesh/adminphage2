@@ -54,59 +54,52 @@
                     <td>{{ $record->title}}</td>
 					<td>
 						<table class="table table-bordered table-striped">
-						<tr>
-							<th>Variant Code</th>
-							<th>Adult Cost With VAT </th>
-							<th>Child Cost With VAT </th>
-							<th>Adult Markup Without VAT</th>
-							 @if($record->sic_TFRS==1)
-							<th>Child Markup Without VAT</th>
-							@else
-							<th style="display:none">Child Markup Without VAT</th>
-							@endif
-							
-							 @if($record->pvt_TFRS==1)
-							<th>Infant Markup Without VAT</th>
-							@else
-							<th style="display:none">Infant Markup Without VAT</th>
-							@endif
-					
-						</tr>
+						
 						@foreach($variants[$record->id] as $variant)
 						@php
-						$ticket_only = (isset($markups[$variant['variant_code']]))?$markups[$variant['variant_code']]['ticket_only']:'';
-						$sic_transfer = (isset($markups[$variant['variant_code']]))?$markups[$variant['variant_code']]['sic_transfer']:'';
-						$pvt_transfer = (isset($markups[$variant['variant_code']]))?$markups[$variant['variant_code']]['pvt_transfer']:'';
+						$ticket_only = (isset($markups[$variant['ucode']]))?$markups[$variant['ucode']]['ticket_only']:'';
+						$sic_transfer = (isset($markups[$variant['ucode']]))?$markups[$variant['ucode']]['sic_transfer']:'';
+						$pvt_transfer = (isset($markups[$variant['ucode']]))?$markups[$variant['ucode']]['pvt_transfer']:'';
 
-            $variant_cost = (isset($markups[$variant['variant_code']]))?$markups[$variant['variant_code']]['variant_cost']:'';
+            $variant_cost = 0;
 
 						@endphp
 						<tr>
-						<td>{{ $variant['variant_code']}}</td>
-					<td>{{ $variant['adult_rate_with_vat']}}</td>
-					<td>{{ $variant['chield_rate_with_vat']}}</td>
+						<th>Variant Code</th>
+						<td>{{ $variant->ucode}}</td>
+						</tr>
+						<tr>
+						<th>Adult Markup Without VAT</th>
 						<td>
-						<input type="text"  name="ticket_only[{{ $record->id}}][{{$variant['variant_code']}}]" value="{{$ticket_only}}" min="0" max="100" class="form-control onlynumbr" required  />
-						</td>
-						 @if($record->sic_TFRS==1)
-						<td>
-						<input type="text" name="sic_transfer[{{ $record->id}}][{{$variant['variant_code']}}]" value="{{$sic_transfer}}" min="0" max="100" class="form-control onlynumbr" required />
-						@else
-							<td style="display:none">
-						<input type="text" name="sic_transfer[{{ $record->id}}][{{$variant['variant_code']}}]" value="{{$sic_transfer}}" min="0" max="100" class="form-control onlynumbr"  />
-						@endif
-						
-						</td>
-						 @if($record->pvt_TFRS==1)
-						<td>
-					<input type="text" name="pvt_transfer[{{ $record->id}}][{{$variant['variant_code']}}]" value="{{$pvt_transfer}}" min="0" max="100" class="form-control onlynumbr" required />
-						@else
-							<td style="display:none">
-						<input type="text" name="pvt_transfer[{{ $record->id}}][{{$variant['variant_code']}}]" value="{{$pvt_transfer}}" min="0" max="100" class="form-control onlynumbr"  />
-						@endif
-						
+						<input type="text"  name="ticket_only[{{ $record->id}}][{{$variant->ucode}}]" value="{{$ticket_only}}" min="0" max="100" class="form-control onlynumbr" required  />
 						</td>
 						</tr>
+						
+						 @if($variant->variant->sic_TFRS==1)
+						<tr>
+						<th>Child Markup Without VAT</th>
+						<td>
+						<input type="text" name="sic_transfer[{{ $record->id}}][{{$variant->ucode}}]" value="{{$sic_transfer}}" min="0" max="100" class="form-control onlynumbr" required />
+						@else
+							<td style="display:none">
+						<input type="text" name="sic_transfer[{{ $record->id}}][{{$variant->ucode}}]" value="{{$sic_transfer}}" min="0" max="100" class="form-control onlynumbr"  />
+						</td>
+						</tr>
+						@endif
+						
+						
+						 @if($variant->variant->pvt_TFRS==1)
+							 <tr>
+							 <th>Infant Markup Without VAT</th>
+						<td>
+					<input type="text" name="pvt_transfer[{{ $record->id}}][{{$variant->ucode}}]" value="{{$pvt_transfer}}" min="0" max="100" class="form-control onlynumbr" required />
+						@else
+							<td style="display:none">
+						<input type="text" name="pvt_transfer[{{ $record->id}}][{{$variant->ucode}}]" value="{{$pvt_transfer}}" min="0" max="100" class="form-control onlynumbr"  />
+						</td>
+						</tr>
+						@endif
+						
 						@endforeach
 						</table>
 					</td>

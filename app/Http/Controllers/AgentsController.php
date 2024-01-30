@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Models\Currency;
+use App\Models\ActivityVariant;
 
 class AgentsController extends Controller
 {
@@ -489,7 +490,7 @@ class AgentsController extends Controller
 		$agentId = $id;
 		//$perPage = config("constants.ADMIN_PAGE_LIMIT");
         $perPage = "1000";
-		$records = Activity::where('status', 1)->where('is_price', 1)->orderBy('title', 'ASC')->paginate($perPage);
+		$records = Activity::where('status', 1)->orderBy('title', 'ASC')->paginate($perPage);
 		$agent = User::find($agentId);
 		$activity_ids = explode(",",$agent->activity_id);
 		$agentCompany =$agent->company_name;
@@ -533,34 +534,41 @@ class AgentsController extends Controller
 		$agentId = $id;
 		$agent = User::find($agentId);
 		$activity_ids = explode(",",$agent->activity_id);
+		$activities = Activity::whereIn('id', $activity_ids)->where(['status'=> 1])->get();
 		$agentCompany = $agent->company_name;
-		$activities = Activity::whereIn('id', $activity_ids)->where(['status'=> 1,'is_price'=> 1])->get();
+		
 		$variants = [];
 		$markups = [];
 		foreach($activity_ids as $aid)
 		{
-			$variants[$aid] = ActivityPrices::select('variant_code','adult_rate_with_vat','chield_rate_with_vat')->distinct()->where('activity_id',  $aid)->get()->toArray();
+			$variants[$aid] = ActivityVariant::with('variant')->where('activity_id', $aid)->get();
 			
 			foreach($variants[$aid] as $variant)
 			{
 				
-				$m = AgentPriceMarkup::where('agent_id',  $agentId)->where('activity_id',  $aid)->where('variant_code',  $variant['variant_code'])->first();
+				$m = AgentPriceMarkup::where('agent_id',  $agentId)->where('activity_id',  $aid)->where('variant_code',  $variant['ucode'])->first();
 				
-				if(!empty($m))
-				{
-					$markups[$variant['variant_code']] = [
-						'variant_cost'=>$variant['adult_rate_with_vat'],
-						'ticket_only'=>$m->ticket_only,
-						'sic_transfer'=>$m->sic_transfer,
-						'pvt_transfer'=>$m->pvt_transfer,
-					];
-				}
+					if(!empty($m))
+					{
+						$markups[$variant->ucode] = [
+							'ticket_only'=>$m->ticket_only,
+							'sic_transfer'=>$m->sic_transfer,
+							'pvt_transfer'=>$m->pvt_transfer,
+						];
+					} else {
+						$markups[$variant->ucode] = [
+							'ticket_only'=>0,
+							'sic_transfer'=>0,
+							'pvt_transfer'=>0,
+						];
+					} 
 			}
 			
 		}
 		
-		// print_r($markups);
-		// exit; 
+		//dd($variants);
+		 //print_r($variants);
+		 //exit; 
 		
 		 
 		

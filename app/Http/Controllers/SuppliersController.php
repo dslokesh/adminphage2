@@ -16,6 +16,7 @@ use Image;
 use Illuminate\Support\Facades\Auth;
 use jeremykenedy\LaravelRoles\Models\Role;
 use jeremykenedy\LaravelRoles\Models\Permission;
+use App\Models\ActivityVariant;
 
 class SuppliersController extends Controller
 {
@@ -295,7 +296,7 @@ class SuppliersController extends Controller
 		$supplierId = $id;
 		//$perPage = config("constants.ADMIN_PAGE_LIMIT");
         $perPage = "1000";
-		$records = Activity::where('status', 1)->where('is_price', 1)->orderBy('title', 'ASC')->paginate($perPage);
+		$records = Activity::where('status', 1)->orderBy('title', 'ASC')->paginate($perPage);
 		$supplier = User::find($supplierId);
 		$activity_ids = explode(",",$supplier->activity_id);
 		$agentCompany =$supplier->company_name;
@@ -341,25 +342,32 @@ class SuppliersController extends Controller
 		$supplier = User::find($supplierId);
 		$activity_ids = explode(",",$supplier->activity_id);
 		$agentCompany = $supplier->company_name;
-		$activities = Activity::whereIn('id', $activity_ids)->where(['status'=> 1,'is_price'=> 1])->get();
+		$activities = Activity::whereIn('id', $activity_ids)->where(['status'=> 1])->get();
 		$variants = [];
 		$markups = [];
 		foreach($activity_ids as $aid)
 		{
-			$variants[$aid] = ActivityPrices::select('variant_code')->distinct()->where('activity_id',  $aid)->get()->toArray();
+			$variants[$aid] = ActivityVariant::with('variant')->where('activity_id', $aid)->get();
 			
 			foreach($variants[$aid] as $variant)
 			{
-				$m = AgentPriceMarkup::where('agent_id',  $supplierId)->where('activity_id',  $aid)->where('variant_code',  $variant['variant_code'])->first();
 				
-				if(!empty($m))
-				{
-					$markups[$variant['variant_code']] = [
-						'ticket_only'=>$m->ticket_only,
-						'sic_transfer'=>$m->sic_transfer,
-						'pvt_transfer'=>$m->pvt_transfer,
-					];
-				}
+				$m = AgentPriceMarkup::where('agent_id',  $supplierId)->where('activity_id',  $aid)->where('variant_code',  $variant['ucode'])->first();
+				
+					if(!empty($m))
+					{
+						$markups[$variant->ucode] = [
+							'ticket_only'=>$m->ticket_only,
+							'sic_transfer'=>$m->sic_transfer,
+							'pvt_transfer'=>$m->pvt_transfer,
+						];
+					} else {
+						$markups[$variant->ucode] = [
+							'ticket_only'=>0,
+							'sic_transfer'=>0,
+							'pvt_transfer'=>0,
+						];
+					} 
 			}
 			
 		}
@@ -394,7 +402,7 @@ class SuppliersController extends Controller
 				'ticket_only' => number_format($ac,2),
 				'sic_transfer' => number_format($sic_transfer[$activity_id][$variant_code],2),
 				'pvt_transfer' => number_format($pvt_transfer[$activity_id][$variant_code],2),
-				'created_by' => Auth::user()->id,
+				'created_bys' => Auth::user()->id,
 				'updated_by' => Auth::user()->id,
 				];
 				}

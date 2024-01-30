@@ -62,26 +62,30 @@
 						</tr>
 						@foreach($variants[$record->id] as $variant)
 						@php
-						$ticket_only = (isset($markups[$variant['variant_code']]))?$markups[$variant['variant_code']]['ticket_only']:'0';
-						$sic_transfer = (isset($markups[$variant['variant_code']]))?$markups[$variant['variant_code']]['sic_transfer']:'0';
-						$pvt_transfer = (isset($markups[$variant['variant_code']]))?$markups[$variant['variant_code']]['pvt_transfer']:'0';
+						$ticket_only = (isset($markups[$variant['ucode']]))?$markups[$variant['ucode']]['ticket_only']:'';
+						$sic_transfer = (isset($markups[$variant['ucode']]))?$markups[$variant['ucode']]['sic_transfer']:'';
+						$pvt_transfer = (isset($markups[$variant['ucode']]))?$markups[$variant['ucode']]['pvt_transfer']:'';
+
+            $variant_cost = 0;
+
 						@endphp
 						<tr>
-						<td>{{ $variant['variant_code']}}</td>
+						<td>{{ $variant->ucode}}</td>
 						<td>
-						<input type="text"  name="ticket_only[{{ $record->id}}][{{$variant['variant_code']}}]" value="{{$ticket_only}}" min="0" max="100" class="form-control onlynumbr" required  />
+						<input type="text"  name="ticket_only[{{ $record->id}}][{{$variant->ucode}}]" value="{{$ticket_only}}" min="0" max="100" class="form-control onlynumbr" required  />
 						</td>
 						 
 						<td>
 						
-						<input type="text" name="sic_transfer[{{ $record->id}}][{{$variant['variant_code']}}]" value="{{$sic_transfer}}" min="0" max="100" class="form-control onlynumbr" required />
+						<input type="text" name="sic_transfer[{{ $record->id}}][{{$variant->ucode}}]" value="{{$sic_transfer}}" min="0" max="100" class="form-control onlynumbr" required />
 						</td>
 						
 						<td>
-						<input type="text" name="pvt_transfer[{{ $record->id}}][{{$variant['variant_code']}}]" value="{{$pvt_transfer}}" min="0" max="100" class="form-control onlynumbr" required />
+						<input type="text" name="pvt_transfer[{{ $record->id}}][{{$variant->ucode}}]" value="{{$pvt_transfer}}" min="0" max="100" class="form-control onlynumbr" required />
 						</td>
 						</tr>
 						@endforeach
+						
 						</table>
 					</td>
                   </tr>

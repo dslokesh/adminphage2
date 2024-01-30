@@ -361,7 +361,7 @@ $(document).on('click', '.loadvari', function(evt) {
    let child = parseInt($("body #child"+inputnumber).val());
    let infant = parseInt($("body #infant"+inputnumber).val());
    let discount = parseFloat($("body #discount"+inputnumber).val());
-   //alert(discount);
+   
    let mpt = parseFloat($("body #mpt"+inputnumber).val());
 	let mpst = parseFloat($("body #mpst"+inputnumber).val());
    let mppt = parseFloat($("body #mppt"+inputnumber).val());

@@ -237,6 +237,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Image' => Intervention\Image\Facades\Image::class,
 		'SiteHelpers' => App\Helpers\SiteHelpers::class,
+		'PriceHelper' => App\Helpers\PriceHelper::class,
 		'SPDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
 		'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
 		'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,

@@ -26,7 +26,7 @@ use App\Models\VoucherActivityLog;
 use App\Models\Ticket;
 use DB;
 use SiteHelpers;
-use App\Helpers\PriceHelper;
+use PriceHelper;
 use Carbon\Carbon;
 use SPDF;
 use Illuminate\Support\Facades\Auth;
@@ -867,10 +867,10 @@ class VouchersController extends Controller
 		$user = auth()->user();
 		
 		$variantData = PriceHelper::getActivityVariantListArrayByTourDate($startDate,$aid);
-		
+		//dd($variantData );
 		
 		$typeActivities = config("constants.typeActivities"); 
-		$returnHTML = view('vouchers.activities-add-view', compact('variantData','voucher'))->render();
+		$returnHTML = view('vouchers.activities-add-view', compact('variantData','voucher','aid','vid'))->render();
 		
 		return response()->json(array('success' => true, 'html'=>$returnHTML, 'dates'=>'','disabledDay'=>''));	
 			

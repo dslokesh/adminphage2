@@ -29,6 +29,7 @@ class PriceHelper
 		$data = [];
 		$activity = Activity::find($activityId);
 		$data['activity'] = $activity;
+		$data['activityVariants'] = [];
 		
 		
 			$activityVariants = ActivityVariant::with('prices', 'variant', 'activity')
