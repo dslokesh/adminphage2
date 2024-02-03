@@ -29,7 +29,7 @@
 
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Activity Variant Prices ({{$variant->title}})</h3>
+                <h3 class="card-title">Activity Variant Prices)</h3>
 				<div class="card-tools">
 				 <a href="{{ route('activity.variant.price.create',$vid) }}" class="btn btn-sm btn-info">
                       <i class="fas fa-plus"></i>

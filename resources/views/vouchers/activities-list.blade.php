@@ -260,6 +260,7 @@
 <script type="text/javascript">
   $(document).ready(function() {
 	  $('body #activity_select0').prop('checked', false); // Checks it
+	 $("body #tour_date0").prop('required',true);
 			
 $(document).on('click', '.loadvari', function(evt) {
   var actid = $(this).data('act');
@@ -305,9 +306,10 @@ $(document).on('click', '.loadvari', function(evt) {
 				var disabledDates = data.dates.disabledDates;
 				var availableDates = data.dates.availableDates;
 				 var disabledDay = data.disabledDay;
+				  $("body #tour_date0").prop('required',true);
 				// console.log(disabledDay);
 				$(".tour_datepicker").datepicker({
-                        beforeShowDay: function(date) {
+                        /* beforeShowDay: function(date) {
                             var dateString = $.datepicker.formatDate('yy-mm-dd', date);
 							if(disabledDay.length > 0){
 								if (disabledDay.indexOf(date.getDay()) != -1) {
@@ -320,7 +322,7 @@ $(document).on('click', '.loadvari', function(evt) {
 								return [false, "disabled-date", "This date is disabled"];
 							}
                             return [true];
-                        },
+                        }, */
 							minDate: new Date(),
 							weekStart: 1,
 							daysOfWeekHighlighted: "6,0",
@@ -340,6 +342,7 @@ $(document).on('click', '.loadvari', function(evt) {
         {   
             var table = $('#tbl-activites').DataTable();
         });
+		
 
     </script> 
 <script type="text/javascript">
@@ -347,170 +350,72 @@ $(document).on('click', '.loadvari', function(evt) {
    
  
  $(document).on('change', '.priceChange', function(evt) {
-  
-   let inputnumber = $(this).data('inputnumber');
-   var activity_id = $("body  #activity_id").val();
-   var is_vat_invoice = $("body  #vat_invoice").val();
-	if(is_vat_invoice == 1){
-		var activity_vat = $("#activity_vat").val();
-	} else {
-		var activity_vat = 0;
-	}
-  
-   let adult = parseInt($("body #adult"+inputnumber).val());
-   let child = parseInt($("body #child"+inputnumber).val());
-   let infant = parseInt($("body #infant"+inputnumber).val());
-   let discount = parseFloat($("body #discount"+inputnumber).val());
-   
-   let mpt = parseFloat($("body #mpt"+inputnumber).val());
-	let mpst = parseFloat($("body #mpst"+inputnumber).val());
-   let mppt = parseFloat($("body #mppt"+inputnumber).val());
-  
+  const inputnumber = $(this).data('inputnumber');
+  const activityVariantId = $("body #activity_variant_id" + inputnumber).val();
+  const adult = parseInt($("body #adult" + inputnumber).val());
+  const child = parseInt($("body #child" + inputnumber).val());
+  const infant = parseInt($("body #infant" + inputnumber).val());
+  const discount = parseFloat($("body #discount" + inputnumber).val());
+  const tourDate = $("body #tour_date" + inputnumber).val();
+  const transferOption = $("body #transfer_option" + inputnumber).find(':selected').data("id");
+  const transferOptionName = $("body #transfer_option" + inputnumber).find(':selected').val();
+  const variantId = $("body #transfer_option" + inputnumber).find(':selected').data("variant");
+  let zonevalue = 0;
+  const agentId = "{{$voucher->agent_id}}";
+  const voucherId = "{{$voucher->id}}";
+  let grandTotal = 0;
 
-   let mptt = parseFloat($("body #mptt"+inputnumber).val());
-   let mpstt = parseFloat($("body #mpstt"+inputnumber).val());
-   let mpptt = parseFloat($("body #mpptt"+inputnumber).val());
-   
-   let adultPrice = $("body #adultPrice"+inputnumber).val();
-   let childPrice = $("body #childPrice"+inputnumber).val();
-   let infPrice = $("body #infPrice"+inputnumber).val();
-   var ad_price = (adult*adultPrice) ;
-   var chd_price = (child*childPrice) ;
-   var inf_price = (child*infPrice) ;
-   var ad_ch_TotalPrice = ad_price + chd_price + inf_price;
-  
-   var ticket_only_markupamt = mpt*adult;
-   var sic_transfer_markupamt =  mpst*child;
-   var pvt_transfer_markupamt =  mpst*infant;
-   var totalMarkup =  ticket_only_markupamt+sic_transfer_markupamt+pvt_transfer_markupamt;
-   
-	
-   let t_option_val = $("body #transfer_option"+inputnumber).find(':selected').data("id");
-   //$("body #pickup_location"+inputnumber).val('');
-   let grandTotal = 0;
-   let grandTotalAfterDis = 0;
-   if(t_option_val == 3)
-   {
-     var totaladult = parseInt(adult + child);
-   getPVTtransfer(activity_id,adult,child,inputnumber);
-   $("body #loader-overlay").show();	
-   waitForInputValue(inputnumber, function(pvt_transfer_price) {
-     var totalPrice = parseFloat(ad_ch_TotalPrice + totalMarkup  + pvt_transfer_price);
-     
-     grandTotal = ( (totalPrice));
-     let vatPrice = parseFloat(((activity_vat/100) * grandTotal));
-     grandTotalAfterDis = parseFloat(grandTotal+vatPrice-discount);
-        
-     if(isNaN(grandTotalAfterDis))
-     {
-     $("body #totalprice"+inputnumber).val(0);
-     $("body #price"+inputnumber).text(0);
-     }
-     else
-     {
-       if(grandTotalAfterDis > 0)
-       {
-       $("body #totalprice"+inputnumber).val(grandTotalAfterDis.toFixed(2));
-       $("body #price"+inputnumber).text("AED "+grandTotalAfterDis.toFixed(2));
-       }
-       else
-       {
-         $("body #totalprice"+inputnumber).val(0);
-         $("body #price"+inputnumber).text(0);
-       }
-     }
-     $("body #loader-overlay").hide();
-     });
-   }
-   else
-   {
-     if(t_option_val == 2)
-     {
-       let zonevalue = parseFloat($("body #transfer_zone"+inputnumber).find(':selected').data("zonevalue"));
-       let zoneptime = $("body #transfer_zone"+inputnumber).find(':selected').data("zoneptime");
-       
-      // $("body #pickup_location"+inputnumber).val(zoneptime);
-       var totaladult = parseInt(adult + child);
-       let zonevalueTotal = (totaladult * zonevalue);
-       $("body #zonevalprice"+inputnumber).val(zonevalueTotal);
-      
-       var totalPrice = parseFloat(ad_ch_TotalPrice + totalMarkup  + zonevalueTotal);
-       
-       grandTotal = ( (totalPrice));
-        let vatPrice = parseFloat(((activity_vat/100) * grandTotal));
-        grandTotalAfterDis = parseFloat(vatPrice + grandTotal-discount);
-     }
-     else
-     {
-		var totaladult = parseInt(adult + child);
-       var totalPrice = parseFloat(ad_ch_TotalPrice + totalMarkup);
-       
-        grandTotal = ( (totalPrice));
-       let vatPrice = parseFloat(((activity_vat/100) * grandTotal));
-        grandTotalAfterDis = parseFloat(vatPrice + grandTotal-discount);
-       
-     }
-    
-     if(isNaN(grandTotalAfterDis))
-     {
-     $("body #totalprice"+inputnumber).val(0);
-     $("body #price"+inputnumber).text(0);
-     }
-     else
-     {
-     if(grandTotalAfterDis > 0)
-       {
-       $("body #totalprice"+inputnumber).val(grandTotalAfterDis.toFixed(2));
-       $("body #price"+inputnumber).text("AED "+grandTotalAfterDis.toFixed(2));
-       }
-       else
-       {
-         $("body #totalprice"+inputnumber).val(0);
-         $("body #price"+inputnumber).text(0);
-       }
-     }
-   }
-   
-   
-   
- });
- $(document).on('blur','.priceChangedis',function(){
-   let inputnumber = $(this).data('inputnumber');
-   let inputvale = parseFloat($(this).val());
-   if(inputvale == null || isNaN(inputvale))
-   {
-     inputvale = 0;
-     $(this).val(0);
-   }
-   $("body #adult"+inputnumber).trigger("change");
- });
+  const transferZoneTd = $("body #transfer_zone_td" + inputnumber);
+  const colTd = $("body .coltd");
+  const transferZone = $("body #transfer_zone" + inputnumber);
+  const loaderOverlay = $("body #loader-overlay");
 
+  transferZoneTd.css("display", "none");
+  colTd.css("display", "none");
+  transferZone.prop('required', false);
+
+  if (transferOption == 2) {
+    transferZoneTd.css("display", "block");
+    colTd.css("display", "block");
+    transferZone.prop('required', true);
+    zonevalue = parseFloat(transferZone.find(':selected').data("zonevalue"));
+  } else if (transferOption == 3) {
+    colTd.css("display", "block");
+  }
+
+  loaderOverlay.show();
+
+  const argsArray = {
+    transfer_option: transferOptionName,
+    activity_variant_id: activityVariantId,
+    agent_id: agentId,
+    voucherId: voucherId,
+    adult: adult,
+    infant: infant,
+    child: child,
+    discount: discount,
+    tourDate: tourDate,
+    zonevalue: zonevalue
+  };
+
+  getPrice(argsArray)
+    .then(function(price) {
+      $("body #price" + inputnumber).html(price.variantData.totalprice);
+    })
+    .catch(function(error) {
+      console.error('Error:', error);
+    })
+    .finally(function() {
+      loaderOverlay.hide();
+    });
+});
  
-
- $(document).on('blur','.priceChangenp',function(){
-  let inputnumber = $(this).data('inputnumber');
-
-
-  let tptice = parseFloat($("body #totalprice"+inputnumber).val());
-   let inputvale = parseFloat($(this).val());
-   if(inputvale == null || isNaN(inputvale))
-   {
-     inputvale = 0;
-     $(this).val("");
-   }
-   else
-   {
-      grandTotalAfterDis = parseFloat(tptice-inputvale).toFixed(2);
-      $("body #discount"+inputnumber).val(grandTotalAfterDis);
-   }
-  
-   $("body #adult"+inputnumber).trigger("change");
- });
+ 
  $(document).on('change', '.actcsk', function(evt) {
    let inputnumber = $(this).data('inputnumber');
    if ($(this).is(':checked')) {
        $("body #transfer_option"+inputnumber).prop('required',true);
-     $("body #tour_date"+inputnumber).prop('required',true);
+		$("body #tour_date"+inputnumber).prop('required',true);
      
      $("body #transfer_option"+inputnumber).prop('disabled',false);
      $("body #tour_date"+inputnumber).prop('disabled',false);
@@ -518,7 +423,6 @@ $(document).on('click', '.loadvari', function(evt) {
      $("body #child"+inputnumber).prop('disabled',false);
      $("body #infant"+inputnumber).prop('disabled',false);
      $("body #discount"+inputnumber).prop('disabled',false);
-     $("body #net_price"+inputnumber).prop('disabled',false);
 	 $("body #adult"+inputnumber).trigger("change");
      } else {
        $("body #transfer_option"+inputnumber).prop('required',false);
@@ -531,96 +435,11 @@ $(document).on('click', '.loadvari', function(evt) {
      $("body #infant"+inputnumber).prop('disabled',true);
      $("body #discount"+inputnumber).prop('disabled',true);
      $("body #discount"+inputnumber).prop('disabled',true);
-	 $("body #net_price"+inputnumber).val(0);
      $("body #price"+inputnumber).text(0);
      }
  });
+
  
- $(document).on('change', '.t_option', function(evt) {
-   //alert("Asas");
-   //alert("Asas");
-   let inputnumber = $(this).data('inputnumber');
-   let t_option_val = $(this).find(':selected').data("id");
-   //$("body #top").removeAttr("colspan");
-   $("body #transfer_zone_td"+inputnumber).css("display","none");
-   $("body .coltd").css("display","none");
-   //$("#pickup_location_td"+inputnumber).css("display","none");
-   $("body #transfer_zone"+inputnumber).prop('required',false);
-   $("body #zonevalprice"+inputnumber).val(0);
-   $('body #transfer_zone'+inputnumber).prop('selectedIndex',0);
-   $("body #pvt_traf_val"+inputnumber).val(0);
-   $("body #adult"+inputnumber).trigger("change");
-   if(t_option_val == 2){
-     //$("body #top").attr("colspan",2);
-     $("body #transfer_zone_td"+inputnumber).css("display","block");
-     $("body .coltd").css("display","block");
-    //$("#pickup_location_td"+inputnumber).css("display","block");
-     $("body #transfer_zone"+inputnumber).prop('required',true);
-   } else if(t_option_val == 3){
-    // $("body #top").attr("colspan",2);
-	 $("body .coltd").css("display","block")
-     //$("#pickup_location_td"+inputnumber).css("display","block");
-     var activity_id = $("body #activity_id").val();
-     let adult = parseInt($("body #adult"+inputnumber).find(':selected').val());
-     let child = parseInt($("body #child"+inputnumber).find(':selected').val());
-     var totaladult = parseInt(adult + child);
-     //alert(totaladult);
-     let mppt = parseFloat($("body #mppt"+inputnumber).val());
-	 let mpptt = parseFloat($("body #mpptt"+inputnumber).val());
-     getPVTtransfer(activity_id,adult,child,inputnumber);
-     $("body #adult"+inputnumber).trigger("change");
-   }
- });
- 
- $(document).on('change', '.zoneselect', function(evt) {
-   let inputnumber = $(this).data('inputnumber');
-   let zonevalue = parseFloat($(this).find(':selected').data("zonevalue"));
-  // $("body #top").attr("colspan",2);
-   let adult = parseInt($("body #adult"+inputnumber).find(':selected').val());
-     let child = parseInt($("body #child"+inputnumber).find(':selected').val());
-     var totaladult = parseInt(adult + child);
-     let zonevalueTotal = totaladult * zonevalue;
-     $("body #zonevalprice"+inputnumber).val(zonevalueTotal);
-     $("body #adult"+inputnumber).trigger("change");
- });
- 
- function getPVTtransfer(acvt_id,adult,child,inputnumber)
- {
-     $.ajaxSetup({
-                 headers: {
-                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                 }
-             });
-     $.ajax({
-             url: "{{route('voucher.getPVTtransferAmount')}}",
-             type: 'POST',
-             dataType: "json",
-             data: {
-				acvt_id: acvt_id,
-				adult: adult,
-				child: child,
-				markupPer: 0,
-             },
-             success: function( data ) {
-                //console.log( data );
-          $("body #pvt_traf_val"+inputnumber).val(data);
-             }
-           });
- }
- 
- function waitForInputValue(inputnumber, callback) {
-   var $input = $("body #pvt_traf_val" + inputnumber);
-   
-   var interval = setInterval(function() {
-     var pvt_transfer_price = parseFloat($input.val());
-     
-     if (!isNaN(pvt_transfer_price)) {
-       // Value is available, execute the callback function
-       clearInterval(interval); // Stop the interval
-       callback(pvt_transfer_price);
-     }
-   }, 2000); // Check every 100 milliseconds
- }
  });
  
  $(document).on('keypress', '.onlynumbrf', function(evt) {
@@ -632,6 +451,21 @@ $(document).on('click', '.loadvari', function(evt) {
  });
 
  
- 
+ function getPrice(argsArray) {
+  return new Promise(function(resolve, reject) {
+    $.ajax({
+      url: "{{ route('get-activity.variant.price') }}",
+      type: 'POST',
+      dataType: "json",
+      data: argsArray,
+      success: function(data) {
+        resolve(data);
+      },
+      error: function(error) {
+        reject(error);
+      }
+    });
+  });
+}
    </script> 
 @endsection

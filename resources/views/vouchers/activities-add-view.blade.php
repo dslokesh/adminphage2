@@ -1,7 +1,7 @@
-		@php
-				  $activity = $variantData['activity'];
-				 
-				  @endphp
+			@php
+			$activity = $variantData['activity'];
+			 
+			@endphp
 				<form action="{{route('voucher.activity.save')}}" method="post" class="form" >
 				{{ csrf_field() }}
 				 <input type="hidden" id="activity_id" name="activity_id" value="{{ $aid }}"  />
@@ -22,22 +22,23 @@
 					<th valign="middle">Adult</th>
                     <th valign="middle">Child<br/><small>({{$ap->prices->child_start_age}}-{{$ap->prices->child_end_age}} Yrs)</small></th>
                     <th valign="middle">Infant<br/><small>(Below {{$ap->prices->child_start_age}} Yrs)</small></th>
-					<th valign="middle">Total Selling Price*</th>
-					<th valign="middle">Net Disc</th>
 					<th valign="middle">Total Amount</th>
                   </tr>
 				  </thead>
 				  @endif
 				  <tbody>
 				 @php
-				  $markup = SiteHelpers::getAgentMarkup($voucher->agent_id,$ap->activity_id,$ap->variant_code);
-				  $actZone = SiteHelpers::getZone($activity->zones,$activity->sic_TFRS);
-				 
+				  $actZone = SiteHelpers::getZone($ap->variant->zones,$ap->variant->sic_TFRS);
+				 $tourDates = SiteHelpers::getDateList($voucher->travel_from_date,$voucher->travel_to_date,$ap->variant->black_out,$ap->variant->sold_out);
 				  @endphp
 				   <tr>
-                    <td><input type="checkbox"  name="activity_select[{{$ap->ucode}}]" id="activity_select{{$kk}}" value="{{ $aid }}" @if($kk == '0') checked @endif class="actcsk" data-inputnumber="{{$kk}}" /> <strong>{{$ap->variant->title}} </strong>
+                    <td>
+					
+					<input type="hidden"  name="activity_variant_id[{{$ap->ucode}}]" id="activity_variant_id{{$kk}}" value="{{$ap->id}}" data-inputnumber="{{$kk}}" /> 
+					
+					<input type="checkbox"  name="activity_select[{{$ap->ucode}}]" id="activity_select{{$kk}}" value="{{ $aid }}" @if($kk == '0') checked @endif class="actcsk" data-inputnumber="{{$kk}}" /> <strong>{{$ap->variant->title}} </strong>
 					</td>
-					<td> <select name="transfer_option[{{$ap->ucode}}]" id="transfer_option{{$kk}}" class="form-control t_option" data-inputnumber="{{$kk}}" @if($kk > '0') disabled="disabled" @endif >
+					<td> <select name="transfer_option[{{$ap->ucode}}]" id="transfer_option{{$kk}}" class="form-control priceChange" data-inputnumber="{{$kk}}" @if($kk > '0') disabled="disabled" @endif >
 						@if($kk > '0')
 						<option value="">--Select--</option>
 						@endif
@@ -48,7 +49,7 @@
 						<option value="Shared Transfer" data-id="2">Shared Transfer</option>
 						@endif
 						@if($ap->variant->pvt_TFRS==1)
-						<option value="Pvt Transfer" data-id="3">Pvt Transfer</option>
+						<option value="Pvt Transfer" data-id="3" data-variant="{{$ap->variant_id}}" >Pvt Transfer</option>
 						@endif
 						</select>
 						<input type="hidden" id="pvt_traf_val{{$kk}}" value="0"  name="pvt_traf_val[{{$ap->ucode}}]"    />
@@ -57,7 +58,7 @@
 						<div  style="display:none;border:none;" id="transfer_zone_td{{$kk}}">
 						@if($ap->variant->sic_TFRS==1)
 						@if(!empty($actZone))
-						<select name="transfer_zone[{{$ap->ucode}}]" id="transfer_zone{{$kk}}" class="form-control zoneselect"  data-inputnumber="{{$kk}}">
+						<select name="transfer_zone[{{$ap->ucode}}]" id="transfer_zone{{$kk}}" class="form-control priceChange"  data-inputnumber="{{$kk}}">
 						
 						
 						@foreach($actZone as $z)
@@ -71,14 +72,18 @@
 							<input type="hidden" id="transfer_zone{{$kk}}" value=""  name="transfer_zone[{{$ap->ucode}}]"    />
 						@endif
 						
-						<input type="hidden" id="zonevalprice{{$kk}}" value="0"  name="zonevalprice[{{$ap->ucode}}]"    />
 						</div> 
 						</td>
-					
-							<input type="hidden" style="display:none" id="pickup_location{{$kk}}" value=""  name="pickup_location[{{$ap->ucode}}]" placeholder="Pickup Location" class="form-control"   />
 						
 					<td>
-					<input type="text"id="tour_date{{$kk}}" value="{{date('d-m-Y',strtotime($voucher->travel_from_date))}}"  name="tour_date[{{ $ap->ucode }}]" placeholder="Tour Date" class="form-control tour_datepicker" required @if($kk > '0') disabled="disabled" @endif     />
+					<select name="tour_date[{{$ap->ucode}}]" id="tour_date{{$kk}}"  class="form-control priceChange" data-inputnumber="{{$kk}}"  >
+						
+						<option value="">--Select--</option>
+						@foreach($tourDates as $tourDate)
+						<option value="{{$tourDate}}" >{{$tourDate}}</option>
+						@endforeach
+						</select>
+						
 					
 					</td>
 					<td><select name="adult[{{$ap->ucode}}]" id="adult{{$kk}}" class="form-control priceChange" required data-inputnumber="{{$kk}}" @if($kk > '0') disabled="disabled" @endif>
@@ -102,57 +107,15 @@
 						<option value="{{$inf}}" @if($voucher->infants==$inf && $voucher->infants > 0) selected="selected" @endif>{{$inf}}</option>
 						@endfor
 						</select>
-						<input type="hidden" value="{{$markup['ticket_only']}}" id="mpt{{$kk}}"  name="mpt[{{$ap->u_code}}]"    />
 						
-						<input type="hidden" value="{{$markup['sic_transfer']}}" id="mpst{{$kk}}"  name="mpst[{{$ap->u_code}}]"    />
+						</td>
+						
 					
-						<input type="hidden" value="{{$markup['pvt_transfer']}}" id="mppt{{$kk}}"  name="mppt[{{$ap->u_code}}]"    />
-
-						<input type="hidden" value="{{$markup['ticket_only_m']}}" id="mptt{{$kk}}"  name="mptt[{{$ap->u_code}}]"    />
-
-						<input type="hidden" value="{{$markup['sic_transfer_m']}}" id="mpstt{{$kk}}"  name="mpstt[{{$ap->u_code}}]"    />
-					
-						<input type="hidden" value="{{$markup['pvt_transfer_m']}}" id="mpptt{{$kk}}"  name="mpptt[{{$ap->u_code}}]"    />
-						</td>
+						<input type="hidden" id="discount{{$kk}}" style="width: 50px;" value="0"  name="discount[{{$ap->ucode}}]" @if($kk > '0') disabled="disabled" @endif data-inputnumber="{{$kk}}" class="form-control onlynumbrf priceChangedis"    />
 						
-						
-						<td>
-						<input type="text" id="net_price{{$kk}}" style="width: 50px;" value="" required  name="net_price[{{$ap->ucode}}]" @if($kk > '0') disabled="disabled" @endif data-inputnumber="{{$kk}}" class="form-control onlynumbrf priceChangenp"    />
-						</td>
-						<td>
-						<input type="text" id="discount{{$kk}}" style="width: 50px;" value="0"  name="discount[{{$ap->ucode}}]" @if($kk > '0') disabled="disabled" @endif data-inputnumber="{{$kk}}" class="form-control onlynumbrf priceChangedis"    />
-						</td>
 						<td class="text-center" >
-						@php
-						$priceAd = ($ap->adult_rate_with_vat*$ap->adult_min_no_allowed);
-						$mar = (($priceAd * $markup['ticket_only'])/100);
-						$price = ($priceAd + ($ap->chield_rate_with_vat*$ap->chield_min_no_allowed) + ($ap->infant_rate_with_vat*$ap->infant_min_no_allowed));
-						
-						$price +=$mar;
-						if($activity->vat > 0){
-						$vat = (($activity->vat * $price)/100);
-						$price +=$vat;
-						}
-						
-						@endphp
-
-						@if($voucher->vat_invoice == '1')
-						<input type="hidden" value="{{$ap->prices->adult_rate_without_vat}}" id="adultPrice{{$kk}}"  name="adultPrice[{{ $ap->ucode }}]"    />
-
-						<input type="hidden" value="{{$ap->prices->child_rate_without_vat}}" id="childPrice{{$kk}}"  name="childPrice[{{ $ap->ucode }}]"    />
-						<input type="hidden" value="{{$ap->prices->infant_rate_without_vat}}" id="infPrice{{$kk}}"  name="infPrice[{{ $ap->ucode }}]"    />
-
-						@else 
-
-						<input type="hidden" value="{{$ap->prices->adult_rate_with_vat}}" id="adultPrice{{$kk}}"  name="adultPrice[{{ $ap->ucode }}]"    />
-
-						<input type="hidden" value="{{$ap->prices->child_rate_with_vat}}" id="childPrice{{$kk}}"  name="childPrice[{{ $ap->ucode }}]"    />
-						<input type="hidden" value="{{$ap->prices->infant_rate_with_vat}}" id="infPrice{{$kk}}"  name="infPrice[{{ $ap->ucode }}]"    />
-						@endif
-
 						
 						<span id="price{{$kk}}" style="font-weight:bold">0</span>
-						<input type="hidden" id="totalprice{{$kk}}" value="0"  name="totalprice[{{$ap->ucode}}]"    />
 						</td>
                   </tr>
 				  @endforeach

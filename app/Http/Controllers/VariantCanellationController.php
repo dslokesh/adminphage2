@@ -17,8 +17,9 @@ class VariantCanellationController extends Controller
     public function index($varidid)
     {
 		//$this->checkPermissionMethod('list.hotlecat');
+		$variant = Variant::select("id","ucode")->find($varidid);
         $records = VariantCanellation::where('variant_id',$varidid)->orderBy('duration')->get();
-        return view('variants.canellation_chart', compact('records','varidid'));
+        return view('variants.canellation_chart', compact('records','varidid','variant'));
 
     }
 
@@ -33,6 +34,7 @@ class VariantCanellationController extends Controller
 		]);
 		
 		$varidid = $request->input('varidid');
+		$varidCode = $request->input('varidCode');
 		$durations = $request->input('duration');
 		$ticketRefundValue = $request->input('ticket_refund_value');
 		$transferRefundValue = $request->input('transfer_refund_value');
@@ -43,6 +45,7 @@ class VariantCanellationController extends Controller
 			foreach($durations as $k=> $duration)
 			{
 				$data[$k]['duration'] = $duration;
+				$data[$k]['varidCode'] = $varidCode;
 				$data[$k]['variant_id'] = $varidid;
 				$data[$k]['ticket_refund_value'] = $ticketRefundValue[$k];
 				$data[$k]['transfer_refund_value'] = $transferRefundValue[$k];

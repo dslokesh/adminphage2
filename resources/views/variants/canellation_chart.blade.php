@@ -41,6 +41,7 @@
                                 </thead>
                                 <tbody>
 								<input type="hidden" name="varidid" value="{{ $varidid }}" />
+								<input type="hidden" name="varidCode" value="{{ $variant->ucode }}" />
                                     @if($records->count() > 0)
                                         @foreach ($records as $key => $record)
 										<tr>

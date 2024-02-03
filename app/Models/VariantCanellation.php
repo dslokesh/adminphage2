@@ -10,6 +10,7 @@ class VariantCanellation extends Model
 	
 	protected $fillable = [
         'variant_id',
+		'varidCode',
         'duration',
         'ticket_refund_value',
         'transfer_refund_value',

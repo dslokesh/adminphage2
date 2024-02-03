@@ -24,12 +24,12 @@ class VariantPriceController extends Controller
 		//$this->checkPermissionMethod('list.activity');
         $data = $request->all();
         $perPage = config("constants.ADMIN_PAGE_LIMIT");
-		$variant = Variant::find($vid);
+		
 		//$vat = Activity::select('vat')->find($variant->vid);
-        $query = VariantPrice::where('activity_variant_id',$vid);
+        $query = VariantPrice::with("createdBy","updatedBy","av","av.activity","av.variant")->where('activity_variant_id',$vid);
         $records = $query->orderBy('created_at', 'DESC')->paginate($perPage);
 		//dd($records);
-        return view('activity_variant_prices.index', compact('records','vid','variant'));
+        return view('activity_variant_prices.index', compact('records','vid'));
     }
 
 
@@ -115,11 +115,13 @@ class VariantPriceController extends Controller
 		$record->infant_max_no_allowed = $request->input('infant_max_no_allowed');
 		$record->infant_min_no_allowed = $request->input('infant_min_no_allowed');
 		$record->infant_start_age = $request->input('infant_start_age');
+		
 		$record->infant_end_age = $request->input('infant_end_age');
+		$record->created_by = auth()->user()->id;
 		$record->save();
 		
 		$activityVariantCount = VariantPrice::where("activity_variant_id",$activity_variant_id)->count();
-		$activityVariant = ActivityVariant::find($vid);
+		$activityVariant = ActivityVariant::find($activity_variant_id);
 		$variant = Variant::find($activityVariant->variant_id);
 		
 			if($activityVariantCount > 0){
@@ -234,6 +236,7 @@ class VariantPriceController extends Controller
 		$record->infant_min_no_allowed = $request->input('infant_min_no_allowed');
 		$record->infant_start_age = $request->input('infant_start_age');
 		$record->infant_end_age = $request->input('infant_end_age');
+		$record->updated_by = auth()->user()->id;
 		$record->save();
 		
 		$activityVariantCount = VariantPrice::where("activity_variant_id",$vid)->count();

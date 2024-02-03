@@ -361,12 +361,11 @@
 					@if(!empty($voucherActivity))
 					  @foreach($voucherActivity as $ap)
 				  @php
-					$activity = SiteHelpers::getActivity($ap->activity_id);
 					$ticketCount = SiteHelpers::getTicketCountByCode($ap->variant_unique_code);
 					@endphp
 					@php
 				$tourDt = date("Y-m-d",strtotime($ap->tour_date));
-				$validTime = SiteHelpers::checkCancelBookingTime($ap->variant_unique_code,$activity->id,$tourDt,$ap->transfer_option);
+				$validTime = SiteHelpers::checkCancelBookingTime($ap->variant_unique_code,$ap->activity_id,$tourDt,$ap->transfer_option);
 				
 				@endphp
             <div class="card card-default">
@@ -374,7 +373,7 @@
                 <div class="row">
 				<div class="col-md-6 text-left">
                     <h3 class="card-title">
-                      <strong> {{$activity->title}}</strong></h3>
+                      <strong> {{$ap->activity_title}}</strong></h3>
 
                       <span class="badge bg-warning" style="margin-left: 5px;">
   @if($ap->status == '1')
@@ -507,7 +506,7 @@
                 </div>
                @if($ap->transfer_option == 'Shared Transfer')
 					@php
-					$pickup_time = SiteHelpers::getPickupTimeByZone($activity->zones,$ap->transfer_zone);
+					$pickup_time = SiteHelpers::getPickupTimeByZone($ap->variant_zones,$ap->transfer_zone);
 					@endphp
                 <div class="row" style="margin-bottom: 5px;">
                   <div class="col-md-5 text-left">
@@ -518,16 +517,16 @@
                   </div>
                 </div>
 				@endif
-				@if(($ap->transfer_option == 'Pvt Transfer') && ($activity->pick_up_required == '1')  && ($activity->pvt_TFRS == '1'))
+				@if(($ap->transfer_option == 'Pvt Transfer') && ($ap->variant_pick_up_required == '1')  && ($ap->variant_pvt_TFRS == '1'))
 					@php
-					$pickup_time = SiteHelpers::getPickupTimeByZone($activity->zones,$ap->transfer_zone);
+					$pickup_time = SiteHelpers::getPickupTimeByZone($ap->variant_zones,$ap->transfer_zone);
 					@endphp
                 <div class="row" style="margin-bottom: 5px;">
                   <div class="col-md-5 text-left">
                     <strong>Pickup Timing</strong>
                   </div>
                   <div class="col-md-7 text-right">
-                   {{$activity->pvt_TFRS_text}}
+                   {{$ap->variant_pvt_TFRS_text}}
                   </div>
                 </div>
 				@endif

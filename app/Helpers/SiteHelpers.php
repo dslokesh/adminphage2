@@ -144,11 +144,19 @@ class SiteHelpers
 		return $pickup_time;
     }
 	
+	
 	public static function getActivity($activity_id)
     {
 		
 		$activity = Activity::where('status', 1)->where('id', $activity_id)->first();
 		return $activity;
+    }
+	
+	public static function getActivityVariant($ucode)
+    {
+		
+		$activityVariant = ActivityVariant::with('activity','variant')->where('ucode', $ucode)->first();
+		return $activityVariant;
     }
 	
 	public static function getZoneName($zoneId)
@@ -184,7 +192,7 @@ class SiteHelpers
 			$period = new \DatePeriod($start, $interval, $end);
 			foreach ($period as $date) {
 				$dt = $date->format('Y-m-d');
-				if((!in_array($dt,$blackDate)) OR (!in_array($dt,$soldoutDates))){
+				if((!in_array($dt,$blackDate)) OR (!in_array($dt,$soldDate))){
 				$dates[] = $dt;
 				}
 			}
@@ -554,7 +562,7 @@ class SiteHelpers
 	public static function checkCancelBookingTime($u_code,$activity_id,$tourDt,$transfer_option)
     {
 		
-		$activityPrice = ActivityPrices::where(['u_code'=>$u_code,'activity_id'=>$activity_id])->select('start_time','end_time','cancellation_value_to','cancellation_valueSIC','cancellation_valuePVT')->first();
+		/* $activityPrice = ActivityPrices::where(['u_code'=>$u_code,'activity_id'=>$activity_id])->select('start_time','end_time','cancellation_value_to','cancellation_valueSIC','cancellation_valuePVT')->first();
 			$startTime = $activityPrice->start_time;
 			$combinedDatetime = $tourDt . ' ' . $startTime;
 			$validuptoTime = strtotime($combinedDatetime);
@@ -587,8 +595,9 @@ class SiteHelpers
 			} else {
 				$data['btm'] = 0;
 			}
-			}
+			} */
 			
+			$data['btm'] = 0;
 			return $data;
 		
     }

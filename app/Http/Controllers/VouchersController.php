@@ -24,6 +24,7 @@ use Illuminate\Http\Request;
 use App\Models\VoucherActivity;
 use App\Models\VoucherActivityLog;
 use App\Models\Ticket;
+use App\Models\Variant;
 use DB;
 use SiteHelpers;
 use PriceHelper;
@@ -871,8 +872,21 @@ class VouchersController extends Controller
 		
 		$typeActivities = config("constants.typeActivities"); 
 		$returnHTML = view('vouchers.activities-add-view', compact('variantData','voucher','aid','vid'))->render();
+		//$dates = SiteHelpers::getDateListBoth($voucher->travel_from_date,$voucher->travel_to_date,$activity->black_sold_out);
+		//$disabledDay = SiteHelpers::getNovableActivityDays($activity->availability);
 		
-		return response()->json(array('success' => true, 'html'=>$returnHTML, 'dates'=>'','disabledDay'=>''));	
+		$dates = [];
+		$disabledDay = [];
+		return response()->json(array('success' => true, 'html'=>$returnHTML, 'dates'=>json_encode($dates),'disabledDay'=>json_encode($disabledDay)));	
+			
+    }
+	
+	public function getActivityVariantPrice(Request $request)
+    {
+		$data = $request->all();
+		$variantData = PriceHelper::getActivityPriceByVariant($data);
+		
+		return response()->json(array('success' => true,  'variantData'=>$variantData));	
 			
     }
 	
@@ -917,14 +931,17 @@ public function addActivityView($aid,$vid,$d="",$a="",$c="",$i="",$tt="")
 	
 	public function getPVTtransferAmount(Request $request)
     {
-		$activity = Activity::where('id', $request->acvt_id)->where('status', 1)->first();
+		$variant = Variant::select('transfer_plan','pvt_TFRS')->where('id', $request->variant_id)->where('status', 1)->first();
+		
 		$price = 0;
 		$total = 0;
 		$totalPerson = $request->adult+$request->child;
 		//$activityPrices = ActivityPrices::where('activity_id', $aid)->get();
-		if($activity->pvt_TFRS == 1)
+		
+		if($variant->pvt_TFRS == 1)
 		{
-			$td = TransferData::where('transfer_id', $activity->transfer_plan)->where('qty', $totalPerson)->first();
+			$td = TransferData::where('transfer_id', $variant->transfer_plan)->where('qty', $totalPerson)->first();
+			
 			if(!empty($td))
 			{
 				$price = $td->price;
@@ -945,14 +962,10 @@ public function addActivityView($aid,$vid,$d="",$a="",$c="",$i="",$tt="")
 		
 		$voucher_id = $request->input('v_id');
 		$activity_id = $request->input('activity_id');
+		$activity_variant_id = $request->input('activity_variant_id');
 		$voucher = Voucher::find($voucher_id);
-		$activity = Activity::find($activity_id);
 		$startDate = $voucher->travel_from_date;
 		$endDate = $voucher->travel_to_date;
-		$getAvailableDateList = SiteHelpers::getDateList($voucher->travel_from_date,$voucher->travel_to_date,$activity->black_sold_out);
-		
-		$variant_name = $request->input('variant_name');
-		$variant_code = $request->input('variant_code');
 		$transfer_option = $request->input('transfer_option');
 		$tour_date = $request->input('tour_date');
 		$transfer_zone = $request->input('transfer_zone');
@@ -960,16 +973,22 @@ public function addActivityView($aid,$vid,$d="",$a="",$c="",$i="",$tt="")
 		$child = $request->input('child');
 		$infant = $request->input('infant');
 		$discount = $request->input('discount');
-		$variant_unique_code = $request->input('variant_unique_code');
 		
 		$data = [];
 		$total_activity_amount = 0;
 		foreach($activity_select as $k => $v)
 		{
+			$activityVariant = ActivityVariant::with('variant', 'activity')->find($activity_variant_id[$k]);
+			$activity = $activityVariant->activity;
+			$variant = $activityVariant->variant;
+			
+
+			$getAvailableDateList = SiteHelpers::getDateList($voucher->travel_from_date,$voucher->travel_to_date,$variant->black_out,$variant->sold_out);
 			$totalmember = $adult[$k] + $child[$k];
-			$priceCal = SiteHelpers::getActivityPriceSaveInVoucherActivity($transfer_option[$k],$activity_id,$voucher->agent_id,$voucher,$variant_unique_code[$k],$adult[$k],$child[$k],$infant[$k],$discount[$k]);
+			$tour_dt = date("Y-m-d",strtotime($tour_date[$k]));
+			$priceCal = PriceHelper::getActivityPriceSaveInVoucher($transfer_option[$k],$activity_variant_id[$k],$voucher->agent_id,$voucher,$activityVariant->ucode,$adult[$k],$child[$k],$infant[$k],$discount[$k],$tour_dt);
+				
 			if($priceCal['totalprice'] > 0){
-				$tour_dt = date("Y-m-d",strtotime($tour_date[$k]));
 				if(!in_array($tour_dt,$getAvailableDateList)){
 				return redirect()->back()->with('error', 'This Tour is not available for Selected Date.');
 				}
@@ -980,9 +999,15 @@ public function addActivityView($aid,$vid,$d="",$a="",$c="",$i="",$tt="")
 			'voucher_id' => $voucher_id,
 			'activity_id' => $activity_id,
 			'activity_vat' => $priceCal['activity_vat'],
-			'variant_unique_code' => $variant_unique_code[$k],
-			'variant_name' => $variant_name[$k],
-			'variant_code' => $variant_code[$k],
+			'variant_unique_code' => $activityVariant->ucode,
+			'variant_name' => $variant->title,
+			'variant_code' => $variant->ucode,
+			'activity_entry_type' => $activity->entry_type,
+			'variant_pvt_TFRS' => $variant->pvt_TFRS,
+			'variant_pick_up_required' => $variant->pick_up_required,
+			'activity_title' => $activity->title,
+			'variant_zones' => $variant->zones,
+			'variant_pvt_TFRS_text' => $variant->pvt_TFRS_text,
 			'transfer_option' => $transfer_option[$k],
 			'tour_date' => $tour_dt,
 			'pvt_traf_val_with_markup' => $priceCal['pvt_traf_val_with_markup'],
@@ -1006,6 +1031,8 @@ public function addActivityView($aid,$vid,$d="",$a="",$c="",$i="",$tt="")
 				$total_activity_amount += $priceCal['totalprice'] - $discount[$k];
 			}
 		}
+		
+		
 		
 		if(count($data) > 0)
 		{

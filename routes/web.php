@@ -160,6 +160,7 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
         Route::delete('voucher-activity-delete/{id}', [VouchersController::class, 'destroyActivityFromVoucher'])->name('voucher.activity.delete');
 		Route::post('voucher-activity-cancel/{id}', [VouchersController::class, 'cancelActivityFromVoucher'])->name('voucher.activity.cancel');
 		Route::post('activity-get-variant/{aid?}/{vid?}', [VouchersController::class, 'getActivityVariant'])->name('get-vouchers.activity.variant');
+		Route::post('activity-get-variant-price', [VouchersController::class, 'getActivityVariantPrice'])->name('get-activity.variant.price');
         Route::get('voucher-activity-itinerary-Pdf/{vid?}', [VouchersController::class, 'voucherActivityItineraryPdf'])->name('voucherActivityItineraryPdf');
         Route::get('voucher-invoice-Pdf/{vid?}', [VouchersController::class, 'voucherInvoicePdf'])->name('voucherInvoicePdf');
 
