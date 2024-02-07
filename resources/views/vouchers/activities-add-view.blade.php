@@ -116,6 +116,7 @@
 						<td class="text-center" >
 						
 						<span id="price{{$kk}}" style="font-weight:bold">0</span>
+						<input type="hidden" id="totalprice{{$kk}}" value="0"  name="totalprice[{{$ap->ucode}}]"    />
 						</td>
                   </tr>
 				  @endforeach

@@ -31,7 +31,7 @@
                   <tr>
 					<td>{{($record->voucher)?$record->voucher->code:''}}</td>
                     <td>{{$record->tour_date}}</td>
-					<td>{{($record->activity)?$record->activity->title:''}}</td>
+					<td>{{$record->activity_title}}</td>
 					<td>{{($record->variant_name)?$record->variant_name:''}}</td>
 					<td>{{$record->transfer_option}}</td>
 					<td>{{($record->voucher->agent)?$record->voucher->agent->company_name:''}}</td>

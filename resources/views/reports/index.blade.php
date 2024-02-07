@@ -137,7 +137,7 @@
 					<td>
 					<input type="text"  class="form-control inputsaveV" id="guest_phone{{$record->id}}" data-name="guest_phone"  data-id="{{$record->voucher_id}}" value="{{($record->voucher)?$record->voucher->guest_phone:''}}" /></td>
 					<td><input type="hidden" class="form-control inputsave" id="pickup_location{{$record->id}}" data-name="pickup_location" data-id="{{$record->id}}" value="{{$record->pickup_location}}"  />{{$record->pickup_location}}</td>
-					<td>{{($record->activity)?$record->activity->title:''}}</td>
+					<td>{{$record->activity_title}}</td>
 					<td>{{($record->variant_name)?$record->variant_name:''}}</td>
 					<td><input type="text" class="form-control inputsave" id="dropoff_location{{$record->id}}" data-name="dropoff_location"  data-id="{{$record->id}}" value="{{$record->dropoff_location}}" /></td>
 					 <td>{{$record->adult}}</td>

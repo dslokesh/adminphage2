@@ -24,13 +24,13 @@ use Carbon\Carbon;
 use SPDF;
 
 use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\VoucherActivityExport;
+use App\Exports\LogisticReportExport;
 use App\Exports\AccountsReceivablesReportExcelExport;
 use App\Exports\VoucherActivityRefundExport;
 use App\Exports\VoucherActivityCancelExport;
 use App\Exports\TicketStockExport;
 use App\Exports\AgentLedgerExport;
-use App\Exports\VoucherActivityVouchredExport;
+use App\Exports\InvoiceReportExport;
 use App\Exports\TicketOnlyReportExcelExport;
 
 class ReporsController extends Controller
@@ -148,9 +148,9 @@ class ReporsController extends Controller
 		});
 		
         $records = $query->orderBy('created_at', 'DESC')->get();
-   // return Excel::download(new VoucherActivityExport(['records' => $records]), 'users.xlsx');
+   // return Excel::download(new LogisticReportExport(['records' => $records]), 'users.xlsx');
 
-return Excel::download(new VoucherActivityExport($records), 'logistic_records'.date('d-M-Y s').'.csv');        //return Excel::download(new VoucherActivityExport($records), 'records.csv');
+return Excel::download(new LogisticReportExport($records), 'logistic_records'.date('d-M-Y s').'.csv');        //return Excel::download(new LogisticReportExport($records), 'records.csv');
     }
 	
 	public function voucherTicketOnlyReport(Request $request)
@@ -922,8 +922,7 @@ public function voucherActivtyRefundedReport(Request $request)
 			$statuses = is_array($data['booking_status']) ? $data['booking_status'] : [$data['booking_status']];
 				$q->whereIn('status_main', $statuses);
 		});
-		}else
-		{
+		}else {
 			$query->whereHas('voucher', function($q)  use($data){
 				$q->where('status_main','5');
 			});
@@ -947,7 +946,7 @@ public function voucherActivtyRefundedReport(Request $request)
 		$agetName = $agentTBA->company_name;
 		}
 		
-        return view('reports.voucher-activity-report', compact('records','voucherStatus','supplier_ticket','supplier_transfer','agetid','agetName'));
+        return view('reports.invoice-report', compact('records','voucherStatus','supplier_ticket','supplier_transfer','agetid','agetName'));
 
     }
 	
@@ -995,6 +994,10 @@ public function voucherActivtyRefundedReport(Request $request)
 			$statuses = is_array($data['booking_status']) ? $data['booking_status'] : [$data['booking_status']];
 				$q->whereIn('status_main', $statuses);
 		});
+		}else {
+			$query->whereHas('voucher', function($q)  use($data){
+				$q->where('status_main','5');
+			});
 		}
 		if(isset($data['agent_id_select']) && !empty($data['agent_id_select'])) {
 			$query->whereHas('voucher', function($q)  use($data){
@@ -1003,7 +1006,7 @@ public function voucherActivtyRefundedReport(Request $request)
 			});
 		}
 		$records = $query->orderBy('created_at', 'DESC')->get();
-		return Excel::download(new VoucherActivityVouchredExport($records), 'invoice_report'.date('d-M-Y s').'.csv');
+		return Excel::download(new InvoiceReportExport($records), 'invoice_report'.date('d-M-Y s').'.csv');
 
     }
 }

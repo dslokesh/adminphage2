@@ -45,7 +45,7 @@
 					<td>{{($record->voucher)?$record->voucher->guest_name:''}}</td>
 				<td>{{($record->voucher)?$record->voucher->guest_phone:''}}</td>
 					<td>{{$record->pickup_location}}</td>
-					<td>{{($record->activity)?$record->activity->title:''}}</td>
+					<td>{{$record->activity_title}}</td>
 					<td>{{($record->variant_name)?$record->variant_name:''}}</td>
 					<td>{{$record->dropoff_location}}</td>
 					 <td>{{$record->adult}}</td>

@@ -33,34 +33,40 @@ class ActivityVariantController extends Controller
 		//$this->checkPermissionMethod('list.activity');
         $data = $request->all();
 		$activities = Activity::where('status',1)->get();
-		$variants = Variant::where('status',1)->get();
+		$variants = Variant::where('status',1)->where('is_price',1)->get();
 		//dd($records);
         return view('activity_variants.create', compact('activities','variants'));
     }
 	
 	public function store(Request $request)
-    {
-		$request->validate([
-			'code' => 'required',
-			'activity_id' => 'required',
-			'variant_id' => 'required_if:activity_id,1', 
-			'variant_id.*' => 'exists:variants,id',
-		], [
-			'activity_id.required' => 'Please select activity.',
-			'variant_id.required_if' => 'Please select at least one variant.',
-			'variant_id.*.exists' => 'One or more selected variants do not exist in the database.',
-		]);
-		$record = new ActivityVariant();
-		$record->code = $request->input('code');
-		$record->activity_id = $request->input('activity_id');
-		$record->variant_id = $request->input('variant_id');
-		$record->save();
-		$ucode = 'AV'.$record->id;
-		$vrt = ActivityVariant::find($record->id);
-		$vrt->ucode = $ucode;
-		$vrt->save();
-		return redirect('activity-variants')->with('success', 'Activity Variant Created Successfully.');
+	{
+    $request->validate([
+        'code' => 'required',
+        'activity_id' => 'required',
+        'variant_id' => 'required_if:activity_id,1', 
+        'variant_id.*' => 'exists:variants,id',
+    ], [
+        'activity_id.required' => 'Please select activity.',
+        'variant_id.required_if' => 'Please select at least one variant.',
+        'variant_id.*.exists' => 'One or more selected variants do not exist in the database.',
+    ]);
+
+    $variantIds = $request->input('variant_id');
+    $code = $request->input('code');
+    $activityId = $request->input('activity_id');
+
+    foreach ($variantIds as $variantId) {
+        $record = ActivityVariant::create([
+            'code' => $code,
+            'activity_id' => $activityId,
+            'variant_id' => $variantId,
+        ]);
+
+        $record->update(['ucode' => 'AV'.$record->id]);
     }
+
+    return redirect('activity-variants')->with('success', 'Activity Variant(s) Created Successfully.');
+	}
 	
 	public function destroy($id)
     {

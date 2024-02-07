@@ -607,7 +607,8 @@ div.footer {
 		@foreach($voucherActivity as $k => $ap)
 		@php
 					$activity = SiteHelpers::getActivity($ap->activity_id);
-					$pickup_time = SiteHelpers::getPickupTimeByZone($activity->zones,$ap->transfer_zone);
+					$variant = SiteHelpers::getVariant($ap->variant_code);
+					$pickup_time = SiteHelpers::getPickupTimeByZone($ap->variant_zones,$ap->transfer_zone);
 					if($tr_dt != $ap->tour_date)
 					{
 						$avt_no = 0;
@@ -629,8 +630,8 @@ div.footer {
 							@if(($ap->transfer_option == 'Pvt Transfer'))
 								@if($ap->actual_pickup_time != '')
 								<span class="text-grey">Pickup Timing</span> : {{$ap->actual_pickup_time}}*
-								@elseif($activity->pvt_TFRS_text != '')
-								<span class="text-grey">Pickup Timing</span> : {{$activity->pvt_TFRS_text}}*
+								@elseif($ap->variant__pvt_TFRS_text != '')
+								<span class="text-grey">Pickup Timing</span> : {{$ap->variant_pvt_TFRS_text}}*
 								@endif
 							@endif
 						</div>
@@ -646,7 +647,7 @@ div.footer {
 						@endif
 	      			</div>
 	      			<div class="col-8 float-left p-15">
-						<div class="col-12 mo-margin" style="font-size: 14px; ">{{$activity->title}}</div>
+						<div class="col-12 mo-margin" style="font-size: 14px; ">{{$ap->activity_title}}</div>
 						<div  class="col-12 mo-margin"" style="font-size: 14px; "><span  class="text-grey">Tour Option</span> : {{$ap->variant_name}}</div>
 						<div  class="col-12 mo-margin text-grey" style="height: 67px;overflow:hidden;text-align:justify!important;"> {!!$activity->description!!}</div>...
 						<div class="clear"></div>

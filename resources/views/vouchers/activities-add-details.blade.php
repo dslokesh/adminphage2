@@ -66,7 +66,7 @@
               </div>
 			   <div class="col-md-6 text-right">
 			   @php
-            $minPrice = SiteHelpers::getActivityLowPrice($activity->id,$voucher->agent_id,$voucher);
+            $minPrice = $activity->min_price;
           @endphp
 		  <small>Starting From </small><br/>
 				 <h3>AED {{$minPrice}}</h3>
@@ -98,7 +98,7 @@
 					<div class="col-md-12">
 						<ul class="list-inline list-group list-group-horizontal">
 							<li style="padding-right: 10px;">
-								<a href="#description">Description</a>
+								<a href="#description">Short Description</a>
 							</li>
 							<li style="padding-right: 10px;">
 								|
@@ -110,28 +110,23 @@
 								|
 							</li>
 							<li style="padding-right: 10px;">
-								<a href="#inclusion">Inclusion</a>
+								<a href="#inclusion">Description</a>
 							</li>
 							<li style="padding-right: 10px;">
 								|
 							</li>
 							<li style="padding-right: 10px;">
-								<a href="#booking">Booking Policy</a>
+								<a href="#booking">Notes</a>
 							</li>
-							<li style="padding-right: 10px;">
-								|
-							</li>
-							<li style="padding-right: 10px;">
-								<a href="#cancellation ">Cancellation Policy</a>
-							</li>
+							
 						</ul>
 					</div>
 			  </div>
 			 
 				  <div class="form-group col-md-12" id="description"  >
 				 
-                <h4>Description</h4>
-				{!! $activity->description !!}
+                <h4>Short Description</h4>
+				{!! $activity->sort_description !!}
               </div>
 			  <hr class="col-md-12 p-30" id="tour_options">
 		
@@ -153,142 +148,121 @@
 				<div class="row p-2" >
 			 
 			  <div class="col-md-12">
-			  <table class="table rounded-corners" style="border-radius: 10px !important;font-size:10pt;">
+			   <table class="table rounded-corners" style="border-radius: 10px !important;font-size:10pt;">
                   <thead>
-				  @if(!empty($activityPrices))
-					  @foreach($activityPrices as $kk => $ap)
+				 
+				  @if(!empty($variantData))
+					 
+					  @foreach($variantData['activityVariants'] as $kk => $ap)
 				  @if($kk == 0)
                   <tr>
-					<th>Tour Option</th>
-                    <th id="top"  colspan="2">Transfer Option</th>
-					<th>Tour Date</th>
-					<th>Adult</th>
-                    <th>Child<br/><small>({{$ap->chield_start_age}}-{{$ap->chield_end_age}} Yrs)</small></th>
-                    <th>Infant<br/><small>(Below {{$ap->chield_start_age}} Yrs)</small></th>
-					<th>Ticket Only</th>
-					<th>SIC Transfer</th>
-					<th>PVT Transfer</th>
-					<th>Net Disc</th>
-					<th>Total Amount</th>
+					<th valign="middle">Tour Option</th>
+                    <th id="top" valign="middle"  colspan="2">Transfer Option</th>
+					<th valign="middle">Tour Date</th>
+					<th valign="middle">Adult</th>
+                    <th valign="middle">Child<br/><small>({{$ap->prices->child_start_age}}-{{$ap->prices->child_end_age}} Yrs)</small></th>
+                    <th valign="middle">Infant<br/><small>(Below {{$ap->prices->child_start_age}} Yrs)</small></th>
+					<th valign="middle">Total Amount</th>
                   </tr>
+				  </thead>
 				  @endif
-				  
-				  @php
-				  $markup = SiteHelpers::getAgentMarkup($voucher->agent_id,$ap->activity_id,$ap->variant_code);
-				  $actZone = SiteHelpers::getZone($activity->zones,$activity->sic_TFRS);
-				 
+				  <tbody>
+				 @php
+				  $actZone = SiteHelpers::getZone($ap->variant->zones,$ap->variant->sic_TFRS);
+				 $tourDates = SiteHelpers::getDateList($voucher->travel_from_date,$voucher->travel_to_date,$ap->variant->black_out,$ap->variant->sold_out);
 				  @endphp
 				   <tr>
-                    <td><input type="checkbox" name="activity_select[{{ $ap->u_code }}]" id="activity_select{{$kk}}" value="{{ $aid }}" class="actcsk" data-inputnumber="{{$kk}}" /> <strong>{{$ap->variant_name}}</strong>
-					<input type="hidden"  name="variant_unique_code[{{ $ap->u_code }}]" id="variant_unique_code{{$kk}}" value="{{ $ap->u_code }}" data-inputnumber="{{$kk}}" /> 
-					<input type="hidden"  name="variant_name[{{ $ap->u_code }}]" id="variant_name{{$kk}}" value="{{ $ap->variant_name }}" data-inputnumber="{{$kk}}" /> 
-					<input type="hidden"  name="variant_code[{{ $ap->u_code }}]" id="variant_code{{$kk}}" value="{{ $ap->variant_code }}" data-inputnumber="{{$kk}}" /> 
+                    <td>
+					
+					<input type="hidden"  name="activity_variant_id[{{$ap->ucode}}]" id="activity_variant_id{{$kk}}" value="{{$ap->id}}" data-inputnumber="{{$kk}}" /> 
+					
+					<input type="checkbox"  name="activity_select[{{$ap->ucode}}]" id="activity_select{{$kk}}" value="{{ $aid }}" @if($kk == '0') checked @endif class="actcsk" data-inputnumber="{{$kk}}" /> <strong>{{$ap->variant->title}} </strong>
 					</td>
-					<td> <select name="transfer_option[{{ $ap->u_code }}]" id="transfer_option{{$kk}}" class="form-control t_option" data-inputnumber="{{$kk}}" disabled="disabled">
+					<td> <select name="transfer_option[{{$ap->ucode}}]" id="transfer_option{{$kk}}" class="form-control priceChange" data-inputnumber="{{$kk}}" @if($kk > '0') disabled="disabled" @endif >
+						@if($kk > '0')
 						<option value="">--Select--</option>
-						@if($activity->entry_type=='Ticket Only')
-						<option value="Ticket Only"  @php if($prev_vals['tt'] == 'Ticket Only') echo "selected='selected'"; @endphp data-id="1">Ticket Only</option>
 						@endif
-						@if($activity->sic_TFRS==1)
-						<option value="Shared Transfer" @php if($prev_vals['tt'] == 'Shared Transfer') echo "selected='selected'"; @endphp data-id="2">Shared Transfer</option>
+						@if(($ap->activity->entry_type=='Ticket Only') && ($ap->prices->adult_rate_without_vat > 0))
+						<option value="Ticket Only" data-id="1">Ticket Only</option>
 						@endif
-						@if($activity->pvt_TFRS==1)
-						<option value="Pvt Transfer" @php if($prev_vals['tt'] == 'Pvt Transfer') echo "selected='selected'"; @endphp data-id="3">Pvt Transfer</option>
+						@if($ap->variant->sic_TFRS==1)
+						<option value="Shared Transfer" data-id="2">Shared Transfer</option>
+						@endif
+						@if($ap->variant->pvt_TFRS==1)
+						<option value="Pvt Transfer" data-id="3" data-variant="{{$ap->variant_id}}" >Pvt Transfer</option>
 						@endif
 						</select>
-						<input type="hidden" id="pvt_traf_val{{$kk}}" value="0"  name="pvt_traf_val[{{ $ap->u_code }}]"    />
+						<input type="hidden" id="pvt_traf_val{{$kk}}" value="0"  name="pvt_traf_val[{{$ap->ucode}}]"    />
 						</td>
 						<td> 
-						<div style="display:none;border:none" id="transfer_zone_td{{$kk}}">
-						@if($activity->sic_TFRS==1)
+						<div  style="display:none;border:none;" id="transfer_zone_td{{$kk}}">
+						@if($ap->variant->sic_TFRS==1)
 						@if(!empty($actZone))
-						<select name="transfer_zone[{{ $ap->u_code }}]" id="transfer_zone{{$kk}}" class="form-control zoneselect"  data-inputnumber="{{$kk}}"  >
+						<select name="transfer_zone[{{$ap->ucode}}]" id="transfer_zone{{$kk}}" class="form-control priceChange"  data-inputnumber="{{$kk}}">
 						
 						
 						@foreach($actZone as $z)
 						<option value="{{$z['zone_id']}}" data-zonevalue="{{$z['zoneValue']}}" data-zoneptime="{{$z['pickup_time']}}">{{$z['zone']}}</option>
 						@endforeach
 						@else
-							<input type="hidden" id="transfer_zone{{$kk}}" value=""  name="transfer_zone[{{ $ap->u_code }}]"    />
+							<input type="hidden" id="transfer_zone{{$kk}}" value=""  name="transfer_zone[{{$ap->ucode}}]"    />
 						@endif
 						</select>
 						@else
-							<input type="hidden" id="transfer_zone{{$kk}}" value=""  name="transfer_zone[{{ $ap->u_code }}]"    />
+							<input type="hidden" id="transfer_zone{{$kk}}" value=""  name="transfer_zone[{{$ap->ucode}}]"    />
 						@endif
 						
-						<input type="hidden" id="zonevalprice{{$kk}}" value="0"  name="zonevalprice[{{ $ap->u_code }}]"    />
 						</div> 
-					</td>
-							<input type="text" style="display:none"  id="pickup_location{{$kk}}" value=""  name="pickup_location[{{ $ap->u_code }}]" placeholder="Pickup Location" class="form-control "   />
+						</td>
+						
 					<td>
-					<input type="text"id="tour_date{{$kk}}" value=" {{ $prev_vals['d'] ? date('d-m-Y',strtotime($prev_vals['d'])): date('d-m-Y',strtotime($voucher->travel_from_date))}}" name="tour_date[{{ $ap->u_code }}]" required disabled="disabled"  placeholder="Tour Date" class="form-control tour_datepicker"   />
+					<select name="tour_date[{{$ap->ucode}}]" id="tour_date{{$kk}}"  class="form-control priceChange" data-inputnumber="{{$kk}}"  >
+						
+						<option value="">--Select--</option>
+						@foreach($tourDates as $tourDate)
+						<option value="{{$tourDate}}" >{{$tourDate}}</option>
+						@endforeach
+						</select>
+						
 					
 					</td>
-					<td><select name="adult[{{ $ap->u_code }}]" id="adult{{$kk}}" class="form-control priceChange" required data-inputnumber="{{$kk}}" disabled="disabled">
+					<td><select name="adult[{{$ap->ucode}}]" id="adult{{$kk}}" class="form-control priceChange" required data-inputnumber="{{$kk}}" @if($kk > '0') disabled="disabled" @endif>
+					@if($kk > '0')
 						<option value="">0</option>
-						@for($a=$ap->adult_min_no_allowed; $a<=$ap->adult_max_no_allowed; $a++)
-						<option value="{{$a}}" @if($voucher->adults==$a && $voucher->adults > 0) selected="selected" @endif >{{$a}}</option>
-						@endfor
-						</select></td>
-                    <td><select name="child[{{ $ap->u_code }}]" id="child{{$kk}}" class="form-control priceChange" data-inputnumber="{{$kk}}" disabled="disabled">
-						@for($child=$ap->chield_min_no_allowed; $child<=$ap->chield_max_no_allowed; $child++)
-						<option value="{{$child}}" @if($voucher->childs==$child && $voucher->childs > 0) selected="selected" @endif >{{$child}}</option>
-						@endfor
-						</select></td>
-                    <td><select name="infant[{{ $ap->u_code }}]" id="infant{{$kk}}" class="form-control priceChange" data-inputnumber="{{$kk}}" disabled="disabled">
-						@for($inf=$ap->infant_min_no_allowed; $inf<=$ap->infant_max_no_allowed; $inf++)
-						<option value="{{$inf}}"  @if($voucher->infants==$inf && $voucher->infants > 0) selected="selected" @endif  >{{$inf}}</option>
-						@endfor
-						</select></td>
-						<td>
-						{{$markup['ticket_only']}}%
-						<input type="hidden" value="{{$markup['ticket_only']}}" id="mpt{{$kk}}"  name="mpt[{{ $ap->u_code }}]"    />
-						</td>
-						<td>
-						{{$markup['sic_transfer']}}%
-						<input type="hidden" value="{{$markup['sic_transfer']}}" id="mpst{{$kk}}"  name="mpst[{{ $ap->u_code }}]"    />
-						</td>
-						<td>
-						{{$markup['pvt_transfer']}}%
-						<input type="hidden" value="{{$markup['pvt_transfer']}}" id="mppt{{$kk}}"  name="mppt[{{ $ap->u_code }}]"    />
-						</td>
-						<td>
-						<input type="text" id="discount{{$kk}}" value="0"  name="discount[{{ $ap->u_code }}]" disabled="disabled" data-inputnumber="{{$kk}}" class="form-control onlynumbrf priceChangedis"    />
-						</td>
-						<td>
-						@php
-						$priceAd = ($ap->adult_rate_with_vat*$ap->adult_min_no_allowed);
-						$mar = (($priceAd * $markup['ticket_only'])/100);
-						$price = ($priceAd + ($ap->chield_rate_with_vat*$ap->chield_min_no_allowed) + ($ap->infant_rate_with_vat*$ap->infant_min_no_allowed));
-						
-						$price +=$mar;
-						if($activity->vat > 0){
-						$vat = (($activity->vat * $price)/100);
-						$price +=$vat;
-						}
-						
-						@endphp
-						@if($voucher->vat_invoice == '1')
-						<input type="hidden" value="{{$ap->adult_rate_without_vat}}" id="adultPrice{{$kk}}"  name="adultPrice[{{ $ap->u_code }}]"    />
-						
-						<input type="hidden" value="{{$ap->chield_rate_without_vat}}" id="childPrice{{$kk}}"  name="childPrice[{{ $ap->u_code }}]"    />
-						<input type="hidden" value="{{$ap->infant_rate_without_vat}}" id="infPrice{{$kk}}"  name="infPrice[{{ $ap->u_code }}]"    />
-
-						@else 
-
-						<input type="hidden" value="{{$ap->adult_rate_with_vat}}" id="adultPrice{{$kk}}"  name="adultPrice[{{ $ap->u_code }}]"    />
-						
-						<input type="hidden" value="{{$ap->chield_rate_with_vat}}" id="childPrice{{$kk}}"  name="childPrice[{{ $ap->u_code }}]"    />
-						<input type="hidden" value="{{$ap->infant_rate_with_vat}}" id="infPrice{{$kk}}"  name="infPrice[{{ $ap->u_code }}]"    />
 						@endif
-						<span id="price{{$kk}}" style="font-weight:bold">0</span>
-						<input type="hidden" id="totalprice{{$kk}}" value="0"  name="totalprice[{{ $ap->u_code }}]"    />
 						
-					</td>
+						@for($a=$ap->prices->adult_min_no_allowed; $a<=$ap->prices->adult_max_no_allowed; $a++)
+						@if($ap->prices->adult_min_no_allowed > 0)
+						<option value="{{$a}}" @if($voucher->adults==$a && $voucher->adults > 0) selected="selected" @endif>{{$a}}</option>
+						@endif
+						@endfor
+						</select></td>
+                    <td><select name="child[{{$ap->ucode}}]" id="child{{$kk}}" class="form-control priceChange" data-inputnumber="{{$kk}}" @if($kk > '0') disabled="disabled" @endif>
+						@for($child=$ap->prices->child_min_no_allowed; $child<=$ap->prices->child_max_no_allowed; $child++)
+						<option value="{{$child}}" @if($voucher->childs==$child && $voucher->childs > 0) selected="selected" @endif>{{$child}}</option>
+						@endfor
+						</select></td>
+                    <td><select name="infant[{{$ap->ucode}}]" id="infant{{$kk}}" class="form-control priceChange" data-inputnumber="{{$kk}}" @if($kk > '0') disabled="disabled" @endif>
+						@for($inf=$ap->prices->infant_min_no_allowed; $inf<=$ap->prices->infant_max_no_allowed; $inf++)
+						<option value="{{$inf}}" @if($voucher->infants==$inf && $voucher->infants > 0) selected="selected" @endif>{{$inf}}</option>
+						@endfor
+						</select>
+						
+						</td>
+						
+					
+						<input type="hidden" id="discount{{$kk}}" style="width: 50px;" value="0"  name="discount[{{$ap->ucode}}]" @if($kk > '0') disabled="disabled" @endif data-inputnumber="{{$kk}}" class="form-control onlynumbrf priceChangedis"    />
+						
+						<td class="text-center" >
+						
+						<span id="price{{$kk}}" style="font-weight:bold">0</span>
+						<input type="hidden" id="totalprice{{$kk}}" value="0"  name="totalprice[{{$ap->ucode}}]"    />
+						</td>
                   </tr>
 				  @endforeach
 				 @endif
-				 </table>
+					</tbody>
+				  </table>
               </div>
 			 </div>	
 			 </div>	
@@ -305,21 +279,16 @@
 			  <hr class="col-md-12 p-30" id="inclusion">
 			   <div class="form-group col-md-12" >
 			   
-				<h4>Inclusion</h4>
-				{!! $activity->inclusion !!}
+				<h4>Description</h4>
+				{!! $activity->description !!}
               </div>
 			  <hr class="col-md-12 p-30" id="booking">
 			   <div class="form-group col-md-12">
 			   
-			   <h4>Booking Policy</h4>
-				{!! $activity->booking_policy !!}
+			   <h4>Notes</h4>
+				{!! $activity->notes !!}
               </div>
-			  <hr class="col-md-12 p-30" id="cancellation">
-			   <div class="form-group col-md-12" >
-			   
-			   <h4>Cancellation Policy</h4>
-				{!! $activity->cancellation_policy !!}
-              </div>
+			  
               </div>
 			 
 			  </div>
@@ -348,18 +317,15 @@
     <!-- /.content -->
 @endsection
 
-@php
-$dates = SiteHelpers::getDateListBoth($voucher->travel_from_date,$voucher->travel_to_date,$activity->black_sold_out);
-$disabledDay = SiteHelpers::getNovableActivityDays($activity->availability);
-@endphp
+
 
 @section('scripts')
  <script>
          $(function() {
           
-            var disabledDates = "{{$dates['disabledDates']}}";
-            var availableDates = "{{$dates['availableDates']}}";
-			 var disabledDay = "{{$disabledDay}}";
+            var disabledDates = "";
+            var availableDates = "";
+			 var disabledDay = "";
 
             
             $(".tour_datepicker").datepicker({
@@ -393,258 +359,133 @@ $disabledDay = SiteHelpers::getNovableActivityDays($activity->availability);
     </script>
  <script type="text/javascript">
  $(document).ready(function() {
-	
+	 $('body #activity_select0').prop('checked', true); // Checks it
+	 $("body #tour_date0").prop('required',true);
 
-$(document).on('change', '.priceChange', function(evt) {
-	let inputnumber = $(this).data('inputnumber');
-	var activity_id = $("#activity_id").val();
-	var is_vat_invoice = $("body  #vat_invoice").val();
-	if(is_vat_invoice == 1){
-		var activity_vat = $("#activity_vat").val();
-	} else {
-		var activity_vat = 0;
-	}
+ $(document).on('change', '.priceChange', function(evt) {
+  const inputnumber = $(this).data('inputnumber');
+  const activityVariantId = $("body #activity_variant_id" + inputnumber).val();
+  const adult = parseInt($("body #adult" + inputnumber).val());
+  const child = parseInt($("body #child" + inputnumber).val());
+  const infant = parseInt($("body #infant" + inputnumber).val());
+  const discount = parseFloat($("body #discount" + inputnumber).val());
+  const tourDate = $("body #tour_date" + inputnumber).val();
+  const transferOption = $("body #transfer_option" + inputnumber).find(':selected').data("id");
+  const transferOptionName = $("body #transfer_option" + inputnumber).find(':selected').val();
+  const variantId = $("body #transfer_option" + inputnumber).find(':selected').data("variant");
+  let zonevalue = 0;
+  const agentId = "{{$voucher->agent_id}}";
+  const voucherId = "{{$voucher->id}}";
+  let grandTotal = 0;
 
-	
-	let adult = parseInt($("body #adult"+inputnumber).val());
-	let child = parseInt($("body #child"+inputnumber).val());
-	let infant = parseInt($("body #infant"+inputnumber).val());
-	let discount = parseFloat($("body #discount"+inputnumber).val());
-	//alert(discount);
-	let mpt = parseFloat($("body #mpt"+inputnumber).val());
-	let mpst = parseFloat($("body #mpst"+inputnumber).val());
-	let mppt = parseFloat($("body #mppt"+inputnumber).val());
-	
-	
-	let adultPrice = $("body #adultPrice"+inputnumber).val();
-	let childPrice = $("body #childPrice"+inputnumber).val();
-	let infPrice = $("body #infPrice"+inputnumber).val();
-	  var ad_price = (adult*adultPrice) ;
-   var chd_price = (child*childPrice) ;
-   var inf_price = (child*infPrice) ;
-   var ad_ch_TotalPrice = ad_price + chd_price + inf_price;
-   
-	 var ticket_only_markupamt = mpt*adult;
-   var sic_transfer_markupamt =  mpst*child;
-   var pvt_transfer_markupamt =  mpst*infant;
-   var totalMarkup =  ticket_only_markupamt+sic_transfer_markupamt+pvt_transfer_markupamt;
-	
-	let t_option_val = $("body #transfer_option"+inputnumber).find(':selected').data("id");
-	//$("body #pickup_location"+inputnumber).val('');
-	let grandTotal = 0;
-	let grandTotalAfterDis = 0;
-	if(t_option_val == 3)
-	{
-		var totaladult = parseInt(adult + child);
-	getPVTtransfer(activity_id,adult,child,inputnumber);
-	$("#loader-overlay").show();	
-	waitForInputValue(inputnumber, function(pvt_transfer_price) {
-		var totalPrice = parseFloat(ad_ch_TotalPrice + totalMarkup  + pvt_transfer_price);
-		
-		grandTotal = ( (totalPrice - discount));
-		let vatPrice = parseFloat(((activity_vat/100) * grandTotal));
-		grandTotalAfterDis = parseFloat(grandTotal+vatPrice);
-			 
-		if(isNaN(grandTotalAfterDis))
-		{
-		$("body #totalprice"+inputnumber).val(0);
-		$("body #price"+inputnumber).text(0);
-		}
-		else
-		{
-			if(grandTotalAfterDis > 0)
-			{
-			$("body #totalprice"+inputnumber).val(grandTotalAfterDis.toFixed(2));
-			$("body #price"+inputnumber).text("AED "+grandTotalAfterDis.toFixed(2));
-			}
-			else
-			{
-				$("body #totalprice"+inputnumber).val(0);
-				$("body #price"+inputnumber).text(0);
-			}
-		}
-		$("#loader-overlay").hide();
-		});
-	}
-	else
-	{
-		if(t_option_val == 2)
-		{
-			let zonevalue = parseFloat($("#transfer_zone"+inputnumber).find(':selected').data("zonevalue"));
-			let zoneptime = $("#transfer_zone"+inputnumber).find(':selected').data("zoneptime");
-			
-			//$("body #pickup_location"+inputnumber).val(zoneptime);
-			var totaladult = parseInt(adult + child);
-			let zonevalueTotal = (totaladult * zonevalue);
-			$("#zonevalprice"+inputnumber).val(zonevalueTotal);
-			//var sic_transfer_markupamt = ((zonevalueTotal *  mpst)/100);
-			var sic_transfer_markupamt = mpst;
-			var totalPrice = parseFloat(ad_ch_TotalPrice + totalMarkup  + zonevalueTotal);
-			
-			grandTotal = ( (totalPrice - discount));
-			 let vatPrice = parseFloat(((activity_vat/100) * grandTotal));
-			 grandTotalAfterDis = parseFloat(vatPrice + grandTotal);
-		}
-		else
-		{
-			var totalPrice = parseFloat(ad_ch_TotalPrice + totalMarkup);
-			
-			 grandTotal = ( (totalPrice - discount));
-			let vatPrice = parseFloat(((activity_vat/100) * grandTotal));
-			 grandTotalAfterDis = parseFloat(vatPrice + grandTotal);
-			
-		}
-		
-		if(isNaN(grandTotalAfterDis))
-		{
-		$("body #totalprice"+inputnumber).val(0);
-		$("body #price"+inputnumber).text(0);
-		}
-		else
-		{
-		if(grandTotalAfterDis > 0)
-			{
-			$("body #totalprice"+inputnumber).val(grandTotalAfterDis.toFixed(2));
-			$("body #price"+inputnumber).text("AED "+grandTotalAfterDis.toFixed(2));
-			}
-			else
-			{
-				$("body #totalprice"+inputnumber).val(0);
-				$("body #price"+inputnumber).text(0);
-			}
-		}
-	}
-	
-	
-	
-});
-$(document).on('blur','.priceChangedis',function(){
-	let inputnumber = $(this).data('inputnumber');
-	let inputvale = parseFloat($(this).val());
-	if(inputvale == null || isNaN(inputvale))
-	{
-		inputvale = 0;
-		$(this).val(0);
-	}
-  $("#adult"+inputnumber).trigger("change");
-});
-$(document).on('change', '.actcsk', function(evt) {
-	let inputnumber = $(this).data('inputnumber');
-	if ($(this).is(':checked')) {
-      $("body #transfer_option"+inputnumber).prop('required',true);
-	  $("body #tour_date"+inputnumber).prop('required',true);
-	  
-	  $("body #transfer_option"+inputnumber).prop('disabled',false);
-	  $("body #tour_date"+inputnumber).prop('disabled',false);
-	  $("body #adult"+inputnumber).prop('disabled',false);
-	  $("body #child"+inputnumber).prop('disabled',false);
-	  $("body #infant"+inputnumber).prop('disabled',false);
-	  $("body #discount"+inputnumber).prop('disabled',false);
-    } else {
-      $("body #transfer_option"+inputnumber).prop('required',false);
-	  $("body #tour_date"+inputnumber).prop('required',false);
-	  
-	  $("body #transfer_option"+inputnumber).prop('disabled',true);
-	  $("body #tour_date"+inputnumber).prop('disabled',true);
-	  $("body #adult"+inputnumber).prop('disabled',true);
-	  $("body #child"+inputnumber).prop('disabled',true);
-	  $("body #infant"+inputnumber).prop('disabled',true);
-	  $("body #discount"+inputnumber).prop('disabled',true);
-    }
-	$("#adult"+inputnumber).trigger("change");
-});
+  const transferZoneTd = $("body #transfer_zone_td" + inputnumber);
+  const colTd = $("body .coltd");
+  const transferZone = $("body #transfer_zone" + inputnumber);
+  const loaderOverlay = $("body #loader-overlay");
 
-$(document).on('change', '.t_option', function(evt) {
-	//alert("Asas");
-	//alert("Asas");
-	let inputnumber = $(this).data('inputnumber');
-	let t_option_val = $(this).find(':selected').data("id");
-	//$("#top").removeAttr("colspan");
-	$("#transfer_zone_td"+inputnumber).css("display","none");
-	$("#pickup_location_td"+inputnumber).css("display","none");
-	$("body #transfer_zone"+inputnumber).prop('required',false);
-	$("#zonevalprice"+inputnumber).val(0);
-	$('#transfer_zone'+inputnumber).prop('selectedIndex',0);
-	$("#pvt_traf_val"+inputnumber).val(0);
-	$("#adult"+inputnumber).trigger("change");
-	if(t_option_val == 2){
-		//$("#top").attr("colspan",2);
-		$("#transfer_zone_td"+inputnumber).css("display","block");
-		//$("#pickup_location_td"+inputnumber).css("display","block");
-		$("body #transfer_zone"+inputnumber).prop('required',true);
-	} else if(t_option_val == 3){
-		//$("#top").attr("colspan",2);
-		//$("#pickup_location_td"+inputnumber).css("display","block");
-		var activity_id = $("#activity_id").val();
-		let adult = parseInt($("body #adult"+inputnumber).find(':selected').val());
-		let child = parseInt($("body #child"+inputnumber).find(':selected').val());
-		var totaladult = parseInt(adult + child);
-		//alert(totaladult);
-		let mppt = parseFloat($("body #mppt"+inputnumber).val());
-		getPVTtransfer(activity_id,totaladult,mppt,inputnumber);
-		$("#adult"+inputnumber).trigger("change");
-	}
-});
+  transferZoneTd.css("display", "none");
+  colTd.css("display", "none");
+  transferZone.prop('required', false);
 
-$(document).on('change', '.zoneselect', function(evt) {
-	let inputnumber = $(this).data('inputnumber');
-	let zonevalue = parseFloat($(this).find(':selected').data("zonevalue"));
-	//$("#top").attr("colspan",2);
-	let adult = parseInt($("body #adult"+inputnumber).find(':selected').val());
-		let child = parseInt($("body #child"+inputnumber).find(':selected').val());
-		var totaladult = parseInt(adult + child);
-		let zonevalueTotal = totaladult * zonevalue;
-		$("#zonevalprice"+inputnumber).val(zonevalueTotal);
-		$("#adult"+inputnumber).trigger("change");
-});
+  if (transferOption == 2) {
+    transferZoneTd.css("display", "block");
+    colTd.css("display", "block");
+    transferZone.prop('required', true);
+    zonevalue = parseFloat(transferZone.find(':selected').data("zonevalue"));
+  } else if (transferOption == 3) {
+    colTd.css("display", "block");
+  }
 
-function getPVTtransfer(acvt_id,adult,child,inputnumber)
-{
-		$.ajaxSetup({
+  loaderOverlay.show();
+
+  const argsArray = {
+    transfer_option: transferOptionName,
+    activity_variant_id: activityVariantId,
+    agent_id: agentId,
+    voucherId: voucherId,
+    adult: adult,
+    infant: infant,
+    child: child,
+    discount: discount,
+    tourDate: tourDate,
+    zonevalue: zonevalue
+  };
+
+  getPrice(argsArray)
+    .then(function(price) {
+      $("body #price" + inputnumber).html(price.variantData.totalprice);
+	   $("body #totalprice" + inputnumber).val(price.variantData.totalprice);
+    })
+    .catch(function(error) {
+      console.error('Error:', error);
+    })
+    .finally(function() {
+      loaderOverlay.hide();
+    });
+});
+ 
+ 
+ $(document).on('change', '.actcsk', function(evt) {
+   let inputnumber = $(this).data('inputnumber');
+   if ($(this).is(':checked')) {
+       $("body #transfer_option"+inputnumber).prop('required',true);
+		$("body #tour_date"+inputnumber).prop('required',true);
+     
+     $("body #transfer_option"+inputnumber).prop('disabled',false);
+     $("body #tour_date"+inputnumber).prop('disabled',false);
+     $("body #adult"+inputnumber).prop('disabled',false);
+     $("body #child"+inputnumber).prop('disabled',false);
+     $("body #infant"+inputnumber).prop('disabled',false);
+     $("body #discount"+inputnumber).prop('disabled',false);
+	 $("body #adult"+inputnumber).trigger("change");
+     } else {
+       $("body #transfer_option"+inputnumber).prop('required',false);
+     $("body #tour_date"+inputnumber).prop('required',false);
+     
+     $("body #transfer_option"+inputnumber).prop('disabled',true);
+     $("body #tour_date"+inputnumber).prop('disabled',true);
+     $("body #adult"+inputnumber).prop('disabled',true);
+     $("body #child"+inputnumber).prop('disabled',true);
+     $("body #infant"+inputnumber).prop('disabled',true);
+     $("body #discount"+inputnumber).prop('disabled',true);
+     $("body #discount"+inputnumber).prop('disabled',true);
+     $("body #price"+inputnumber).text(0);
+     }
+ });
+
+ 
+
+ 
+ $(document).on('keypress', '.onlynumbrf', function(evt) {
+   var charCode = (evt.which) ? evt.which : evt.keyCode
+   if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
+     return false;
+   return true;
+ 
+ });
+ });
+ 
+ function getPrice(argsArray) {
+  return new Promise(function(resolve, reject) {
+	  $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-		$.ajax({
-            url: "{{route('voucher.getPVTtransferAmount')}}",
-            type: 'POST',
-            dataType: "json",
-            data: {
-				acvt_id: acvt_id,
-				adult: adult,
-				child: child,
-				markupPer: 0,
-            },
-            success: function( data ) {
-               //console.log( data );
-			   $("#pvt_traf_val"+inputnumber).val(data);
-            }
-          });
+    $.ajax({
+      url: "{{ route('get-activity.variant.price') }}",
+      type: 'POST',
+      dataType: "json",
+      data: argsArray,
+      success: function(data) {
+        resolve(data);
+      },
+      error: function(error) {
+        reject(error);
+      }
+    });
+  });
 }
-
-function waitForInputValue(inputnumber, callback) {
-  var $input = $("body #pvt_traf_val" + inputnumber);
-  
-  var interval = setInterval(function() {
-    var pvt_transfer_price = parseFloat($input.val());
-    
-    if (!isNaN(pvt_transfer_price)) {
-      // Value is available, execute the callback function
-      clearInterval(interval); // Stop the interval
-      callback(pvt_transfer_price);
-    }
-  }, 2000); // Check every 100 milliseconds
-}
-});
-
-$(document).on('keypress', '.onlynumbrf', function(evt) {
-	var charCode = (evt.which) ? evt.which : evt.keyCode
-  if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
-    return false;
-  return true;
-
-});
-
   </script>  
 
 <script type="text/javascript">

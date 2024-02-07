@@ -29,7 +29,7 @@
 					<td>{{($record->voucher)?$record->voucher->code:''}}</td>
 					<td>{{($record->voucher->agent)?$record->voucher->agent->company_name:''}}</td>
                    
-					<td>{{($record->activity)?$record->activity->title:''}}</td>
+					<td>{{$record->activity_title}}</td>
 					<td>{{$record->variant_name}}</td>
 					<td>{{($record->voucher)?$record->voucher->guest_name:''}}</td>
 					<td>{{($record->voucher)?$record->voucher->guest_phone:''}}</td>

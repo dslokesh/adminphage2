@@ -412,7 +412,7 @@ $controller = preg_replace('/.*\\\/', '', $controller);
             $active = 'active';
           }
           @endphp     
-			  <li class="nav-item hide">
+			  <li class="nav-item ">
                 <a href="{{ route('vouchers.index') }}" class="nav-link {{$active}}">
                <i class="nav-icon fas fa-gift"></i>
               <p>
@@ -429,7 +429,7 @@ $controller = preg_replace('/.*\\\/', '', $controller);
             $active = 'active';
           }
           @endphp     
-		   <li class="nav-item hide" >
+		   <li class="nav-item " >
                 <a href="{{ route('invoicePriceStatusList') }}" class="nav-link {{$active}}">
                <i class="nav-icon fas fa-gift"></i>
               <p>
@@ -446,7 +446,7 @@ $controller = preg_replace('/.*\\\/', '', $controller);
             $active = 'active';
           }
           @endphp     
-			  <li class="nav-item hide">
+			  <li class="nav-item ">
                 <a href="{{ route('voucherReport') }}" class="nav-link {{$active}}">
                <i class="nav-icon fas fa-file"></i>
               <p>
@@ -463,7 +463,7 @@ $controller = preg_replace('/.*\\\/', '', $controller);
             $active = 'active';
           }
           @endphp     
-			  <li class="nav-item hide">
+			  <li class="nav-item">
                 <a href="{{ route('voucherTicketOnlyReport') }}" class="nav-link {{$active}}">
                <i class="nav-icon fas fa-file"></i>
               <p>
@@ -480,7 +480,7 @@ $controller = preg_replace('/.*\\\/', '', $controller);
             $active = 'active';
           }
           @endphp     
-			  <li class="nav-item hide">
+			  <li class="nav-item">
                 <a href="{{ route('voucherActivityReport') }}" class="nav-link {{$active}}">
                <i class="nav-icon fas fa-file"></i>
               <p>
@@ -497,7 +497,7 @@ $controller = preg_replace('/.*\\\/', '', $controller);
             $active = 'active';
           }
           @endphp     
-			  <li class="nav-item hide">
+			  <li class="nav-item ">
                 <a href="{{ route('ticketStockReport') }}" class="nav-link {{$active}}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Ticket Stock Report</p>
@@ -622,7 +622,7 @@ $controller = preg_replace('/.*\\\/', '', $controller);
             </ul>
           </li>
 		  
-		  <li class="nav-item has-treeview hide">
+		  <li class="nav-item has-treeview ">
             <a href="#" class="nav-link ">
               <i class="nav-icon fas fa-money-bill"></i>
               <p>
@@ -716,7 +716,7 @@ $controller = preg_replace('/.*\\\/', '', $controller);
             </ul>
           </li>
 		  @role(1)
-		   <li class="nav-item has-treeview">
+		   <li class="nav-item has-treeview hide">
             <a href="#" class="nav-link ">
               <i class="nav-icon fas fa-ticket-alt"></i>
               <p>

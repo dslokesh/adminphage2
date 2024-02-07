@@ -518,9 +518,7 @@
                 </div>
 				@endif
 				@if(($ap->transfer_option == 'Pvt Transfer') && ($ap->variant_pick_up_required == '1')  && ($ap->variant_pvt_TFRS == '1'))
-					@php
-					$pickup_time = SiteHelpers::getPickupTimeByZone($ap->variant_zones,$ap->transfer_zone);
-					@endphp
+					
                 <div class="row" style="margin-bottom: 5px;">
                   <div class="col-md-5 text-left">
                     <strong>Pickup Timing</strong>

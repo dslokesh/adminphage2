@@ -401,6 +401,7 @@ $(document).on('click', '.loadvari', function(evt) {
   getPrice(argsArray)
     .then(function(price) {
       $("body #price" + inputnumber).html(price.variantData.totalprice);
+	  $("body #totalprice" + inputnumber).val(price.variantData.totalprice);
     })
     .catch(function(error) {
       console.error('Error:', error);

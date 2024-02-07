@@ -53,12 +53,11 @@
 				  @if(!empty($voucherActivity))
 					  @foreach($voucherActivity as $kk => $ap)
 					@php
-					$activity = SiteHelpers::getActivity($ap->activity_id);
 					$priceT = $ap->totalprice + $ap->discountPrice;
 					@endphp
 					
 				   <tr>
-                    <td>{{$activity->title}} - {{$ap->variant_name}} - {{$ap->variant_code}}</td>
+                    <td>{{$ap->activity_title}} - {{$ap->variant_name}} - {{$ap->variant_code}}</td>
 					<td>{{$ap->transfer_option}}
 					@if($ap->transfer_option == 'Shared Transfer')
 						@php

@@ -7,7 +7,7 @@ use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Illuminate\Contracts\View\View;
 
-class VoucherActivityVouchredExport implements FromView
+class LogisticReportExport implements FromView
 {
     use Exportable;
 	
@@ -22,7 +22,7 @@ class VoucherActivityVouchredExport implements FromView
 	public function view(): View
     {
 		
-        return view('exports.voucher-activity-export-vouchred', [
+        return view('exports.logistic_report', [
             'records' => $this->records
         ]);
     }

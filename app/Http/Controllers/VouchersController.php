@@ -893,7 +893,7 @@ class VouchersController extends Controller
 
 	
 
-public function addActivityView($aid,$vid,$d="",$a="",$c="",$i="",$tt="")
+	public function addActivityView($aid,$vid,$d="",$a="",$c="",$i="",$tt="")
     {
 		$query = Activity::with('images')->where('id', $aid);
 		$activity = $query->where('status', 1)->first();
@@ -901,31 +901,11 @@ public function addActivityView($aid,$vid,$d="",$a="",$c="",$i="",$tt="")
 		$voucher = Voucher::find($vid);
 		$startDate = $voucher->travel_from_date;
 		$endDate = $voucher->travel_to_date;
-		
-
-		$activityPrices = ActivityPrices::where('activity_id', $aid)
-->where('rate_valid_from', '<=', $startDate)->where('rate_valid_to', '>=', $endDate)->get();
-
+		$variantData = PriceHelper::getActivityVariantListArrayByTourDate($startDate,$aid);
 		
 		$typeActivities = config("constants.typeActivities"); 
-		$is_edit = 0;
-		$prev_vals = [];
-
-		$prev_vals['d'] = "";
-		$prev_vals['a'] = "0";
-		$prev_vals['c'] = "0";
-		$prev_vals['i'] = "0";
-		$prev_vals['tt'] = "";
-		if($d != '')
-		{
-			$prev_vals['d'] = $d;
-			$prev_vals['a'] = $a;
-			$prev_vals['c'] = $c;
-			$prev_vals['i'] = $i;
-			$prev_vals['tt'] = $tt;
-			$is_edit = "1";
-		}
-       return view('vouchers.activities-add-details', compact('activity','aid','vid','voucher','typeActivities','activityPrices','prev_vals','is_edit'));
+		
+       return view('vouchers.activities-add-details', compact('activity','aid','vid','voucher','typeActivities','variantData'));
     }
 	
 	
@@ -990,7 +970,7 @@ public function addActivityView($aid,$vid,$d="",$a="",$c="",$i="",$tt="")
 				
 			if($priceCal['totalprice'] > 0){
 				if(!in_array($tour_dt,$getAvailableDateList)){
-				return redirect()->back()->with('error', 'This Tour is not available for Selected Date.');
+				return redirect()->back()->with('error', $variant->title.' Tour is not available for Selected Date.');
 				}
 			
 			
@@ -1099,8 +1079,7 @@ public function addActivityView($aid,$vid,$d="",$a="",$c="",$i="",$tt="")
 					 foreach($voucherActivity as $kkh => $ap)
 					 {
 						
-					$activity = SiteHelpers::getActivity($ap->activity_id);
-					$vat =  1 + $activity->vat;
+					$vat =  1 + $ap->activity_vat;
 					$vatPrice = $ap->totalprice/$vat;
 					$total = $ap->totalprice;
 				$dataArray['adult'] += $ap->adult;
@@ -1443,6 +1422,7 @@ public function addActivityView($aid,$vid,$d="",$a="",$c="",$i="",$tt="")
     {
 		$this->checkPermissionMethod('list.invoiceEditList');
 		$data = $request->all();
+		
 		$hotelPriceTotal = 0;
 		$grandTotal = 0;
 		$record = Voucher::where('id',$id)->first();
@@ -1460,7 +1440,9 @@ public function addActivityView($aid,$vid,$d="",$a="",$c="",$i="",$tt="")
 			$discountRecord = $data['discount'];
 			
 			foreach($voucherActivityRecord as $var){
-				$dis = $discountRecord[$var->id];
+				
+				$dis = (array_key_exists($var->id,$discountRecord))?$discountRecord[$var->id]:0;
+				$dis = (floatval($dis)) ? $dis : 0;
 				$tPrice = $var->totalprice + $var->discountPrice;
 				if($dis > $tPrice){
 					 return redirect()->back()->with('error', 'Discount not greater than total amount.');
@@ -1475,7 +1457,7 @@ public function addActivityView($aid,$vid,$d="",$a="",$c="",$i="",$tt="")
 				
 				$grandTotal +=$tP;
 			}
-			
+			//dd($aData);
 			$agentAmountBalance = $agent->agent_amount_balance;
 			
 			if($agentAmountBalance >= $grandTotal)

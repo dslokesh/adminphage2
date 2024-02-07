@@ -131,7 +131,7 @@ class SiteHelpers
 		
 		if($zoneId > 0){
 			$zoneArrayJson = json_decode($activity_zones);
-			if(count($zoneArrayJson) > 0 or !empty($zoneArrayJson)){
+			if(!empty($zoneArrayJson)){
 				foreach($zoneArrayJson as $k => $z){
 					if($zoneId == $z->zone){
 					$pickup_time =   (!empty($z->pickup_time))?$z->pickup_time:'';
@@ -150,6 +150,13 @@ class SiteHelpers
 		
 		$activity = Activity::where('status', 1)->where('id', $activity_id)->first();
 		return $activity;
+    }
+	
+	public static function getVariant($ucode)
+    {
+		
+		$variant = Variant::where('status', 1)->where('ucode', $ucode)->first();
+		return $variant;
     }
 	
 	public static function getActivityVariant($ucode)
@@ -621,127 +628,7 @@ class SiteHelpers
 		return $booking_window_text;
     }
 	
-	public static function getActivityPriceSaveInVoucherActivity($transfer_option,$activity_id,$agent_id,$voucher,$u_code,$adult,$child,$infent,$discount)
-    {
-		$totalPrice = 0;
-		$zonePrice = 0;
-		$transferPrice = 0;
-		$vatPrice = 0;
-		$adult_total_rate = 0;
-		$adultPrice = 0;
-		$childPrice = 0;
-		$infPrice = 0;
-		$pvtTrafValWithMarkup = 0;
-		$totalmember = $adult + $child;
-		$vat_invoice = $voucher->vat_invoice;
-		$startDate = $voucher->travel_from_date;
-		$endDate = $voucher->travel_to_date;
-		$user = auth()->user();
-		
-		$activity = Activity::where('id', $activity_id)->select('entry_type','sic_TFRS','pvt_TFRS','zones','transfer_plan','vat')->first();
-		$avat = 0;
-		if($activity->vat > 0){
-		$avat = $activity->vat;	
-		}
-		
-		$query = ActivityPrices::where('activity_id', $activity_id)->where('rate_valid_from', '<=', $startDate)->where('rate_valid_to', '>=', $endDate)->where('u_code', $u_code);
-		if($user->role_id == '3'){
-			$query->where('for_backend_only', '0');
-		}
-		if($vat_invoice == 1){
-			$ap = $query->select('adult_rate_without_vat', 'variant_code','chield_rate_without_vat','infant_rate_without_vat')
-    ->first();
-	if(isset($ap->variant_code)){
-	$adultPrice = $ap->adult_rate_without_vat;
-	$childPrice = $ap->chield_rate_without_vat;
-	$infPrice = $ap->infant_rate_without_vat;
-	}
 	
-	
-	} else {
-	$ap = $query->select('adult_rate_with_vat', 'variant_code','chield_rate_with_vat','infant_rate_with_vat')
-    ->first();
-	
-	if(isset($ap->adult_rate_with_vat)){
-	$adultPrice = $ap->adult_rate_with_vat ;
-	$childPrice = $ap->chield_rate_with_vat;
-	$infPrice = $ap->infant_rate_with_vat;
-	}
-	}
-	
-	$adultPriceTotal  = $adultPrice * $adult;
-	$childPriceTotal  = $childPrice * $child;
-	$infentPriceTotal  = $infPrice * $infent;
-	$adult_total_rate = $adultPriceTotal + $childPriceTotal + $infentPriceTotal;
-	$adult_total_rate = ($adult_total_rate > 0)?$adult_total_rate:0;
-		if(isset($ap->variant_code)){
-		$markup = self::getAgentMarkup($agent_id,$activity_id, $ap->variant_code);
-		}else{
-			$markup['ticket_only'] = 0;
-			$markup['sic_transfer'] = 0;
-			$markup['pvt_transfer'] = 0;
-			$markup['ticket_only_m'] = 1;
-			$markup['sic_transfer_m'] = 1;
-			$markup['pvt_transfer_m'] = 1;
-		}
-		
-		$adultPriceMarkupTotal = $markup['ticket_only'] * $adult; // ticket_only as adult
-		$childPriceMarkupTotal = $markup['sic_transfer'] * $child; // sic_transfer as child
-		$infentPriceMarkupTotal = $markup['pvt_transfer'] * $infent; // pvt_transfer as infent
-		$markupTotal = $adultPriceMarkupTotal + $childPriceMarkupTotal + $infentPriceMarkupTotal;
-		 
-			if($activity->sic_TFRS==1){
-				
-				 $actZone = self::getZone($activity->zones,$activity->sic_TFRS);
-				 if(!empty($actZone))
-				 {
-					  $zonePrice = $actZone[0]['zoneValue'] * $totalmember;
-				 }
-			}
-			if($activity->pvt_TFRS==1){
-					$td = TransferData::where('transfer_id', $activity->transfer_plan)->where('qty', $totalmember)->first();
-					if(!empty($td))
-					{
-					 $transferPrice = $td->price * $totalmember ;
-					}
-			}
-			
-			
-			$ticketPrice = $adultPriceTotal + $childPriceTotal  + $infentPriceTotal;
-			if($transfer_option == 'Ticket Only'){
-				$totalPrice = $ticketPrice;
-			} else {
-			if($transfer_option == 'Shared Transfer'){
-				$totalPrice =  $ticketPrice + $zonePrice;
-			}elseif($transfer_option == 'Pvt Transfer'){
-
-				  $totalPrice = $ticketPrice + $transferPrice;
-			}
-			}
-			
-		
-		$grandTotal = $totalPrice + $markupTotal;
-		if($vat_invoice == 1){
-		$vatPrice = (($avat/100) * $grandTotal);
-		}
-		
-		$total = round(($grandTotal+$vatPrice - $discount),2);
-		$data = [
-		'adultPrice' =>$adultPrice,
-		'childPrice' =>$childPrice,
-		'infPrice' =>$infPrice,
-		'totalprice' =>$total,
-		'activity_vat' =>$avat,
-		'pvt_traf_val_with_markup' =>$transferPrice,
-		'zonevalprice_without_markup' =>$zonePrice,
-		'markup_p_ticket_only' =>$markup['ticket_only'],
-		'markup_p_sic_transfer' =>$markup['sic_transfer'],
-		'markup_p_pvt_transfer' =>$markup['pvt_transfer'],
-		];
-		
-		return $data;
-		
-    }
 
 
 	public static function getActivitySupplierCost($activity_id,$agent_id,$voucher,$variant_code,$adult,$child,$infent,$discount)

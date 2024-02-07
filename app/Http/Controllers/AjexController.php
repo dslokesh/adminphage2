@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Country;
 use App\Models\State;
 use App\Models\City;
-use App\Models\ActivityPrices;
+use App\Models\ActivityVariant;
 use Illuminate\Http\Request;
 use DB;
 class AjexController extends Controller
@@ -35,7 +35,15 @@ class AjexController extends Controller
 	public function getVariantByActivitySelect(Request $request)
     {
 		$data = $request->all();
-        $records = ActivityPrices::select('variant_name','u_code','variant_code')->where('activity_id',$data['activity_id'])->get();
+		$activityVariants = ActivityVariant::with('variant', 'activity')->where('activity_id',$data['activity_id'])->get();
+		foreach($activityVariants as $activityVariant){
+			$records[] = [
+			'variant_name'=> $activityVariant->variant->title,
+			'u_code'=> $activityVariant->ucode,
+			'variant_code'=> $activityVariant->variant->ucode
+			];
+		}
+        //$records = ActivityPrices::select('variant_name','u_code','variant_code')->where('activity_id',$data['activity_id'])->get();
 		return response()->json($records, 200);
     }
 }

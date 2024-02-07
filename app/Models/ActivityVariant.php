@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ActivityVariant extends Model
 {
     protected $table = "activity_variants";
+	protected $fillable  = ['code','activity_id','variant_id','ucode'];
 	
 	public function activity()
     {

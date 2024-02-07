@@ -79,9 +79,11 @@
                   <tbody>
 				  
                   @foreach ($variants as $record)
-				  
+				  @php
+				  $varid = (!empty(old('variant_id')))?old('variant_id'):[];
+				  @endphp
                   <tr>
-                  <td><input type="radio" name="variant_id" value="{{ $record->id }}" {{ (old('variant_id') == $record->id) ? 'checked' : '' }} />
+                  <td><input type="checkbox" name="variant_id[]" value="{{ $record->id }}" {{ (in_array($record->id,$varid)) ? 'checked' : '' }} />
 </td>
                     <td>{{ $record->title}}</td>
 				
