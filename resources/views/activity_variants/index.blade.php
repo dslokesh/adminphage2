@@ -48,7 +48,21 @@
                     <th>Updated</th>
                     <th width="17%"></th>
                   </tr>
-				 
+				  <tr>
+                    <form id="filterForm" method="get" action="{{route('activity.variants')}}" >
+                    <th><input type="text" name="activity_name" value="{{request('activity_name')}}" class="form-control"  placeholder="Activity Name" /></th>
+					<th><input type="text" name="variant_name" value="{{request('variant_name')}}" class="form-control"  placeholder="Variant Name" /></th>
+                  <th><input type="text" name="code" value="{{request('code')}}" class="form-control"  placeholder="Code" /></th>
+					
+				  <th></th>
+					<th></th>
+                    
+                   
+                    <th><button class="btn btn-info btn-sm" type="submit">Filter</button>
+                    <a class="btn btn-default btn-sm" href="{{route('activity.variants')}}">Clear</a></th>
+                    
+                  </form>
+                  </tr>
                   </thead>
                   <tbody>
                   @foreach ($records as $record)

@@ -22,6 +22,21 @@ class ActivityVariantController extends Controller
         $data = $request->all();
         $perPage = config("constants.ADMIN_PAGE_LIMIT");
         $query = ActivityVariant::with(['activity','variant'])->where('id','!=','');
+		if (isset($data['activity_name']) && !empty($data['activity_name'])) {
+                $query->whereHas('activity', function ($q) use ($data) {
+				$q->where('title', 'like', '%' . $data['activity_name'] . '%');
+			});
+        }
+		if (isset($data['variant_name']) && !empty($data['variant_name'])) {
+                $query->whereHas('variant', function ($q) use ($data) {
+				$q->where('title', 'like', '%' . $data['variant_name'] . '%');
+			});
+        }
+		
+		if (isset($data['code']) && !empty($data['code'])) {
+            $query->where('code', 'like', '%' . $data['code'] . '%');
+        }
+		
         $records = $query->orderBy('created_at', 'DESC')->paginate($perPage);
 		//dd($records);
         return view('activity_variants.index', compact('records'));

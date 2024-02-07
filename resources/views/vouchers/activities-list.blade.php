@@ -384,7 +384,7 @@ $(document).on('click', '.loadvari', function(evt) {
   }
 
   loaderOverlay.show();
-
+	adultChildReq(adult,child,inputnumber);
   const argsArray = {
     transfer_option: transferOptionName,
     activity_variant_id: activityVariantId,
@@ -414,6 +414,9 @@ $(document).on('click', '.loadvari', function(evt) {
  
  $(document).on('change', '.actcsk', function(evt) {
    let inputnumber = $(this).data('inputnumber');
+    const adult = parseInt($("body #adult" + inputnumber).val());
+  const child = parseInt($("body #child" + inputnumber).val());
+   adultChildReq(adult,child,inputnumber);
    if ($(this).is(':checked')) {
        $("body #transfer_option"+inputnumber).prop('required',true);
 		$("body #tour_date"+inputnumber).prop('required',true);
@@ -468,5 +471,15 @@ $(document).on('click', '.loadvari', function(evt) {
     });
   });
 }
+
+function adultChildReq(a,c,inputnumber) {
+  var total = a+c;
+  if(total == 0){
+	  $("body #adult"+inputnumber).prop('required',true); 
+  } else {
+	  $("body #adult"+inputnumber).prop('required',false); 
+  }
+}
+
    </script> 
 @endsection

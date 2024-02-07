@@ -98,6 +98,12 @@
                               </i>
                               
                           </a>
+						    <a class="btn btn-info btn-sm" href="{{route('activity.variants',['activity_name'=>$record->title])}}">
+                              <i class="fas fa-eye">
+                              </i>
+                               Variants
+                          </a>
+						  
                           <form id="delete-form-{{$record->id}}" method="post" action="{{route('activities.destroy',$record->id)}}" style="display:none;">
                                 {{csrf_field()}}
                                 {{method_field('DELETE')}}

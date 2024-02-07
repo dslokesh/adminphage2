@@ -232,7 +232,7 @@
 						@endif
 						
 						@for($a=$ap->prices->adult_min_no_allowed; $a<=$ap->prices->adult_max_no_allowed; $a++)
-						@if($ap->prices->adult_min_no_allowed > 0)
+						@if($ap->prices->adult_min_no_allowed+$ap->prices->child_min_no_allowed > 0)
 						<option value="{{$a}}" @if($voucher->adults==$a && $voucher->adults > 0) selected="selected" @endif>{{$a}}</option>
 						@endif
 						@endfor
@@ -397,7 +397,7 @@
   }
 
   loaderOverlay.show();
-
+adultChildReq(adult,child,inputnumber);
   const argsArray = {
     transfer_option: transferOptionName,
     activity_variant_id: activityVariantId,
@@ -427,6 +427,9 @@
  
  $(document).on('change', '.actcsk', function(evt) {
    let inputnumber = $(this).data('inputnumber');
+    const adult = parseInt($("body #adult" + inputnumber).val());
+  const child = parseInt($("body #child" + inputnumber).val());
+   adultChildReq(adult,child,inputnumber);
    if ($(this).is(':checked')) {
        $("body #transfer_option"+inputnumber).prop('required',true);
 		$("body #tour_date"+inputnumber).prop('required',true);
@@ -485,6 +488,14 @@
       }
     });
   });
+}
+function adultChildReq(a,c,inputnumber) {
+  var total = a+c;
+  if(total == 0){
+	  $("body #adult"+inputnumber).prop('required',true); 
+  } else {
+	  $("body #adult"+inputnumber).prop('required',false); 
+  }
 }
   </script>  
 
