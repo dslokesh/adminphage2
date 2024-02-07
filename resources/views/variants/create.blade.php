@@ -287,34 +287,35 @@
                     <span class="text-danger">{{ $errors->first('description') }}</span>
                 @endif
               </div>
-			   <div class="form-group col-md-4">
-                <label for="inputName">Inclusion:</label>
-				
-                <textarea placeholder="Inclusion" id="inclusion" name="inclusion" cols="50" rows="5" id="inclusion" class="form-control box-size short-text-editor">{{ old('inclusion') }}</textarea>
-                @if ($errors->has('inclusion'))
-                    <span class="text-danger">{{ $errors->first('inclusion') }}</span>
-                @endif
-              </div>
-			   <div class="form-group col-md-4">
-                <label for="inputName">Important Information: </label>
-				
-                <textarea placeholder="Important Information" name="important_information" cols="50" rows="5" id="exclusion" class="form-control box-size short-text-editor2">{{ old('important_information') }}</textarea>
-                @if ($errors->has('important_information'))
-                    <span class="text-danger">{{ $errors->first('important_information') }}</span>
-                @endif
-              </div>
-			   <div class="form-group col-md-4">
+			  <div class="form-group col-md-12">
                 <label for="inputName">Booking Policy: </label>
 				
-                <textarea placeholder="Booking Policy" name="booking_policy" cols="50" rows="5" id="booking_policy" class="form-control box-size ">{{ old('booking_policy') }}</textarea>
+                <textarea placeholder="Booking Policy" name="booking_policy" cols="50" rows="5" id="booking_policy" class="form-control box-size text-editor-all">{{ old('booking_policy') }}</textarea>
                 @if ($errors->has('booking_policy'))
                     <span class="text-danger">{{ $errors->first('booking_policy') }}</span>
                 @endif
               </div>
+			   <div class="form-group col-md-6">
+                <label for="inputName">Inclusion:</label>
+				
+                <textarea placeholder="Inclusion" id="inclusion" name="inclusion" cols="50" rows="5" id="inclusion" class="form-control box-size text-editor-all">{{ old('inclusion') }}</textarea>
+                @if ($errors->has('inclusion'))
+                    <span class="text-danger">{{ $errors->first('inclusion') }}</span>
+                @endif
+              </div>
+			   <div class="form-group col-md-6">
+                <label for="inputName">Important Information: </label>
+				
+                <textarea placeholder="Important Information" name="important_information" cols="50" rows="5" id="exclusion" class="form-control box-size text-editor-all">{{ old('important_information') }}</textarea>
+                @if ($errors->has('important_information'))
+                    <span class="text-danger">{{ $errors->first('important_information') }}</span>
+                @endif
+              </div>
+			   
 			  <div class="form-group col-md-6">
                 <label for="inputName">Booking Cut off & Cancellation: </label>
 				
-                <textarea placeholder="Booking Cut off & Cancellation" name="booking_cut_off" cols="50" rows="5" id="booking_cut_off" class="form-control box-size short-text-editor3">{{ old('booking_cut_off') }}</textarea>
+                <textarea placeholder="Booking Cut off & Cancellation" name="booking_cut_off" cols="50" rows="5" id="booking_cut_off" class="form-control box-size text-editor-all">{{ old('booking_cut_off') }}</textarea>
                 @if ($errors->has('booking_cut_off'))
                     <span class="text-danger">{{ $errors->first('booking_cut_off') }}</span>
                 @endif
@@ -322,7 +323,7 @@
 			   <div class="form-group col-md-6">
                 <label for="inputName">Cancellation Policy: </label>
 				
-                <textarea placeholder="Cancellation Policy" name="cancellation_policy" cols="50" rows="5" id="cancellation_policy" class="form-control box-size short-text-editor3">{{ old('cancellation_policy') }}</textarea>
+                <textarea placeholder="Cancellation Policy" name="cancellation_policy" cols="50" rows="5" id="cancellation_policy" class="form-control box-size text-editor-all">{{ old('cancellation_policy') }}</textarea>
                 @if ($errors->has('cancellation_policy'))
                     <span class="text-danger">{{ $errors->first('cancellation_policy') }}</span>
                 @endif

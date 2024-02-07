@@ -9,6 +9,7 @@ use App\Models\ActivityPrices;
 use App\Models\AgentPriceMarkup;
 use Illuminate\Http\Request;
 use App\Models\VoucherActivity;
+use App\Models\Variant;
 use Illuminate\Support\Facades\Response;
 use App\Models\Ticket;
 use Illuminate\Support\Facades\Log;
@@ -57,7 +58,8 @@ class TicketsController extends Controller
 		$agetid = '';
 		$agetName = '';
 		$activities = Activity::where('status', 1)->orderBy('title', 'ASC')->get();
-        return view('tickets.index', compact('records','activities'));
+		$variants = Variant::where('status', 1)->orderBy('title', 'ASC')->get();
+        return view('tickets.index', compact('records','activities','variants'));
 
     }
 	
@@ -298,8 +300,9 @@ class TicketsController extends Controller
 	public function csvUploadForm()
     {
 		$this->checkPermissionMethod('list.ticket');
+		$variants = Variant::where('status', 1)->orderBy('title', 'ASC')->get();
 		$activities = Activity::where('status', 1)->orderBy('title', 'ASC')->get();
-		return view('tickets.csv-upload',  compact('activities'));
+		return view('tickets.csv-upload',  compact('activities','variants'));
     }
 	
 	public function csvUploadPost(Request $request)
@@ -307,7 +310,7 @@ class TicketsController extends Controller
 		$validator = Validator::make($request->all(), [
             'ticket_for' => 'required',
 			'type_of_ticket' => 'required',
-			'activity_id' => 'required',
+			//'activity_id' => 'required',
 			'activity_variant' => 'required',
 			'serial_number' => 'required',
 			'valid_from' => 'required',
@@ -327,7 +330,8 @@ class TicketsController extends Controller
             
 			$ticket_for = $request->input('ticket_for');
 			$type_of_ticket = $request->input('type_of_ticket');
-			$activity_id = $request->input('activity_id');
+			//$activity_id = $request->input('activity_id');
+			$activity_id = 0;
 			$activity_variant = $request->input('activity_variant');
 			$serial_number = $request->input('serial_number');
 			$valid_from = $request->input('valid_from');

@@ -58,9 +58,9 @@
                 @endif
 				</div>
 				 
-			  <div class="form-group col-md-6">
+			  <div class="form-group col-md-6 hide">
                 <label for="inputName">Activity: <span class="red">*</span></label>
-                <select name="activity_id" required id="activity_id" class="form-control">
+                <select name="activity_id"  id="activity_id" class="form-control">
 				<option value="">--select--</option>
 				@foreach($activities as $activity)
                     <option value="{{$activity->id}}" @if(old('activity_id') == $activity->id) {{'selected="selected"'}} @endif>{{$activity->title}}</option>
@@ -74,6 +74,9 @@
                 <label for="inputName">Activity Variant: <span class="red">*</span></label>
                 <select name="activity_variant" required id="activity_variant" class="form-control">
 				<option value="">--select--</option>
+				@foreach($variants as $variant)
+                    <option value="{{$variant->ucode}}" @if(old('activity_variant') == $variant->ucode) {{'selected="selected"'}} @endif>{{$variant->title}}</option>
+				@endforeach
 				</select>
 				 @if ($errors->has('activity_variant'))
                     <span class="text-danger">{{ $errors->first('activity_variant') }}</span>
@@ -86,14 +89,14 @@
                     <span class="text-danger">{{ $errors->first('serial_number') }}</span>
                 @endif
               </div>
-			    <div class="form-group col-md-3">
+			    <div class="form-group col-md-6">
                 <label for="inputName">Valid From: <span class="red">*</span></label>
                 <input type="text" id="valid_from"  autocomplete="off"name="valid_from" value="{{ old('valid_from') }}" class="form-control datepickerdmy"  placeholder="Valid From" />
                 @if ($errors->has('valid_from'))
                     <span class="text-danger">{{ $errors->first('valid_from') }}</span>
                 @endif
               </div>
-			    <div class="form-group col-md-3">
+			    <div class="form-group col-md-6">
                 <label for="inputName">Valid Till: <span class="red">*</span></label>
                 <input type="text" id="valid_till" autocomplete="off" name="valid_till" value="{{ old('valid_till') }}" class="form-control datepickerdmy"  placeholder="Name" />
                 @if ($errors->has('valid_till'))
@@ -154,7 +157,7 @@
 					 $('#activity_variant').html('<option value="">--select--</option>');
 					$.each(data, function (key, value) {
                             $("#activity_variant").append('<option value="' + value
-                                .u_code + '">' + value.variant_name + '</option>');
+                                .variant_code + '">' + value.variant_name + '</option>');
                         });
 					$('#activity_variant').val(oldactivity_variant).prop('selected', true);
 					$("#activity_variant").prop("disabled",false);

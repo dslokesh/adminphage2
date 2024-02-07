@@ -37,7 +37,7 @@ class AjexController extends Controller
 		$data = $request->all();
 		$activityVariants = ActivityVariant::with('variant', 'activity')->where('activity_id',$data['activity_id'])->get();
 		foreach($activityVariants as $activityVariant){
-			$records[] = [
+			$records[$activityVariant->variant->ucode] = [
 			'variant_name'=> $activityVariant->variant->title,
 			'u_code'=> $activityVariant->ucode,
 			'variant_code'=> $activityVariant->variant->ucode

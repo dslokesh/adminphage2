@@ -716,7 +716,7 @@ $controller = preg_replace('/.*\\\/', '', $controller);
             </ul>
           </li>
 		  @role(1)
-		   <li class="nav-item has-treeview hide">
+		   <li class="nav-item has-treeview ">
             <a href="#" class="nav-link ">
               <i class="nav-icon fas fa-ticket-alt"></i>
               <p>
