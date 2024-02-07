@@ -173,6 +173,13 @@ class SiteHelpers
 		return $activityVariantTotalCount;
     }
 	
+	public static function getActivityImageName($aid)
+    {
+		
+		$activity = Activity::select('image')->where('id', $aid)->first();
+		return (!empty($activity))?$activity->image:'';
+    }
+	
 	public static function getZoneName($zoneId)
     {
 				$zone = Zone::where('status', 1)->where('id', $zoneId)->first();

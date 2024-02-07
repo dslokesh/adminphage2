@@ -157,6 +157,7 @@
 					  @foreach($voucherActivity as $ap)
 				  @php
           $total += $ap->totalprice;
+		  $activityImg = SiteHelpers::getActivityImageName($ap->activity_id);
 					@endphp
             <div class="card">
 			
@@ -166,7 +167,7 @@
               <div class="row">
               <div class="col-10">
               <span class="cart-title font-size-21 text-dark">
-              {{$record->title}}
+              {{$ap->activity_title}}
               </span>
               </div>
               <div class="col-2  text-right">
@@ -192,7 +193,7 @@
              
                                   <div class="row" >
 				  <div class="col-md-3" style="padding: 5px 0px 5px 5px; ">
-              <img src="{{asset('uploads/activities/'.$record->image)}}" class="img-fluid" style="border-radius: 5px;" />
+              <img src="{{asset('uploads/activities/'.$activityImg)}}" class="img-fluid" style="border-radius: 5px;" />
             </div>
 			<div class="col-md-9">
               <ul class="list-unstyled" style="">
