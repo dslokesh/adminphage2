@@ -226,20 +226,21 @@
 						
 					
 					</td>
-					<td><select name="adult[{{$ap->ucode}}]" id="adult{{$kk}}" class="form-control priceChange" required data-inputnumber="{{$kk}}" @if($kk > '0') disabled="disabled" @endif>
-					@if($kk > '0')
+					<td><select name="adult[{{$ap->ucode}}]" id="adult{{$kk}}" class="form-control priceChange"  data-inputnumber="{{$kk}}" @if($kk > '0') disabled="disabled" @endif>
 						<option value="">0</option>
-						@endif
-						
 						@for($a=$ap->prices->adult_min_no_allowed; $a<=$ap->prices->adult_max_no_allowed; $a++)
 						@if($ap->prices->adult_min_no_allowed+$ap->prices->child_min_no_allowed > 0)
-						<option value="{{$a}}" @if($voucher->adults==$a && $voucher->adults > 0) selected="selected" @endif>{{$a}}</option>
+						<option value="{{$a}}" @if($voucher->adults==$a) selected="selected" @endif>{{$a}}</option>
 						@endif
 						@endfor
 						</select></td>
                     <td><select name="child[{{$ap->ucode}}]" id="child{{$kk}}" class="form-control priceChange" data-inputnumber="{{$kk}}" @if($kk > '0') disabled="disabled" @endif>
+						<option value="">0</option>
+						
 						@for($child=$ap->prices->child_min_no_allowed; $child<=$ap->prices->child_max_no_allowed; $child++)
-						<option value="{{$child}}" @if($voucher->childs==$child && $voucher->childs > 0) selected="selected" @endif>{{$child}}</option>
+							@if($child > 0)
+						<option value="{{$child}}" @if($voucher->childs==$child) selected="selected" @endif>{{$child}}</option>
+					@endif
 						@endfor
 						</select></td>
                     <td><select name="infant[{{$ap->ucode}}]" id="infant{{$kk}}" class="form-control priceChange" data-inputnumber="{{$kk}}" @if($kk > '0') disabled="disabled" @endif>
@@ -361,7 +362,7 @@
  $(document).ready(function() {
 	 $('body #activity_select0').prop('checked', true); // Checks it
 	 $("body #tour_date0").prop('required',true);
-
+adultChildReq(0,0,0);
  $(document).on('change', '.priceChange', function(evt) {
   const inputnumber = $(this).data('inputnumber');
   const activityVariantId = $("body #activity_variant_id" + inputnumber).val();
@@ -490,7 +491,10 @@ adultChildReq(adult,child,inputnumber);
   });
 }
 function adultChildReq(a,c,inputnumber) {
-  var total = a+c;
+  
+	a = (isNaN(a))?0:a;
+	c = (isNaN(c))?0:c;
+	var total = a+c;
   if(total == 0){
 	  $("body #adult"+inputnumber).prop('required',true); 
   } else {

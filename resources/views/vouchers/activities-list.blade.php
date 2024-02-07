@@ -347,7 +347,7 @@ $(document).on('click', '.loadvari', function(evt) {
     </script> 
 <script type="text/javascript">
   $(document).ready(function() {
-   
+   adultChildReq(0,0,0);
  
  $(document).on('change', '.priceChange', function(evt) {
   const inputnumber = $(this).data('inputnumber');
@@ -473,6 +473,8 @@ $(document).on('click', '.loadvari', function(evt) {
 }
 
 function adultChildReq(a,c,inputnumber) {
+	a = (isNaN(a))?0:a;
+	c = (isNaN(c))?0:c;
   var total = a+c;
   if(total == 0){
 	  $("body #adult"+inputnumber).prop('required',true); 

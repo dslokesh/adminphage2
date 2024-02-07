@@ -166,6 +166,13 @@ class SiteHelpers
 		return $activityVariant;
     }
 	
+	public static function getActivityVariantTotalCount($aid)
+    {
+		
+		$activityVariantTotalCount = ActivityVariant::where('activity_id', $aid)->count();
+		return $activityVariantTotalCount;
+    }
+	
 	public static function getZoneName($zoneId)
     {
 				$zone = Zone::where('status', 1)->where('id', $zoneId)->first();

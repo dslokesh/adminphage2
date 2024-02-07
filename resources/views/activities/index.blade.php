@@ -75,7 +75,9 @@
                   </thead>
                   <tbody>
                   @foreach ($records as $record)
-				  
+				  @php
+				  $avc = SiteHelpers::getActivityVariantTotalCount($record->id);
+				  @endphp
                   <tr>
 					
                     <td>{{ $record->title}}</td>
@@ -101,7 +103,7 @@
 						    <a class="btn btn-info btn-sm" href="{{route('activity.variants',['activity_name'=>$record->title])}}">
                               <i class="fas fa-eye">
                               </i>
-                               Variants
+                               Variants({{$avc}})
                           </a>
 						  
                           <form id="delete-form-{{$record->id}}" method="post" action="{{route('activities.destroy',$record->id)}}" style="display:none;">
