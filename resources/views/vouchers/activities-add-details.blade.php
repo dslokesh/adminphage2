@@ -130,239 +130,114 @@
               </div>
 			  <hr class="col-md-12 p-30" id="tour_options">
 		
-
-				<form action="{{route('voucher.activity.save')}}" method="post" class="form" >
-				{{ csrf_field() }}
-				 <input type="hidden" id="activity_id" name="activity_id" value="{{ $aid }}"  />
-				 <input type="hidden" id="v_id" name="v_id" value="{{ $vid }}"  />
-				 <input type="hidden" id="activity_vat" name="activity_vat" value="{{ ($activity->vat > 0)?$activity->vat:0 }}"  />
-				 <input type="hidden" id="vat_invoice" name="vat_invoice" value="{{ $voucher->vat_invoice }}"  />
-			
-				<div class="row   mt-2" style="">
-				<div class="col-lg-12">
-				<h4>Tour Options</h4>
-				</div>
-				
-				  </div>
-				<div id="hDetailsDiv">
-				<div class="row p-2" >
-			 
-			  <div class="col-md-12">
-			   <table class="table rounded-corners" style="border-radius: 10px !important;font-size:10pt;">
-                  <thead>
-				 
-				  @if(!empty($variantData))
-					 
-					  @foreach($variantData['activityVariants'] as $kk => $ap)
-				  @if($kk == 0)
-                  <tr>
-					<th valign="middle">Tour Option</th>
-                    <th id="top" valign="middle"  colspan="2">Transfer Option</th>
-					<th valign="middle">Tour Date</th>
-					<th valign="middle">Adult</th>
-                    <th valign="middle">Child<br/><small>({{$ap->prices->child_start_age}}-{{$ap->prices->child_end_age}} Yrs)</small></th>
-                    <th valign="middle">Infant<br/><small>(Below {{$ap->prices->child_start_age}} Yrs)</small></th>
-					<th valign="middle">Total Amount</th>
-                  </tr>
-				  </thead>
-				  @endif
-				  <tbody>
-				 @php
-				  $actZone = SiteHelpers::getZone($ap->variant->zones,$ap->variant->sic_TFRS);
-				 $tourDates = SiteHelpers::getDateList($voucher->travel_from_date,$voucher->travel_to_date,$ap->variant->black_out,$ap->variant->sold_out);
-				  @endphp
-				   <tr>
-                    <td>
-					
-					<input type="hidden"  name="activity_variant_id[{{$ap->ucode}}]" id="activity_variant_id{{$kk}}" value="{{$ap->id}}" data-inputnumber="{{$kk}}" /> 
-					
-					<input type="checkbox"  name="activity_select[{{$ap->ucode}}]" id="activity_select{{$kk}}" value="{{ $aid }}" @if($kk == '0') checked @endif class="actcsk" data-inputnumber="{{$kk}}" /> <strong>{{$ap->variant->title}} </strong>
-					</td>
-					<td> <select name="transfer_option[{{$ap->ucode}}]" id="transfer_option{{$kk}}" class="form-control priceChange" data-inputnumber="{{$kk}}" @if($kk > '0') disabled="disabled" @endif >
-						@if($kk > '0')
-						<option value="">--Select--</option>
-						@endif
-						@if(($ap->activity->entry_type=='Ticket Only') && ($ap->prices->adult_rate_without_vat > 0))
-						<option value="Ticket Only" data-id="1">Ticket Only</option>
-						@endif
-						@if($ap->variant->sic_TFRS==1)
-						<option value="Shared Transfer" data-id="2">Shared Transfer</option>
-						@endif
-						@if($ap->variant->pvt_TFRS==1)
-						<option value="Pvt Transfer" data-id="3" data-variant="{{$ap->variant_id}}" >Pvt Transfer</option>
-						@endif
-						</select>
-						<input type="hidden" id="pvt_traf_val{{$kk}}" value="0"  name="pvt_traf_val[{{$ap->ucode}}]"    />
-						</td>
-						<td> 
-						<div  style="display:none;border:none;" id="transfer_zone_td{{$kk}}">
-						@if($ap->variant->sic_TFRS==1)
-						@if(!empty($actZone))
-						<select name="transfer_zone[{{$ap->ucode}}]" id="transfer_zone{{$kk}}" class="form-control priceChange"  data-inputnumber="{{$kk}}">
-						
-						
-						@foreach($actZone as $z)
-						<option value="{{$z['zone_id']}}" data-zonevalue="{{$z['zoneValue']}}" data-zoneptime="{{$z['pickup_time']}}">{{$z['zone']}}</option>
-						@endforeach
-						@else
-							<input type="hidden" id="transfer_zone{{$kk}}" value=""  name="transfer_zone[{{$ap->ucode}}]"    />
-						@endif
-						</select>
-						@else
-							<input type="hidden" id="transfer_zone{{$kk}}" value=""  name="transfer_zone[{{$ap->ucode}}]"    />
-						@endif
-						
-						</div> 
-						</td>
-						
-					<td>
-					<select name="tour_date[{{$ap->ucode}}]" id="tour_date{{$kk}}"  class="form-control priceChange" data-inputnumber="{{$kk}}"  >
-						
-						<option value="">--Select--</option>
-						@foreach($tourDates as $tourDate)
-						<option value="{{$tourDate}}" >{{$tourDate}}</option>
-						@endforeach
-						</select>
-						
-					
-					</td>
-					<td><select name="adult[{{$ap->ucode}}]" id="adult{{$kk}}" class="form-control priceChange"  data-inputnumber="{{$kk}}" @if($kk > '0') disabled="disabled" @endif>
-						<option value="">0</option>
-						@for($a=$ap->prices->adult_min_no_allowed; $a<=$ap->prices->adult_max_no_allowed; $a++)
-						@if($ap->prices->adult_min_no_allowed+$ap->prices->child_min_no_allowed > 0)
-						<option value="{{$a}}" @if($voucher->adults==$a) selected="selected" @endif>{{$a}}</option>
-						@endif
-						@endfor
-						</select></td>
-                    <td><select name="child[{{$ap->ucode}}]" id="child{{$kk}}" class="form-control priceChange" data-inputnumber="{{$kk}}" @if($kk > '0') disabled="disabled" @endif>
-						<option value="">0</option>
-						
-						@for($child=$ap->prices->child_min_no_allowed; $child<=$ap->prices->child_max_no_allowed; $child++)
-							@if($child > 0)
-						<option value="{{$child}}" @if($voucher->childs==$child) selected="selected" @endif>{{$child}}</option>
-					@endif
-						@endfor
-						</select></td>
-                    <td><select name="infant[{{$ap->ucode}}]" id="infant{{$kk}}" class="form-control priceChange" data-inputnumber="{{$kk}}" @if($kk > '0') disabled="disabled" @endif>
-						@for($inf=$ap->prices->infant_min_no_allowed; $inf<=$ap->prices->infant_max_no_allowed; $inf++)
-						<option value="{{$inf}}" @if($voucher->infants==$inf && $voucher->infants > 0) selected="selected" @endif>{{$inf}}</option>
-						@endfor
-						</select>
-						
-						</td>
-						
-					
-						<input type="hidden" id="discount{{$kk}}" style="width: 50px;" value="0"  name="discount[{{$ap->ucode}}]" @if($kk > '0') disabled="disabled" @endif data-inputnumber="{{$kk}}" class="form-control onlynumbrf priceChangedis"    />
-						
-						<td class="text-center" >
-						
-						<span id="price{{$kk}}" style="font-weight:bold">0</span>
-						<input type="hidden" id="totalprice{{$kk}}" value="0"  name="totalprice[{{$ap->ucode}}]"    />
-						</td>
-                  </tr>
-				  @endforeach
-				 @endif
-					</tbody>
-				  </table>
-              </div>
-			 </div>	
-			 </div>	
-			  <div class="row">
-
-        <div class="col-12 mt-3">
-         
-			<button type="submit" class="btn btn-success float-right mr-2" name="save_and_continue">Add To Cart</button>
-        </div>
-      </div>
-			 </form>
-		<div class="col-md-12">
-			  <div class="row mt-5">
-			  <hr class="col-md-12 p-30" id="inclusion">
-			   <div class="form-group col-md-12" >
-			   
-				<h4>Description</h4>
-				{!! $activity->description !!}
-              </div>
-			  <hr class="col-md-12 p-30" id="booking">
-			   <div class="form-group col-md-12">
-			   
-			   <h4>Notes</h4>
-				{!! $activity->notes !!}
-              </div>
-			  
-              </div>
-			 
-			  </div>
-<div class="row mb-20" style="margin-bottom: 20px;">
-	<div class="col-md-2 mb-20">
-	<a href="{{route('voucher.add.activity',$vid)}}" class="btn btn-secondary mr-2">Back</a>
-	</div>
-	
-</div>
-</div>	 	 
-		  
-		 
-		
-          <!-- /.card-body --> 
-        </div>
-		
-          
-			
-          </div>
-		 
+			 <div class="card-body pdivvarc" id="pdivvar" style="display: none;">
+					  <div class="row p-2">
+						 
+						<div class="col-md-12 var_data_div_cc" id="var_data_div">
+								
+							  </div>
+						  
+					   </div>
+					</div>
           <!-- /.card -->
         </div>
       </div>
   
     </section>
+	
+	<div class="modal fade" id="timeSlotModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Select Time Slot</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="timeSlotDropdown">Choose a time slot:</label>
+                    <select class="form-control" required id="timeSlotDropdown">
+                        <!-- Time slots will be dynamically added here -->
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-primary-flip btn-sm" id="selectTimeSlotBtn"><i class="fa fa-cart-plus"></i></button>
+                <!-- You can add a button here for further actions if needed -->
+            </div>
+        </div>
+    </div>
+</div>
+
     <!-- /.content -->
 @endsection
 
 
 
 @section('scripts')
- <script>
-         $(function() {
-          
-            var disabledDates = "";
-            var availableDates = "";
-			 var disabledDay = "";
-
-            
-            $(".tour_datepicker").datepicker({
-                beforeShowDay: function(date) {
-                    var dateString = $.datepicker.formatDate('yy-mm-dd', date);
-                    
-					/* for (let i = 0; i < disabledDay.length; ++i) {
-						if (date.getDay() === disabledDay[i]) {
-							return [false, "disabled-day", "This date is disabled"];
-						}
-					} */
-					//console.log(availableDates);
-					
-					
-                    if (availableDates.indexOf(dateString) != -1) {
-                        return [true, "available-date", "This date is available"];
-                    } else {
-					return [false, "disabled-date", "This date is disabled"];	
-					}
-						
-                    return [true];
-                },
-				minDate: new Date(),
-				weekStart: 1,
-				daysOfWeekHighlighted: "6,0",
-				autoclose: true,
-				todayHighlight: true,
-				dateFormat: 'dd-mm-yy'
-            });
-        }); 
-    </script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js
+"></script>
  <script type="text/javascript">
- $(document).ready(function() {
-	 $('body #activity_select0').prop('checked', true); // Checks it
-	 $("body #tour_date0").prop('required',true);
-adultChildReq(0,0,0);
+ 
+  $(document).ready(function() {
+	  
+			$.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+			
+			
+
+  var actid = "{{$activity->id}}";
+  var vid = "{{$vid}}";
+  
+   var inputnumber = $(this).data('inputnumber');
+  $("body #loader-overlay").show();
+		
+           
+		$.ajax({
+            url: "{{route('get-vouchers.activity.variant')}}",
+            type: 'POST',
+            dataType: "json",
+            data: {
+              act: actid,
+              vid: vid,
+            },
+            success: function( data ) {
+               //console.log( data.html );
+               //alert("#var_data_div");
+               
+             //$("body .var_data_div_cc").html('');
+             //$("body .pdivvarc").css('display','none');
+			      $("body #var_data_div").html(data.html);
+            $("body #pdivvar").css('display','block');
+            $("body #loader-overlay").hide();
+			// Onload change price 
+			var pvttr =  $("body #transfer_option0").find(':selected').val();
+			$("body #adult0").trigger("change");
+			if(pvttr == 'Pvt Transfer'){
+				setTimeout(function() {
+				$("body .t_option#transfer_option0").trigger("change");
+				}, 1000);
+			}
+			
+			if(pvttr == 'Shared Transfer'){
+				$("body .t_option#transfer_option0").trigger("change");
+			}
+			 $('.actcsk:first').prop('checked', true).trigger("change");
+            }
+          });
+
+});
+</script>  
+
+<script type="text/javascript">
+  $(document).ready(function() {
+	  $('body #cartForm').validate({});
+   adultChildReq(0,0,0);
+ 
  $(document).on('change', '.priceChange', function(evt) {
   const inputnumber = $(this).data('inputnumber');
   const activityVariantId = $("body #activity_variant_id" + inputnumber).val();
@@ -398,7 +273,7 @@ adultChildReq(0,0,0);
   }
 
   loaderOverlay.show();
-adultChildReq(adult,child,inputnumber);
+	adultChildReq(adult,child,inputnumber);
   const argsArray = {
     transfer_option: transferOptionName,
     activity_variant_id: activityVariantId,
@@ -415,7 +290,7 @@ adultChildReq(adult,child,inputnumber);
   getPrice(argsArray)
     .then(function(price) {
       $("body #price" + inputnumber).html(price.variantData.totalprice);
-	   $("body #totalprice" + inputnumber).val(price.variantData.totalprice);
+	  $("body #totalprice" + inputnumber).val(price.variantData.totalprice);
     })
     .catch(function(error) {
       console.error('Error:', error);
@@ -431,51 +306,70 @@ adultChildReq(adult,child,inputnumber);
     const adult = parseInt($("body #adult" + inputnumber).val());
   const child = parseInt($("body #child" + inputnumber).val());
    adultChildReq(adult,child,inputnumber);
+    $("body .priceChange").prop('required',false);
+	$("body .priceChange").prop('disabled',true);
+	$("body .addToCart").prop('disabled',true);
+	$("body #ucode").val('');
+	$('#timeslot').val('');
+	$("body .priceclass").text(0);
    if ($(this).is(':checked')) {
        $("body #transfer_option"+inputnumber).prop('required',true);
 		$("body #tour_date"+inputnumber).prop('required',true);
      
      $("body #transfer_option"+inputnumber).prop('disabled',false);
      $("body #tour_date"+inputnumber).prop('disabled',false);
+	 $("body #addToCart"+inputnumber).prop('disabled',false);
      $("body #adult"+inputnumber).prop('disabled',false);
      $("body #child"+inputnumber).prop('disabled',false);
      $("body #infant"+inputnumber).prop('disabled',false);
      $("body #discount"+inputnumber).prop('disabled',false);
 	 $("body #adult"+inputnumber).trigger("change");
-     } else {
-       $("body #transfer_option"+inputnumber).prop('required',false);
-     $("body #tour_date"+inputnumber).prop('required',false);
-     
-     $("body #transfer_option"+inputnumber).prop('disabled',true);
-     $("body #tour_date"+inputnumber).prop('disabled',true);
-     $("body #adult"+inputnumber).prop('disabled',true);
-     $("body #child"+inputnumber).prop('disabled',true);
-     $("body #infant"+inputnumber).prop('disabled',true);
-     $("body #discount"+inputnumber).prop('disabled',true);
-     $("body #discount"+inputnumber).prop('disabled',true);
-     $("body #price"+inputnumber).text(0);
+	 var ucode = $("body #activity_select"+inputnumber).val();
+	 $("body #ucode").val(ucode);
      }
  });
 
+  $(document).on('click', '.addToCart', function(evt) {
+	  evt.preventDefault();
+	 if($('body #cartForm').validate({})){
+		 variant_id = $(this).data('variantid');
+		 inputnumber = $(this).data('inputnumber');
+		 const transferOptionName = $("body #transfer_option" + inputnumber).find(':selected').val();
+		 $.ajax({
+			  url: "{{ route('get.variant.slots') }}",
+			  type: 'POST',
+			  dataType: "json",
+			  data: {
+				  variant_id:variant_id,
+				  transferOptionName:transferOptionName
+				  },
+			  success: function(data) {
+				  if(data.status == 1) {
+						
+						var timeslot = $('#timeslot').val();
+						if(timeslot==''){
+							openTimeSlotModal(data.slots);
+						} 
+					} else if (data.status == 2) {
+						$("body #cartForm").submit();
+					}
+				//console.log(data);
+			  },
+			  error: function(error) {
+				console.log(error);
+			  }
+		});
+		  
+	 }
+	
+ });
+ });
  
 
- 
- $(document).on('keypress', '.onlynumbrf', function(evt) {
-   var charCode = (evt.which) ? evt.which : evt.keyCode
-   if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
-     return false;
-   return true;
- 
- });
- });
+
  
  function getPrice(argsArray) {
   return new Promise(function(resolve, reject) {
-	  $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
     $.ajax({
       url: "{{ route('get-activity.variant.price') }}",
       type: 'POST',
@@ -490,35 +384,69 @@ adultChildReq(adult,child,inputnumber);
     });
   });
 }
+
 function adultChildReq(a,c,inputnumber) {
-  
 	a = (isNaN(a))?0:a;
 	c = (isNaN(c))?0:c;
-	var total = a+c;
+  var total = a+c;
   if(total == 0){
 	  $("body #adult"+inputnumber).prop('required',true); 
   } else {
 	  $("body #adult"+inputnumber).prop('required',false); 
   }
 }
-  </script>  
 
-<script type="text/javascript">
-$(window).on('load', function(){
- var owl = $('.owl-carousel');
-owl.owlCarousel({
-    loop:true,
-    nav:true,
-	dots:false,
-    margin:10,
-	items:1
-  
-});
+  function openTimeSlotModal(slots, selectedSlot) {
+    var isValid = $('body #cartForm').valid();
+    if (isValid) {
+        $('#timeSlotModal').modal('show');
 
-  
-  
-});
+        var dropdown = $('#timeSlotDropdown');
+        dropdown.empty();
 
+        $.each(slots, function(index, slot) {
+            var option = $('<option></option>').attr('value', slot).text(slot);
+            if (slot === selectedSlot) {
+                option.attr('selected', 'selected');
+            }
+            dropdown.append(option);
+        });
 
-</script>  
+        dropdown.on('change', function() {
+            var selectedValue = dropdown.val();
+			$('body #timeslot').val('');
+            if (selectedValue !== 'select') {
+                $('#timeslot').val(selectedValue);
+				$("body #timeSlotDropdown").removeClass('error-rq');
+            }
+        });
+
+        $('#selectTimeSlotBtn').on('click', function() {
+				var timeslot = $('body #timeslot').val();
+				$("body #timeSlotDropdown").removeClass('error-rq');
+				if(timeslot==''){
+				$("body #timeSlotDropdown").addClass('error-rq');
+				} else { 
+					$("body #cartForm").submit();
+				}
+						
+            
+        });
+
+        $('#timeSlotModal .close').on('click', function() {
+            $('body #timeslot').val('');
+            $('#timeSlotModal').modal('hide');
+        });
+    }
+}
+
+ $(document).on('keypress', '.onlynumbrf', function(evt) {
+   var charCode = (evt.which) ? evt.which : evt.keyCode
+   if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
+     return false;
+   return true;
+ 
+ });
+ 
+ </script> 
 @endsection

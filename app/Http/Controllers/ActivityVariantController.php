@@ -48,7 +48,7 @@ class ActivityVariantController extends Controller
 		//$this->checkPermissionMethod('list.activity');
         $data = $request->all();
 		$activities = Activity::where('status',1)->get();
-		$variants = Variant::where('status',1)->where('is_price',1)->get();
+		$variants = Variant::where('status',1)->get();
 		//dd($records);
         return view('activity_variants.create', compact('activities','variants'));
     }

@@ -118,6 +118,7 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
 		Route::resource('variants', VariantsController::class);
 		Route::get('variant/slots-create/{varid}', [SlotsController::class, 'index'])->name('variant.slots');
 		Route::post('variant/slots-save', [SlotsController::class, 'saveSlot'])->name('variant.slots.save'); 
+		Route::post('variant/slots/get', [SlotsController::class, 'variantSlotGet'])->name('get.variant.slots'); 
 		Route::get('variant/canellation-chart-create/{varid}', [VariantCanellationController::class, 'index'])->name('variant.canellation');
 		Route::post('variant/canellation-chart-save', [VariantCanellationController::class, 'saveCanellation'])->name('variant.canellation.save'); 
 		

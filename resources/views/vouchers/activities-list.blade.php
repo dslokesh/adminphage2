@@ -253,15 +253,41 @@
       <!-- /.container-fluid -->
     </section>
     <!-- /.content -->
+	
+	<div class="modal fade" id="timeSlotModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Select Time Slot</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="timeSlotDropdown">Choose a time slot:</label>
+                    <select class="form-control" required id="timeSlotDropdown">
+                        <!-- Time slots will be dynamically added here -->
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-primary-flip btn-sm" id="selectTimeSlotBtn"><i class="fa fa-cart-plus"></i></button>
+                <!-- You can add a button here for further actions if needed -->
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('scripts')
-
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js
+"></script>
 	
 <script type="text/javascript">
   $(document).ready(function() {
-	  $('body #activity_select0').prop('checked', false); // Checks it
-	 $("body #tour_date0").prop('required',true);
+	  var table = $('#tbl-activites').DataTable();
 			
 $(document).on('click', '.loadvari', function(evt) {
   var actid = $(this).data('act');
@@ -287,7 +313,7 @@ $(document).on('click', '.loadvari', function(evt) {
                
              $("body .var_data_div_cc").html('');
              $("body .pdivvarc").css('display','none');
-			      $("body #var_data_div"+actid).html(data.html);
+			 $("body #var_data_div"+actid).html(data.html);
             $("body #pdivvar"+actid).css('display','block');
             $("body #loader-overlay").hide();
 			// Onload change price 
@@ -302,52 +328,17 @@ $(document).on('click', '.loadvari', function(evt) {
 			if(pvttr == 'Shared Transfer'){
 				$("body .t_option#transfer_option0").trigger("change");
 			}
-			
-				//var response = JSON.parse(data.dates);
-				var disabledDates = data.dates.disabledDates;
-				var availableDates = data.dates.availableDates;
-				 var disabledDay = data.disabledDay;
-				  $("body #tour_date0").prop('required',true);
-				// console.log(disabledDay);
-				$(".tour_datepicker").datepicker({
-                        /* beforeShowDay: function(date) {
-                            var dateString = $.datepicker.formatDate('yy-mm-dd', date);
-							if(disabledDay.length > 0){
-								if (disabledDay.indexOf(date.getDay()) != -1) {
-									return [false, "disabled-day", "This day is disabled"];
-								}
-							}
-                            if (availableDates.indexOf(dateString) != -1) {
-                                return [true, "available-date", "This date is available"];
-                            }else{
-								return [false, "disabled-date", "This date is disabled"];
-							}
-                            return [true];
-                        }, */
-							minDate: new Date(),
-							weekStart: 1,
-							daysOfWeekHighlighted: "6,0",
-							autoclose: true,
-							todayHighlight: true,
-							dateFormat: 'dd-mm-yy'
-                    });
-			
+			 $('.actcsk:first').prop('checked', true).trigger("change");
 			
             }
           });
 });
 });
 </script>  
-<script>
-        $(document).ready(function ()
-        {   
-            var table = $('#tbl-activites').DataTable();
-        });
-		
-
-    </script> 
+ 
 <script type="text/javascript">
   $(document).ready(function() {
+	  $('body #cartForm').validate({});
    adultChildReq(0,0,0);
  
  $(document).on('change', '.priceChange', function(evt) {
@@ -418,43 +409,64 @@ $(document).on('click', '.loadvari', function(evt) {
     const adult = parseInt($("body #adult" + inputnumber).val());
   const child = parseInt($("body #child" + inputnumber).val());
    adultChildReq(adult,child,inputnumber);
+    $("body .priceChange").prop('required',false);
+	$("body .priceChange").prop('disabled',true);
+	$("body .addToCart").prop('disabled',true);
+	$("body #ucode").val('');
+	$('#timeslot').val('');
+	$("body .priceclass").text(0);
    if ($(this).is(':checked')) {
        $("body #transfer_option"+inputnumber).prop('required',true);
 		$("body #tour_date"+inputnumber).prop('required',true);
      
      $("body #transfer_option"+inputnumber).prop('disabled',false);
      $("body #tour_date"+inputnumber).prop('disabled',false);
+	 $("body #addToCart"+inputnumber).prop('disabled',false);
      $("body #adult"+inputnumber).prop('disabled',false);
      $("body #child"+inputnumber).prop('disabled',false);
      $("body #infant"+inputnumber).prop('disabled',false);
      $("body #discount"+inputnumber).prop('disabled',false);
 	 $("body #adult"+inputnumber).trigger("change");
-     } else {
-       $("body #transfer_option"+inputnumber).prop('required',false);
-     $("body #tour_date"+inputnumber).prop('required',false);
-     
-     $("body #transfer_option"+inputnumber).prop('disabled',true);
-     $("body #tour_date"+inputnumber).prop('disabled',true);
-     $("body #adult"+inputnumber).prop('disabled',true);
-     $("body #child"+inputnumber).prop('disabled',true);
-     $("body #infant"+inputnumber).prop('disabled',true);
-     $("body #discount"+inputnumber).prop('disabled',true);
-     $("body #discount"+inputnumber).prop('disabled',true);
-     $("body #price"+inputnumber).text(0);
+	 var ucode = $("body #activity_select"+inputnumber).val();
+	 $("body #ucode").val(ucode);
      }
  });
 
- 
+  $(document).on('click', '.addToCart', function(evt) {
+	  evt.preventDefault();
+	 if($('body #cartForm').validate({})){
+		 variant_id = $(this).data('variantid');
+		 inputnumber = $(this).data('inputnumber');
+		 const transferOptionName = $("body #transfer_option" + inputnumber).find(':selected').val();
+		 $.ajax({
+			  url: "{{ route('get.variant.slots') }}",
+			  type: 'POST',
+			  dataType: "json",
+			  data: {
+				  variant_id:variant_id,
+				  transferOptionName:transferOptionName
+				  },
+			  success: function(data) {
+				  if(data.status == 1) {
+						
+						var timeslot = $('#timeslot').val();
+						if(timeslot==''){
+							openTimeSlotModal(data.slots);
+						} 
+					} else if (data.status == 2) {
+						$("body #cartForm").submit();
+					}
+				//console.log(data);
+			  },
+			  error: function(error) {
+				console.log(error);
+			  }
+		});
+		  
+	 }
+	
  });
- 
- $(document).on('keypress', '.onlynumbrf', function(evt) {
-   var charCode = (evt.which) ? evt.which : evt.keyCode
-   if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
-     return false;
-   return true;
- 
  });
-
  
  function getPrice(argsArray) {
   return new Promise(function(resolve, reject) {
@@ -484,5 +496,59 @@ function adultChildReq(a,c,inputnumber) {
   }
 }
 
-   </script> 
+  function openTimeSlotModal(slots, selectedSlot) {
+    var isValid = $('body #cartForm').valid();
+    if (isValid) {
+		$("body #timeSlotDropdown").removeClass('error-rq');
+        $('#timeSlotModal').modal('show');
+
+        var dropdown = $('#timeSlotDropdown');
+        dropdown.empty();
+
+        $.each(slots, function(index, slot) {
+            var option = $('<option></option>').attr('value', slot).text(slot);
+            if (slot === selectedSlot) {
+                option.attr('selected', 'selected');
+            }
+            dropdown.append(option);
+        });
+
+        dropdown.on('change', function() {
+            var selectedValue = dropdown.val();
+			$('body #timeslot').val('');
+            if (selectedValue !== 'select') {
+                $('#timeslot').val(selectedValue);
+				$("body #timeSlotDropdown").removeClass('error-rq');
+            }
+        });
+
+        $('#selectTimeSlotBtn').on('click', function() {
+				var timeslot = $('body #timeslot').val();
+				$("body #timeSlotDropdown").removeClass('error-rq');
+				if(timeslot==''){
+				$("body #timeSlotDropdown").addClass('error-rq');
+				} else { 
+					$("body #cartForm").submit();
+				}
+						
+            
+        });
+
+        $('#timeSlotModal .close').on('click', function() {
+            $('body #timeslot').val('');
+            $('#timeSlotModal').modal('hide');
+        });
+    }
+}
+
+$(document).on('keypress', '.onlynumbrf', function(evt) {
+   var charCode = (evt.which) ? evt.which : evt.keyCode
+   if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
+     return false;
+   return true;
+ 
+ });
+
+
+ </script> 
 @endsection

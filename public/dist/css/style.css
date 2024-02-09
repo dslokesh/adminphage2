@@ -181,3 +181,18 @@ header.profile-header {
 .small-box p{
 	color:#fff!important;
 }
+
+
+
+/* Change border color when there is an error */
+#cartForm .form-control.error:invalid {
+    border-color: #dc3545!important; /* Change this to the desired color */
+}
+.form-control.error-rq {
+   border-color: #dc3545!important; /* Change this to the desired color */
+}
+
+/* Hide error label by default */
+label.error {
+    display: none!important; /* Change this to the desired color */
+}

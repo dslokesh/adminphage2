@@ -100,6 +100,43 @@ class SlotsController extends Controller
         return back()->with('success', 'Slots saved Successfully.');
 
     }
+	
+	public function variantSlotGet(Request $request)
+    {
+		$variantId = $request->input('variant_id');
+		$transferOption = $request->input('transferOptionName');
+		$variant = Variant::find($variantId);
+		$data[''] = 'select';
+		if($variant->is_slot == 1){
+		
+		if(!empty($variantId)){
+			$query = Slot::where('variant_id', $variantId);
+			if($transferOption == 'Ticket Only'){
+				$query->where('ticket_only', 1);
+			}
+			if($transferOption == 'Shared Transfer'){
+				$query->where('sic', 1);
+			}
+			if($transferOption == 'Pvt Transfer'){
+				$query->where('pvt', 1);
+			}
+			$slots = $query->get();
+			
+			foreach($slots as $slot)
+			{
+				$data[$slot->slot_timing] = $slot->slot_timing;
+			}
+			
+		}
+		
+		$response = array("status"=>1,'slots'=>$data);
+		} else {
+			$response = array("status"=>2,'slots'=>$data);
+		}
+		
+        return response()->json($response);
+    }
+
 
 	
 }

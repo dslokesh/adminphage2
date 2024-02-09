@@ -2,12 +2,14 @@
 			$activity = $variantData['activity'];
 			 
 			@endphp
-				<form action="{{route('voucher.activity.save')}}" method="post" class="form" >
+				<form action="{{route('voucher.activity.save')}}" method="post" class="form" id="cartForm" >
 				{{ csrf_field() }}
 				 <input type="hidden" id="activity_id" name="activity_id" value="{{ $aid }}"  />
 				 <input type="hidden" id="v_id" name="v_id" value="{{ $vid }}"  />
 				 <input type="hidden" id="activity_vat" name="activity_vat" value="{{ ($activity->vat > 0)?$activity->vat:0 }}"  />
 				 <input type="hidden" id="vat_invoice" name="vat_invoice" value="{{ $voucher->vat_invoice }}"  />
+				 <input type="hidden" id="ucode" name="ucode" value=""  />
+				 <input type="text" id="timeslot" name="timeslot" value=""  />
 				 <table class="table rounded-corners" style="border-radius: 10px !important;font-size:10pt;">
                   <thead>
 				 
@@ -23,6 +25,7 @@
                     <th valign="middle">Child<br/><small>({{$ap->prices->child_start_age}}-{{$ap->prices->child_end_age}} Yrs)</small></th>
                     <th valign="middle">Infant<br/><small>(Below {{$ap->prices->child_start_age}} Yrs)</small></th>
 					<th valign="middle">Total Amount</th>
+					<th valign="middle"></th>
                   </tr>
 				  </thead>
 				  @endif
@@ -36,7 +39,7 @@
 					
 					<input type="hidden"  name="activity_variant_id[{{$ap->ucode}}]" id="activity_variant_id{{$kk}}" value="{{$ap->id}}" data-inputnumber="{{$kk}}" /> 
 					
-					<input type="checkbox"  name="activity_select[{{$ap->ucode}}]" id="activity_select{{$kk}}" value="{{ $aid }}" @if($kk == '0') checked @endif class="actcsk" data-inputnumber="{{$kk}}" /> <strong>{{$ap->variant->title}} </strong>
+					<input type="radio"  name="activity_select" required id="activity_select{{$kk}}" value="{{ $ap->ucode }}" @if($kk == '0')  @endif class="actcsk" data-inputnumber="{{$kk}}" /> <strong>{{$ap->variant->title}} </strong>
 					</td>
 					<td> <select name="transfer_option[{{$ap->ucode}}]" id="transfer_option{{$kk}}" class="form-control priceChange" data-inputnumber="{{$kk}}" @if($kk > '0') disabled="disabled" @endif >
 						@if($kk > '0')
@@ -112,25 +115,26 @@
 						</td>
 						
 					
-						<input type="hidden" id="discount{{$kk}}" style="width: 50px;" value="0"  name="discount[{{$ap->ucode}}]" @if($kk > '0') disabled="disabled" @endif data-inputnumber="{{$kk}}" class="form-control onlynumbrf priceChangedis"    />
+						<input type="hidden" id="discount{{$kk}}" style="width: 50px;" value="0"  name="discount[{{$ap->ucode}}]" data-inputnumber="{{$kk}}" class="form-control onlynumbrf priceChangedis"    />
 						
 						<td class="text-center" >
 						
-						<span id="price{{$kk}}" style="font-weight:bold">0</span>
+						<span id="price{{$kk}}" class="priceclass" style="font-weight:bold">0</span>
 						<input type="hidden" id="totalprice{{$kk}}" value="0"  name="totalprice[{{$ap->ucode}}]"    />
 						</td>
+						
+						<td class="text-center" >
+						
+						<button type="button" class="btn btn-sm  btn-primary-flip float-right addToCart" data-inputnumber="{{$kk}}" data-variantid="{{$ap->variant_id}}" id="addToCart{{$kk}}" name="save"><i class="fa fa-cart-plus"></i> </button>
+						</td>
+						
                   </tr>
 				  @endforeach
 				 @endif
 					</tbody>
 				  </table>
 				  
-			  <div class="row">
-
-        <div class="col-12 mt-3">
-          <button type="submit" class="btn btn-sm  btn-primary-flip float-right" name="save">Add To Cart</button>
-        </div>
-      </div>
+			
 			 </form>
           <!-- /.card-body --> 
        

@@ -937,6 +937,7 @@ class VouchersController extends Controller
 	public function activitySaveInVoucher(Request $request)
     {
 		$activity_select = $request->input('activity_select');
+		
 	if(isset($activity_select))
 	{
 		
@@ -953,10 +954,15 @@ class VouchersController extends Controller
 		$child = $request->input('child');
 		$infant = $request->input('infant');
 		$discount = $request->input('discount');
-		
+		//dd($request->input('ucode'));
+		//dd($request->all());
 		$data = [];
 		$total_activity_amount = 0;
-		foreach($activity_select as $k => $v)
+		$k  = $request->input('ucode');
+		$timeslot  = $request->input('timeslot');
+		$activitySelectNew[$k] = $k;
+		if(!empty($k)){
+		foreach($activitySelectNew as $k => $v)
 		{
 			$activityVariant = ActivityVariant::with('variant', 'activity')->find($activity_variant_id[$k]);
 			$activity = $activityVariant->activity;
@@ -991,7 +997,7 @@ class VouchersController extends Controller
 			'transfer_option' => $transfer_option[$k],
 			'tour_date' => $tour_dt,
 			'pvt_traf_val_with_markup' => $priceCal['pvt_traf_val_with_markup'],
-			'transfer_zone' => $transfer_zone[$k],
+			'transfer_zone' => (array_key_exists($k,$transfer_zone))?$transfer_zone[$k]:'',
 			'zonevalprice_without_markup' => $priceCal['zonevalprice_without_markup'],
 			'adult' => $adult[$k],
 			'child' => $child[$k],
@@ -1003,6 +1009,7 @@ class VouchersController extends Controller
 			'childPrice' => $priceCal['childPrice'],
 			'infPrice' => $priceCal['infPrice'],
 			'discountPrice' => $discount[$k],
+			'time_slot' => $timeslot,
 			'totalprice' => number_format($priceCal['totalprice'], 2, '.', ''),
 			'created_by' => Auth::user()->id,
 			'updated_by' => Auth::user()->id,	
@@ -1022,7 +1029,9 @@ class VouchersController extends Controller
 			$voucher->save();
 		}
 
-
+		} else {
+			return redirect()->back()->with('error', $variant->title.' Please Select Tour Option.');
+		}
 		
 		
 		if ($request->has('save_and_continue')) {
