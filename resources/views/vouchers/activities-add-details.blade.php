@@ -424,11 +424,11 @@ function adultChildReq(a,c,inputnumber) {
         $('#selectTimeSlotBtn').on('click', function() {
 				var timeslot = $('body #timeslot').val();
 				$("body #timeSlotDropdown").removeClass('error-rq');
-				if(timeslot==''){
-				$("body #timeSlotDropdown").addClass('error-rq');
-				} else { 
+				//if(timeslot==''){
+				//$("body #timeSlotDropdown").addClass('error-rq');
+				//} else { 
 					$("body #cartForm").submit();
-				}
+				//}
 						
             
         });

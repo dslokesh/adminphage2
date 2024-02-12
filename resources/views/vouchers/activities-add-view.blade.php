@@ -9,7 +9,7 @@
 				 <input type="hidden" id="activity_vat" name="activity_vat" value="{{ ($activity->vat > 0)?$activity->vat:0 }}"  />
 				 <input type="hidden" id="vat_invoice" name="vat_invoice" value="{{ $voucher->vat_invoice }}"  />
 				 <input type="hidden" id="ucode" name="ucode" value=""  />
-				 <input type="text" id="timeslot" name="timeslot" value=""  />
+				 <input type="hidden" id="timeslot" name="timeslot" value=""  />
 				 <table class="table rounded-corners" style="border-radius: 10px !important;font-size:10pt;">
                   <thead>
 				 

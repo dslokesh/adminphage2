@@ -35,12 +35,12 @@
         <tr>
             <th colspan="4"><h4 class="text-center">Variant : {{$variant->title}}</h4></th>
         </tr>
-        <tr>
-            <th>Slot Timing</th>
-            <th>Ticket Only</th>
-            <th>SIC Transfer</th>
-            <th>PVT Transfer</th>
-        </tr>
+		<tr>
+		<th>Slot Timing  </th>
+		<th>Ticket Only <input type="checkbox" id="checkAll_to"> Check All Ticket Only</th>
+		<th>SIC Transfer     <input type="checkbox" id="checkAll_sic"> Check All SIC Transfer</th>
+		<th>PVT Transfer     <input type="checkbox" id="checkAll_pvt"> Check All PVT Transfer</th>
+		</tr>
     </thead>
     <tbody>
    @foreach ($slots as $k => $record)
@@ -83,5 +83,22 @@
     <!-- /.content -->
 @endsection
 @section('scripts')
+<script>
+    $(document).ready(function () {
+        function handleCheckAll(groupName) {
+			$(`#checkAll_${groupName}`).click(function () {
+			$(`input[name^="slot"][name$="[${groupName}]"]`).prop('checked', this.checked);
+			});
 
+			$(`input[name^="slot"][name$="[${groupName}]"]`).click(function () {
+			$(`#checkAll_${groupName}`).prop('checked', $(`input[name^="slot"][name$="[${groupName}]"]:checked`).length === $(`input[name^="slot"][name$="[${groupName}]"]`).length);
+			});
+
+        }
+
+        handleCheckAll('to');
+        handleCheckAll('sic');
+        handleCheckAll('pvt');
+    });
+</script>
 @endsection
