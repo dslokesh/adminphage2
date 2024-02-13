@@ -92,7 +92,7 @@
 					<td><select name="adult[{{$ap->ucode}}]" id="adult{{$kk}}" class="form-control priceChange"  data-inputnumber="{{$kk}}" @if($kk > '0') disabled="disabled" @endif>
 						<option value="">0</option>
 						@for($a=$ap->prices->adult_min_no_allowed; $a<=$ap->prices->adult_max_no_allowed; $a++)
-						@if($ap->prices->adult_min_no_allowed+$ap->prices->child_min_no_allowed > 0)
+						@if($ap->prices->adult_max_no_allowed > 0)
 						<option value="{{$a}}" @if($voucher->adults==$a) selected="selected" @endif>{{$a}}</option>
 						@endif
 						@endfor
