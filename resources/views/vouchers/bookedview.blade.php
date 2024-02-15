@@ -37,7 +37,7 @@
                 </div>
 
                 <div class="col-md-3 multistep-step current">
-                    <div class="text-center multistep-stepname" style="font-size: 16px;">Confimation</div>
+                    <div class="text-center multistep-stepname" style="font-size: 16px;">Confirmation</div>
                     <div class="progress"><div class="progress-bar"></div></div>
                     <a href="#" class="multistep-dot"></a>
                 </div>
@@ -143,6 +143,11 @@
                       
 					   <label for="inputName">Agent Reference No.:</label>
                      {{$voucher->agent_ref_no}}
+                    </div>
+					<div class="col-6">
+                      
+					   <label for="inputName">File Handling By:</label>
+                     {{$voucher->file_handling_by}}
                     </div>
                   </div>
                   <div class="row" style="margin-bottom: 5px;">

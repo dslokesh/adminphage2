@@ -184,35 +184,35 @@
 				<label for="inputName">Operational Days: <span class="red">*</span></label>
 					<div class="form-group clearfix">
 					<div class="icheck-primary d-inline">
-					<input type="checkbox" id="allDaysCheckbox" name="AllDay" value="All" >
+					<input type="checkbox" id="allDaysCheckbox" checked name="AllDay" value="All" >
 					<label for="checkboxPrimary1">All Days</label>
 					</div>
 					<div class="icheck-primary d-inline">
-					<input type="checkbox" id="checkboxMonday" value="Monday" name="day[0]"  >
+					<input type="checkbox" id="checkboxMonday" checked value="Monday" name="day[0]"  >
 					<label for="checkboxPrimary1">Monday</label>
 					</div>
 					<div class="icheck-primary d-inline">
-					<input type="checkbox" id="checkboxTuesday" value="Tuesday" name="day[1]" >
+					<input type="checkbox" id="checkboxTuesday" checked value="Tuesday" name="day[1]" >
 					<label for="checkboxPrimary1">Tuesday</label>
 					</div>
 					<div class="icheck-primary d-inline">
-					<input type="checkbox" id="checkboxPrimary1" value="Wednesday" name="day[2]">
+					<input type="checkbox" id="checkboxPrimary1" checked value="Wednesday" name="day[2]">
 					<label for="checkboxPrimary1">Wednesday</label>
 					</div>
 					<div class="icheck-primary d-inline">
-					<input type="checkbox" id="checkboxPrimary1" value="Thursday" name="day[3]">
+					<input type="checkbox" id="checkboxPrimary1" checked value="Thursday" name="day[3]">
 					<label for="checkboxPrimary1">Thursday</label>
 					</div>
 					<div class="icheck-primary d-inline">
-					<input type="checkbox" id="checkboxPrimary1" value="Friday" name="day[4]" >
+					<input type="checkbox" id="checkboxPrimary1" checked value="Friday" name="day[4]" >
 					<label for="checkboxPrimary1">Friday</label>
 					</div>
 					<div class="icheck-primary d-inline">
-					<input type="checkbox" id="checkboxPrimary1" value="Saturday" name="day[5]" >
+					<input type="checkbox" id="checkboxPrimary1" checked value="Saturday" name="day[5]" >
 					<label for="checkboxPrimary1">Saturday</label>
 					</div>
 					<div class="icheck-primary d-inline">
-					<input type="checkbox" id="checkboxPrimary1" value="Sunday" name="day[6]">
+					<input type="checkbox" id="checkboxPrimary1" checked value="Sunday" name="day[6]">
 					<label for="checkboxPrimary1">Sunday</label>
 					</div>
 					</div>
@@ -288,9 +288,9 @@
                 @endif
               </div>
 			  <div class="form-group col-md-12">
-                <label for="inputName">Booking Policy: </label>
+                <label for="inputName">High Light: </label>
 				
-                <textarea placeholder="Booking Policy" name="booking_policy" cols="50" rows="5" id="booking_policy" class="form-control box-size text-editor-all">{{ old('booking_policy') }}</textarea>
+                <textarea placeholder="High Light" name="booking_policy" cols="50" rows="5" id="booking_policy" class="form-control box-size text-editor-all">{{ old('booking_policy') }}</textarea>
                 @if ($errors->has('booking_policy'))
                     <span class="text-danger">{{ $errors->first('booking_policy') }}</span>
                 @endif
@@ -321,9 +321,9 @@
                 @endif
               </div>
 			   <div class="form-group col-md-6">
-                <label for="inputName">Cancellation Policy: </label>
+                <label for="inputName">Booking Policy: </label>
 				
-                <textarea placeholder="Cancellation Policy" name="cancellation_policy" cols="50" rows="5" id="cancellation_policy" class="form-control box-size text-editor-all">{{ old('cancellation_policy') }}</textarea>
+                <textarea placeholder="Booking Policy" name="cancellation_policy" cols="50" rows="5" id="cancellation_policy" class="form-control box-size text-editor-all">{{ old('cancellation_policy') }}</textarea>
                 @if ($errors->has('cancellation_policy'))
                     <span class="text-danger">{{ $errors->first('cancellation_policy') }}</span>
                 @endif
@@ -411,15 +411,21 @@
   
   
   
-  $('#allDaysCheckbox').on('change', function() {
-    // If the "All Days" checkbox is checked, disable other day checkboxes
-    if ($(this).is(':checked')) {
-      $('input[type="checkbox"]').not(this).prop('disabled', true);
-    } else {
-      // Otherwise, enable other day checkboxes
-      $('input[type="checkbox"]').not(this).prop('disabled', false);
-    }
-  });
+ $("#allDaysCheckbox").click(function () {
+            // Check or uncheck all individual day checkboxes based on "All Days" checkbox status
+            $("input[name^='day']").prop('checked', $(this).prop('checked'));
+        });
+
+        // When any individual day checkbox is clicked
+        $("input[name^='day']").click(function () {
+            // If any individual day checkbox is unchecked, uncheck "All Days" checkbox
+            if ($("input[name^='day']:checked").length < 7) {
+                $("#allDaysCheckbox").prop('checked', false);
+            } else {
+                // If all individual day checkboxes are checked, check "All Days" checkbox
+                $("#allDaysCheckbox").prop('checked', true);
+            }
+        });
   
   $('#sic_TFRS').on('change', function() {
     // If the checkbox is checked, show the text input

@@ -437,6 +437,7 @@ class VouchersController extends Controller
 		$record->guest_phone = $data['customer_mobile'];
 		$record->agent_ref_no = $data['agent_ref_no'];
 		$record->remark = $data['remark'];
+		$record->file_handling_by = $data['file_handling_by'];
 		$record->updated_by = Auth::user()->id;
 		$record->payment_date = $paymentDate;
 		
@@ -535,7 +536,7 @@ class VouchersController extends Controller
 		
 		}
 		else if ($request->has('btn_hold')) {
-			$record->booking_date = date("Y-m-d");
+			//$record->booking_date = date("Y-m-d");
 			$record->status_main = 4;
 			$record->save();
 		}

@@ -324,9 +324,9 @@
                 @endif
               </div>
 			   <div class="form-group col-md-12">
-                <label for="inputName">Booking Policy: </label>
+                <label for="inputName">High Light: </label>
 				
-                <textarea placeholder="Booking Policy" name="booking_policy" cols="50" rows="5"  id="booking_policy" class="form-control box-size text-editor-all">{{ old('booking_policy')?:$record->booking_policy }}</textarea>
+                <textarea placeholder="High Light" name="booking_policy" cols="50" rows="5"  id="booking_policy" class="form-control box-size text-editor-all">{{ old('booking_policy')?:$record->booking_policy }}</textarea>
                 @if ($errors->has('booking_policy'))
                     <span class="text-danger">{{ $errors->first('booking_policy') }}</span>
                 @endif
@@ -357,9 +357,9 @@
                 @endif
               </div>
 			   <div class="form-group col-md-6">
-                <label for="inputName">Cancellation Policy: <span class="red">*</span></label>
+                <label for="inputName">Booking Policy: <span class="red">*</span></label>
 				
-                <textarea placeholder="Cancellation Policy" name="cancellation_policy" cols="50" rows="5" id="cancellation_policy" class="form-control box-size text-editor-all">{{ old('cancellation_policy')?:$record->cancellation_policy }}</textarea>
+                <textarea placeholder="Booking Policy" name="cancellation_policy" cols="50" rows="5" id="cancellation_policy" class="form-control box-size text-editor-all">{{ old('cancellation_policy')?:$record->cancellation_policy }}</textarea>
                 @if ($errors->has('cancellation_policy'))
                     <span class="text-danger">{{ $errors->first('cancellation_policy') }}</span>
                 @endif

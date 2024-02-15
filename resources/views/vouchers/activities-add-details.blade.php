@@ -369,6 +369,8 @@
 
  
  function getPrice(argsArray) {
+	argsArray.adult = (isNaN(argsArray.adult))?0:argsArray.adult;
+	argsArray.child = (isNaN(argsArray.child))?0:argsArray.child;
   return new Promise(function(resolve, reject) {
     $.ajax({
       url: "{{ route('get-activity.variant.price') }}",

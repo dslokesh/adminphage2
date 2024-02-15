@@ -73,25 +73,33 @@
                         <option>Miss</option>
                       </select>
                     </div>
-                    <div class="col-5">
+                    <div class="col-4">
                       <input type="text" name="fname" value="{{$fname}}" class="form-control" placeholder="First Name*" required>
                     </div>
-                    <div class="col-5">
+                    <div class="col-6">
                       <input type="text" name="lname" value="{{$lname}}" class="form-control" placeholder="Last Name*" required>
                     </div>
                   </div>
                   <div class="row" style="margin-bottom: 15px;">
-                    <div class="col-4">
+                    <div class="col-6">
                       <input type="text" name="customer_email" value="{{(!empty($voucher->guest_email))?$voucher->guest_email:$voucher->agent->email}}" class="form-control" placeholder="Email ID">
                     </div>
-                    <div class="col-4">
+                    <div class="col-6">
                      <input type="text" name="customer_mobile" value="{{(!empty($voucher->guest_phone))?$voucher->guest_phone:$voucher->agent->mobile}}" class="form-control" placeholder="Mobile No.">
                     </div>
-                    <div class="col-4">
+                    
+					
+                  </div>
+				  <div class="row" style="margin-bottom: 15px;">
+				  <div class="col-6">
+                      <input type="text" name="file_handling_by" value="{{$voucher->file_handling_by}}" class="form-control" placeholder="File Handling By">
+                    </div>
+				  <div class="col-6">
                       <input type="text" name="agent_ref_no" value="{{$voucher->agent_ref_no}}" class="form-control" placeholder="Agent Reference No.">
                     </div>
-                  </div>
+				  </div>
                   <div class="row" style="margin-bottom: 5px;">
+				  
                     <div class="col-12">
                       <textarea type="text" class="form-control" style="resize:none;" name="remark" placeholder="Remark" rows="2">{{$voucher->remark}}</textarea>
                     </div>
@@ -127,8 +135,14 @@
 					@if(!empty($voucherActivity))
 						 @php
 					$c=0;
+					$tkt=0;
 					@endphp
-					<div class="row" style="margin-bottom: 15px;">
+					 @foreach($voucherActivity as $ap)
+						@if(($ap->transfer_option != 'Ticket Only'))
+							@php $tkt++; @endphp
+						@endif
+					  @endforeach
+					<div class="row @if($tkt == 0) hide @endif" style="margin-bottom: 15px;" >
 					<div class="form-group col-md-6">
 						 <label>Defaut Dropoff Location</label>
 						<input type="text" class="form-control" id="defaut_dropoff_location" />
@@ -139,8 +153,8 @@
 						 <input type="text" class="form-control" id="defaut_pickup_location" />
 						</div>
 					</div>
-					  @foreach($voucherActivity as $ap)
-				  @if(($ap->transfer_option == 'Shared Transfer') || ($ap->transfer_option == 'Pvt Transfer') || ($ap->transfer_option == 'Ticket Only'))
+					 @foreach($voucherActivity as $ap)
+					  @if(($ap->transfer_option == 'Shared Transfer') || ($ap->transfer_option == 'Pvt Transfer') || ($ap->transfer_option == 'Ticket Only'))
 				  @php
 					$c++;
           

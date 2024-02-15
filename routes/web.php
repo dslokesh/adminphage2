@@ -131,6 +131,9 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
 		 Route::get('activity-variants', [ActivityVariantController::class, 'index'])->name('activity.variants');
 		 Route::get('activity-variants/create',[ActivityVariantController::class, 'create'])->name('activity.variants.create');
 		 Route::post('activity-variants/store', [ActivityVariantController::class, 'store'])->name('activity.variants.store');
+		Route::get('activity-variants/edit/{id}',[ActivityVariantController::class, 'edit'])->name('activity.variants.edit');
+		Route::post('activity-variants/update/{id}',[ActivityVariantController::class, 'update'])->name('activity.variants.update');
+		
 		 Route::delete('activity-variants-delete/{id}', [ActivityVariantController::class, 'destroy'])->name('activity.variants.destroy');
 		 Route::get('activity-variant/prices/{vid}', [VariantPriceController::class, 'index'])->name('activity.variant.prices');
 		Route::get('activity-variant/price/create/{vid}', [VariantPriceController::class, 'create'])->name('activity.variant.price.create');

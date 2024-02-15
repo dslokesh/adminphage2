@@ -235,7 +235,7 @@ class AuthController extends Controller
 		DB::raw('SUM((SELECT COUNT(id) FROM  voucher_activity WHERE voucher_id = vouchers.id AND status NOT IN (1,2))) as totalActivity')
     )
     ->where('status_main', '5')
-    ->whereDate('created_at',  $currentDate)
+    ->whereDate('booking_date',  $currentDate)
     ->first();
 			
 			$vouchersMonth =Voucher::select(
@@ -246,8 +246,8 @@ class AuthController extends Controller
 		DB::raw('SUM((SELECT COUNT(id) FROM  voucher_activity WHERE voucher_id = vouchers.id AND status NOT IN (1,2))) as totalActivity')
     )
     ->where('status_main', '5')
-    ->whereDate('created_at', '>=', $currentMonthStartDate)
-    ->whereDate('created_at', '<=', $currentDate)
+    ->whereDate('booking_date', '>=', $currentMonthStartDate)
+    ->whereDate('booking_date', '<=', $currentDate)
     ->first();
 			
 			 $vouchersYear = Voucher::select(
@@ -258,8 +258,8 @@ class AuthController extends Controller
 		DB::raw('SUM((SELECT COUNT(id) FROM  voucher_activity WHERE voucher_id = vouchers.id AND status NOT IN (1,2))) as totalActivity')
     )
     ->where('status_main', '5')
-    ->whereDate('created_at', '>=', $startDateOfApril)
-    ->whereDate('created_at', '<=', $endDateOfMarchNextYear)
+    ->whereDate('booking_date', '>=', $startDateOfApril)
+    ->whereDate('booking_date', '<=', $endDateOfMarchNextYear)
     ->first();
 			
 			  //print_r($vouchersCurrentDate);
@@ -269,14 +269,14 @@ class AuthController extends Controller
 					 return view('dashboard-agent', compact('totalUserRecords','totalAgentRecords','totalSupplierRecords','totalCustomerRecords','totalActivityRecords','totalHotelRecords'));
 				}else{
 					$query = Voucher::where('id','!=', null);
-					$query->whereDate('created_at', $todayDate);
+					$query->whereDate('booking_date', $todayDate);
 					$query->where(function ($q) {
 					$q->where('status', '=', 1)
 					->orWhere('status', '=', 4)->orWhere('status', '=', 5);
 					});
 					
           
-					$vouchers = $query->orderBy('created_at', 'DESC')->paginate(10);
+					$vouchers = $query->orderBy('booking_date', 'DESC')->paginate(10);
                 return view('dashboard', compact('totalUserRecords','totalAgentRecords','totalSupplierRecords','totalCustomerRecords','totalActivityRecords','totalHotelRecords','vouchers','vouchersCurrentDate','vouchersMonth','vouchersYear'));
 				}
            

@@ -34,8 +34,8 @@
 			
 				   {{ csrf_field() }}
 				    <div class="form-group col-md-12">
-                <label for="inputName">Code: <span class="red">*</span></label>
-                <input type="text" id="code" name="code" value="{{ old('code') }}" class="form-control"  placeholder="Code" />
+                <label for="inputName">Display Name: <span class="red">*</span></label>
+                <input type="text" id="code" name="code" value="{{ old('code') }}" class="form-control"  placeholder="Display Name" />
                 @if ($errors->has('code'))
                     <span class="text-danger">{{ $errors->first('code') }}</span>
                 @endif

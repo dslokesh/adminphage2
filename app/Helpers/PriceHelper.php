@@ -182,8 +182,8 @@ class PriceHelper
 		$activity_variant_id = (isset($data['activity_variant_id']))?$data['activity_variant_id']:0;
 		$agent_id = (isset($data['agent_id']))?$data['agent_id']:0;
 		$voucherId = (isset($data['voucherId']))?$data['voucherId']:0;
-		$adult = (isset($data['adult']) && $data['adult'] > 0)?$data['adult']:0;
-		$child = (isset($data['child']) && $data['child'] > 0)?$data['child']:0;
+		$adult = (isset($data['adult']) && $data['adult'] > 0)?(int)$data['adult']:0;
+		$child = (isset($data['child']) && $data['child'] > 0)?(int)$data['child']:0;
 		$infent = (isset($data['infent']) && $data['infent'] > 0)?$data['infent']:0;
 		$tourDate = (isset($data['tourDate']))?date("Y-m-d",strtotime($data['tourDate'])):0;
 		$discount = (isset($data['discount']))?$data['discount']:0;

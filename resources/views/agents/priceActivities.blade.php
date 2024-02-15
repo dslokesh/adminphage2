@@ -22,6 +22,7 @@
 					}
 				
 		}
+		 
 </script>
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -60,7 +61,7 @@
 			   <form id="filterForm" method="post" action="{{route('agents.markup.activity.save')}}" >
 				   {{ csrf_field() }}
 				   <input type="hidden" name="agent_id" value="{{ $agentId}}" />
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="example20" class="table table-bordered table-striped">
                   <thead>
                   <tr>
                   <th><input type="checkbox" name="selectall" id="selectall" value="all" onClick="selectAll(this);" /></th>
@@ -101,5 +102,19 @@
     <!-- /.content -->
 @endsection
 @section('scripts')
+ <script type="text/javascript">
+$(document).ready(function() {
+		$('#example20').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+      "bFilter": true, // show search input
+    });
+	 });
+	 </script>   
  @include('inc.citystatecountryjs')
 @endsection

@@ -62,6 +62,7 @@ class ActivityVariantController extends Controller
         'variant_id.*' => 'exists:variants,id',
     ], [
         'activity_id.required' => 'Please select activity.',
+		'code.required' => 'Display Name required.',
         'variant_id.required_if' => 'Please select at least one variant.',
         'variant_id.*.exists' => 'One or more selected variants do not exist in the database.',
     ]);
@@ -71,6 +72,10 @@ class ActivityVariantController extends Controller
     $activityId = $request->input('activity_id');
 
     foreach ($variantIds as $variantId) {
+		$existingRecord = ActivityVariant::where('activity_id', $activityId)
+        ->where('variant_id', $variantId)
+        ->count();
+		if ($existingRecord == 0) {
         $record = ActivityVariant::create([
             'code' => $code,
             'activity_id' => $activityId,
@@ -78,9 +83,54 @@ class ActivityVariantController extends Controller
         ]);
 
         $record->update(['ucode' => 'AV'.$record->id]);
+		}
     }
 
     return redirect('activity-variants')->with('success', 'Activity Variant(s) Created Successfully.');
+	}
+	
+	
+	public function edit(Request $request,$id)
+    {
+		//$this->checkPermissionMethod('list.activity');
+        $data = $request->all();
+		$activityVariant = ActivityVariant::find($id);
+		$activities = Activity::where('status',1)->get();
+		$variants = Variant::where('status',1)->get();
+		//dd($records);
+        return view('activity_variants.edit', compact('activities','variants','activityVariant'));
+    }
+	
+	public function update(Request $request, $id)
+	{
+    $request->validate([
+        'code' => 'required',
+        'activity_id' => 'required',
+        'variant_id' => 'required_if:activity_id,1', 
+    ], [
+        'activity_id.required' => 'Please select activity.',
+		'code.required' => 'Display Name required.',
+        'variant_id.required_if' => 'Please select variant.',
+        'variant_id.*.exists' => 'One or more selected variants do not exist in the database.',
+    ]);
+
+    $variantIds = $request->input('variant_id');
+    $code = $request->input('code');
+    $activityId = $request->input('activity_id');
+
+		$existingRecord = ActivityVariant::where('activity_id', $activityId)
+        ->where('variant_id', $variantIds)->where('id', '!=',$id)
+        ->count();
+		if ($existingRecord == 0) {
+        $record = ActivityVariant::where('id', $id)->update([
+            'code' => $code,
+            'activity_id' => $activityId,
+            'variant_id' => $variantIds,
+        ]);
+
+		}
+
+    return redirect('activity-variants')->with('success', 'Activity Variant Updated Successfully.');
 	}
 	
 	public function destroy($id)

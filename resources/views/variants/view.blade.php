@@ -210,7 +210,7 @@
                 {!!$variant->important_information!!}
               </div>
 			  <div class="form-group col-lg-12 mb-3">
-                <label for="inputName">Booking Policy:</label>
+                <label for="inputName">High Light:</label>
                 {!!$variant->booking_policy!!}
               </div>
 			    <div class="form-group col-lg-12 mb-3">
@@ -218,7 +218,7 @@
                 {!!$variant->booking_cut_off!!}
               </div>
 			   <div class="form-group col-lg-12 mb-3">
-                <label for="inputName">Cancellation Policy:</label>
+                <label for="inputName">Booking Policy:</label>
                 {!!$variant->cancellation_policy!!}
               </div>
 			   
