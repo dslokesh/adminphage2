@@ -27,6 +27,9 @@ use App\Mail\VoucheredBookingEmailMailable;
 
 class AgentVouchersController extends Controller
 {
+	
+
+	
     /**
      * Display a listing of the resource.
      *
@@ -34,10 +37,12 @@ class AgentVouchersController extends Controller
      */
     public function index(Request $request)
     {
-		if (!auth()->check()) {
-        // User is not authenticated, redirect to the login page
-        return redirect()->route('login');
-    }
+		
+		$redirectResponse = $this->chekAgentLogin();
+		if ($redirectResponse) {
+		return $redirectResponse;
+		}
+		
 		 $perPage = config("constants.ADMIN_PAGE_LIMIT");
 		 $data = $request->all();
 		$query = VoucherActivity::whereHas('voucher', function($q){
@@ -106,6 +111,11 @@ class AgentVouchersController extends Controller
      */
     public function create()
     {
+		$redirectResponse = $this->chekAgentLogin();
+		if ($redirectResponse) {
+		return $redirectResponse;
+		}
+		
 		$countries = Country::where('status', 1)->orderBy('name', 'ASC')->get();
 		$airlines = Airline::where('status', 1)->orderBy('name', 'ASC')->get();
 		if(old('customer_id_select')){
@@ -125,6 +135,10 @@ class AgentVouchersController extends Controller
      */
     public function store(Request $request)
     {
+		$redirectResponse = $this->chekAgentLogin();
+		if ($redirectResponse) {
+		return $redirectResponse;
+		}
 		
         $request->validate([
             
@@ -212,6 +226,11 @@ class AgentVouchersController extends Controller
 	 
 	public function show($id)
     {
+		$redirectResponse = $this->chekAgentLogin();
+		if ($redirectResponse) {
+		return $redirectResponse;
+		}
+		
 		$voucher = Voucher::with('agent')->find($id);
 		
 		if (empty($voucher)) {
@@ -406,6 +425,11 @@ class AgentVouchersController extends Controller
 	
 	 public function addActivityList(Request $request,$vid)
     {
+		$redirectResponse = $this->chekAgentLogin();
+		if ($redirectResponse) {
+		return $redirectResponse;
+		}
+		
        $data = $request->all();
 		$typeActivities = config("constants.typeActivities"); 
         //$perPage = config("constants.ADMIN_PAGE_LIMIT");
@@ -449,6 +473,11 @@ class AgentVouchersController extends Controller
 	
 	 public function addActivityView($aid,$vid)
     {
+		$redirectResponse = $this->chekAgentLogin();
+		if ($redirectResponse) {
+		return $redirectResponse;
+		}
+		
 		$query = Activity::with('images')->where('id', $aid);
 		$activity = $query->where('status', 1)->first();
 		
@@ -532,6 +561,10 @@ class AgentVouchersController extends Controller
 	
 	public function activitySaveInVoucher(Request $request)
     {
+		$redirectResponse = $this->chekAgentLogin();
+		if ($redirectResponse) {
+		return $redirectResponse;
+		}
 		$activity_select = $request->input('activity_select');
 		
 	if(isset($activity_select))
@@ -677,6 +710,11 @@ class AgentVouchersController extends Controller
 	
 	public function statusChangeVoucher(Request $request,$id)
     {
+		$redirectResponse = $this->chekAgentLogin();
+		if ($redirectResponse) {
+		return $redirectResponse;
+		}
+		
 		$data = $request->all();
 		$hotelPriceTotal = 0;
 		$grandTotal = 0;
@@ -839,6 +877,22 @@ class AgentVouchersController extends Controller
 		}
 		else{
 		return redirect()->back()->with('error', "Ticket already downloaded you can not cancel this.");	
+		}
+	}
+	
+	public function chekAgentLogin(){
+		
+		if (auth()->check()) {
+			
+			$user = auth()->user();
+			if ($user->role_id == '3') {
+			
+			} else {
+				return redirect()->route('dashboard')->withSuccess('You have Successfully logged in.');
+			}
+			
+		} else {
+			return redirect()->route('login');
 		}
 	}
 }
