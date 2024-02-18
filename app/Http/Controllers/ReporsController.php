@@ -513,8 +513,12 @@ return Excel::download(new LogisticReportExport($records), 'logistic_records'.da
 		$agetName = $agentTBA->company_name;
 		}
 		
-		
+		if(Auth::user()->role_id == '3')
+		{
         return view('reports.agent-with-vat-ledger-report', compact('records','voucherStatus','agetid','agetName','openingBalance'));
+		} else {
+		 return view('reports.agent-with-vat-ledger-report-forAdmin', compact('records','voucherStatus','agetid','agetName','openingBalance'));	
+		}
 
     }
 	

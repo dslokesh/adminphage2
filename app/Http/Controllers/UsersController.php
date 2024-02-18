@@ -426,7 +426,11 @@ class UsersController extends Controller
         $roles = Role::where('id', '!=' , '1')->where('id', '!=' , '3')->orderBy('name', 'ASC')->get();
         //pr($user);
 		
+		if(Auth::user()->role_id == '3'){
+		return view('users.profile_agent', compact('roles','user','countries','states','cities'));
+		} else {
 			return view('users.profile', compact('roles','user','countries','states','cities'));
+		}
 		
         
     }
@@ -496,8 +500,12 @@ class UsersController extends Controller
 		$user->updated_by = Auth::user()->id;
         $user->save();
 		
-        
+        if(Auth::user()->role_id == '3'){
+		return redirect('/profile-edit/'.Auth::user()->id)->with('success','Profile Updated Successfully.');
+		} else {
 			return redirect('/dashboard')->with('success','Profile Updated Successfully.');
+		}
+		
 		
 		
         

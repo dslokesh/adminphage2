@@ -51,8 +51,8 @@ use App\Http\Controllers\VariantCanellationController;
     return view('welcome');
 });
 */
-
-Route::get('/', [AuthController::class, 'index'])->name('login');
+Route::get('/', [AgentVouchersController::class, 'index']);
+Route::get('/login', [AuthController::class, 'index'])->name('login');
 Route::get('/thank-you', [AuthController::class, 'thankyou'])->name('thankyou');
 Route::post('post-login', [AuthController::class, 'postLogin'])->name('login.post');
 Route::get('registration', [AuthController::class, 'registration'])->name('register');
@@ -190,6 +190,7 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
         Route::get('agent-add-activity-vouchers/{vid?}', [AgentVouchersController::class, 'addActivityList'])->name('agent-vouchers.add.activity');
         Route::get('agent-activity-view-vouchers/{aid?}/{vid?}', [AgentVouchersController::class, 'addActivityView'])->name('agent-vouchers.activity.view');
         Route::post('agent-activity-get-variant/{aid?}/{vid?}', [AgentVouchersController::class, 'getActivityVariant'])->name('get-agent-vouchers.activity.variant');
+		Route::post('agent-activity-get-variant-price', [AgentVouchersController::class, 'getActivityVariantPrice'])->name('agent.get.activity.variant.price');
         Route::post('agent-voucher-activity-save', [AgentVouchersController::class, 'activitySaveInVoucher'])->name('agent-voucher.activity.save');
         Route::delete('agent-voucher-activity-delete/{id}', [AgentVouchersController::class, 'destroyActivityFromVoucher'])->name('agent.voucher.activity.delete');
 		Route::post('agent-voucher-activity-cancel/{id}', [AgentVouchersController::class, 'cancelActivityFromVoucher'])->name('agent-voucher.activity.cancel');

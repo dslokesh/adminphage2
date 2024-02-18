@@ -33,6 +33,13 @@ class AuthController extends Controller
      */
     public function index()
     {
+		if (auth()->check()) {
+			if(Auth::user()->role_id == '3'){
+			return redirect('/');
+			}else {
+			return redirect()->intended('dashboard');
+			}
+		}
         return view('auth.login');
     }  
 	
@@ -48,6 +55,14 @@ class AuthController extends Controller
      */
     public function registration()
     {
+		if (auth()->check()) {
+			if(Auth::user()->role_id == '3'){
+			return redirect('/');
+			}else {
+			return redirect()->intended('dashboard');
+			}
+		}
+		
 		$countries = Country::where('status', 1)->orderBy('name', 'ASC')->get();
         return view('auth.registration', compact('countries'));
     }
@@ -316,7 +331,11 @@ class AuthController extends Controller
 	
 	public function changepassword(Request $request){
 		$user = User::where('id',\Auth::user()->id)->first();
-		return view('changepassword',compact('user'));
+		if(Auth::user()->role_id == '3'){
+		return view('changepassword-agent',compact('user'));
+		} else {
+			return view('changepassword',compact('user'));
+		}
 	}
 
     public function saveProfile(Request $request){

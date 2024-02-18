@@ -1,130 +1,116 @@
-@extends('layouts.signUp')
+@extends('layouts.appLogin')
   
 @section('content')
-<main class="login-form">
-  <div class="cotainer">
-      <div class=" justify-content-center">
-        <div class="col-md-12 ">
-          <div class="row">
+<section class="mt-header layout-pt-lg layout-pb-lg">
+      <div class="container">
+        <div data-anim="slide-up" class="row justify-center">
+          <div class="col-xl-6 col-lg-7 col-md-9">
+            <div class="text-center mb-60 md:mb-30">
+              <h1 class="text-30">Register</h1>
+              <div class="text-18 fw-500 mt-20 md:mt-15">@include('inc.errors-and-messages')</div>
+              <div class="mt-5">
+                Already have an account? <a href="{{route('login')}}" class="text-accent-1">Log In!</a>
+              </div>
+            </div>
 
-         
-     
-<div class="col-md-12 background-white">
-             
-  
-                      <form action="{{ route('register.post') }}" method="post" class="form" enctype="multipart/form-data">
-    {{ csrf_field() }}
-    <div class="row">
-        <div class="col-md-12">
-          <div class=" card-primary">
-            <div class="card-body row">
-               
-                  <div class="row">
-                <div class="form-group col-md-12">
-                  <input type="text" id="company_name	" name="company_name" value="{{ old('company_name')}}" class="form-control"  placeholder="Agency Name" />
+            <div class="contactForm border-1 rounded-12 px-60 py-60 md:px-25 md:py-30">
+			<form action="{{ route('register.post') }}" method="post" class="form" enctype="multipart/form-data">
+			{{ csrf_field() }}
+              <div class="form-input ">
+                <input type="text" id="company_name	" name="company_name" value="{{ old('company_name')}}" class="form-control"  />
+				 <label class="lh-1 text-16 text-light-1">Agency Name</label>
                   @if ($errors->has('company_name'))
                       <span class="text-danger">{{ $errors->first('company_name') }}</span>
                   @endif
-                </div>
-                <div class="form-group col-md-6">
-                <input type="text" id="first_name" name="first_name" value="{{ old('first_name') }}" class="form-control"  placeholder="First Name" />
-                @if ($errors->has('first_name'))
+               
+              </div>
+				<div class="form-input mt-30">
+                 <input type="text" id="first_name" name="first_name" value="{{ old('first_name') }}" class="form-control"   />
+                <label class="lh-1 text-16 text-light-1">First Name</label>
+				@if ($errors->has('first_name'))
                     <span class="text-danger">{{ $errors->first('first_name') }}</span>
                 @endif
               </div>
-			        <div class="form-group col-md-6">
-                <input type="text" id="last_name" name="last_name" value="{{ old('last_name') }}" class="form-control"  placeholder="Last Name" />
-                @if ($errors->has('last_name'))
+				<div class="form-input mt-30">
+                 <input type="text" id="last_name" name="last_name" value="{{ old('first_name') }}" class="form-control"  />
+                <label class="lh-1 text-16 text-light-1">Last Name</label>
+				@if ($errors->has('last_name'))
                     <span class="text-danger">{{ $errors->first('last_name') }}</span>
                 @endif
               </div>
-			  
-                <div class="form-group col-md-6">
-                <input type="text" id="mobile" name="mobile" required value="{{ old('mobile') }}" class="form-control"  placeholder="Mobile No with Country Code *" />
-                @if ($errors->has('mobile'))
+				<div class="form-input mt-30">
+                 <input type="text" id="mobile" name="mobile"  value="{{ old('mobile') }}" class="form-control"   />
+                <label class="lh-1 text-16 text-light-1">Mobile No with Country Code</label>
+				 @if ($errors->has('mobile'))
                     <span class="text-danger">{{ $errors->first('mobile') }}</span>
                 @endif
               </div>
-			        <div class="form-group col-md-6">
-                <input type="email" id="email" name="email" value="{{ old('email') }}" required class="form-control"  placeholder="Email ID *" />
-                @if ($errors->has('email'))
+			<div class="form-input mt-30">
+                <input type="email" id="email" name="email" value="{{ old('email') }}"  class="form-control"  />
+                <label class="lh-1 text-16 text-light-1">Email ID</label>
+				@if ($errors->has('email'))
                     <span class="text-danger">{{ $errors->first('email') }}</span>
                 @endif
               </div>
-			 
-              <div class="form-group col-md-12">
-               <textarea id="address" name="address" rows="2" style="resize:none;" class="form-control" required placeholder="Address" >{{ old('address') }}</textarea>
-                @if ($errors->has('address'))
+			  <div class="form-input mt-30">
+                <textarea id="address" name="address" rows="2" style="resize:none;" class="form-control" >{{ old('address') }}</textarea>
+                <label class="lh-1 text-16 text-light-1">Address</label>
+				 @if ($errors->has('address'))
                     <span class="text-danger">{{ $errors->first('address') }}</span>
                 @endif
               </div>
-               
-			  <div class="form-group col-md-6">
-                <select name="country_id" id="country_id" class="form-control">
+			  <div class="form-input mt-30">
+              <select name="country_id" id="country_id" class="form-control">
 				<option value="">Country</option>
 				@foreach($countries as $country)
                     <option value="{{$country->id}}" @if(old('country_id') == $country->id) {{'selected="selected"'}} @endif>{{$country->name}}</option>
 				@endforeach
                  </select>
+               
 				 @if ($errors->has('country_id'))
                     <span class="text-danger">{{ $errors->first('country_id') }}</span>
                 @endif
               </div>
-			  <div class="form-group col-md-6">
-               
-                <select name="state_id" id="state_id" class="form-control">
+			  <div class="form-input mt-30">
+             <select name="state_id" id="state_id" class="form-control">
 				<option value="">State</option>
 				</select>
+                
+				 @if ($errors->has('state_id'))
+                    <span class="text-danger">{{ $errors->first('state_id') }}</span>
+                @endif
               </div>
-              <div class="form-group col-md-6">
-                <select name="city_id" id="city_id" class="form-control">
+			  <div class="form-input mt-30">
+               <select name="city_id" id="city_id" class="form-control">
 				<option value="">City</option>
 				</select>
+                
+				 @if ($errors->has('city_id'))
+                    <span class="text-danger">{{ $errors->first('city_id') }}</span>
+                @endif
               </div>
-               <div class="form-group col-md-6">
-                <input type="text" id="postcode" name="postcode" value="{{ old('postcode') }}" class="form-control" placeholder="Zip Code"   />
-                @if ($errors->has('postcode'))
+			    <div class="form-input mt-30">
+             <input type="text" id="postcode" name="postcode" value="{{ old('postcode') }}" class="form-control"    />
+                <label class="lh-1 text-16 text-light-1">Zip Code</label>
+				 @if ($errors->has('postcode'))
                     <span class="text-danger">{{ $errors->first('postcode') }}</span>
                 @endif
               </div>
-              
-                </div>
-             
 			  
+              <button type="submit" class="button -md -dark-1 bg-accent-1 text-white col-12 mt-30">
+                Register
+                <i class="icon-arrow-top-right ml-10"></i>
+              </button>
+
+              
+
+              
+			  </form>
             </div>
-			
-            <!-- /.card-body -->
           </div>
-          <!-- /.card -->
         </div>
       </div>
-      <div class="row">
-      <div class="col-4 offset-md-4">
-            <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
-
-        
-        </div>
-        <div class="col-6 pt-3">
-          
-       
-
-        
-        </div>
-      </div>
-      <p class="mb-1 mt-20">
-       
-		<a class="btn btn-link float-right" href="{{route('login')}}"> {{ __('Already have an account?') }}</a>
-      </p>
-    </form>
-                      
-                        
-                 
-              </div>
-        </div>
-          </div>
-      </div>
-  </div>
-</main>
+    </section>
 @endsection
 @section('scripts')
  @include('inc.citystatecountryjs')

@@ -1,30 +1,50 @@
 @extends('layouts.appLogin')
   
 @section('content')
-<div class="card-body">
-      <p class="login-box-msg">You forgot your password? Here you can easily retrieve a new password.</p>
-      <form method="POST" action="{{ route('password.email') }}">
+<section class="mt-header layout-pt-lg layout-pb-lg">
+      <div class="container">
+        <div data-anim="slide-up" class="row justify-center">
+          <div class="col-xl-6 col-lg-7 col-md-9">
+            <div class="text-center mb-60 md:mb-30">
+              <h1 class="text-30">Forgot Password</h1>
+              <div class="text-18 fw-500 mt-20 md:mt-15"> @include('inc.errors-and-messages')</div>
+              <div class="mt-5">You forgot your password? Here you can easily retrieve a new password.
+              </div>
+            </div>
+
+            <div class="contactForm border-1 rounded-12 px-60 py-60 md:px-25 md:py-30">
+			 <form method="POST" action="{{ route('password.email') }}">
          {{ csrf_field() }}   
-        <div class="input-group mb-3">
-          <input id="email" type="email" class="form-control" placeholder="Email" name="email" value="{{ old('email') }}" >
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-envelope"></span>
+              <div class="form-input ">
+			  <input type="text" id="email_address" class="form-control" name="email" placeholder="Email" required autofocus>
+                <label class="lh-1 text-16 text-light-1">Email Address </label>
+				 @if ($errors->has('email'))
+                <span class="text-danger">{{ $errors->first('email') }}</span>
+            @endif
+              </div>
+	
+
+              <div class="row y-ga-10 justify-between items-center pt-30">
+                <div class="col-auto">
+
+                  <div class="d-flex items-center">
+                    
+
+                  </div>
+
+                </div>
+
+                <div class="col-auto">
+                 <a class="btn btn-link" href="{{route('login')}}"> Login</a>
+                </div>
+              </div>
+				<button type="submit" class="button -md -dark-1 bg-accent-1 text-white col-12 mt-30">Request new password <i class="icon-arrow-top-right ml-10"></i></button>
+           
+			  </form>
             </div>
           </div>
         </div>
-        @if ($errors->has('email'))
-                <span class="text-danger text-left mb-3">{{ $errors->first('email') }}</span>
-            @endif
-        <div class="row">
-          <div class="col-12">
-            <button type="submit" class="btn btn-primary btn-block">Request new password</button>
-          </div>
-          <!-- /.col -->
-        </div>
-      </form>
-      <p class="mt-3 mb-1">
-        <a href="{{route('login')}}">Login</a>
-      </p>
-    </div>
+      </div>
+    </section>
+      
 @endsection

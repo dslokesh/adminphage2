@@ -163,184 +163,8 @@
 				
                
             </div>
-            <!-- /.card -->
-            @if(!empty($voucherActivity) && $voucher->is_activity == 1)
-            @php
-                    $ii = 0;
-                    @endphp
-                  @foreach($voucherActivity as $ap)
-                    @if(($ap->transfer_option == 'Shared Transfer') || ($ap->transfer_option == 'Pvt Transfer'))
-                    @php
-                    $ii = 1;
-                    @endphp
-                  @endif
-                    @endforeach
-                    
-                      <div class="card card-default {{($ii=='0')?'hide':''}}">
-              <div class="card-header">
-                <h3 class="card-title"><i class="nav-icon fas fa-book" style="color:black"></i> Additional Information</h3>
-              </div>
-              <!-- /.card-header -->
-              <!-- form start -->
-            
-                <div class="card-body">
-			
-					@if(!empty($voucherActivity))
-						 @php
-					$c=0;
-					@endphp
-					  @foreach($voucherActivity as $ap)
-				  @if(($ap->transfer_option == 'Shared Transfer') || ($ap->transfer_option == 'Pvt Transfer'))
-				  @php
-			  $c++;
-					$activity = SiteHelpers::getActivity($ap->activity_id);
-					@endphp
-                  <div class="row" style="margin-bottom: 15px;">
-                    <div class="col-12"><p><strong>{{$c}}. {{$ap->variant_name}} : {{$ap->transfer_option}}</strong></p></div>
-					@if($activity->entry_type=='Arrival')
-                    <div class="col-6">
-					<label for="inputName">Dropoff Location:</label>
-					{{$ap->dropoff_location}}
-                     
-                    </div>
-					 <div class="col-6">
-					<label for="inputName">Passenger Name:</label>
-					{{$ap->passenger_name}}
-                     
-                    </div>
-					<div class="col-6">
-					<label for="inputName">Arrival Time:</label>
-					{{$ap->actual_pickup_time}}
-                     
-                    </div>
-					<div class="col-6">
-					<label for="inputName">Flight Details:</label>
-					{{$ap->flight_no}}
-                     
-                    </div>
-                    <div class="col-6">
-					<label for="inputName">Remark:</label>
-					{{$ap->remark}}
-                    </div>
-				
-					@elseif($activity->entry_type=='Interhotel')
-					<div class="col-6">
-					<label for="inputName">Pickup Location:</label>
-					{{$ap->pickup_location}}
-                     
-                    </div>
-					 <div class="col-6">
-					<label for="inputName">Dropoff Location:</label>
-					{{$ap->dropoff_location}}
-                     
-                    </div>
-					<div class="col-6">
-					<label for="inputName">Pickup Time:</label>
-					{{$ap->actual_pickup_time}}
-                     
-                    </div>
-                    <div class="col-12 pt-3">
-					<label for="inputName">Remark:</label>
-					{{$ap->remark}}
-                    </div>
-					@elseif($activity->entry_type=='Departure')
-					<div class="col-6">
-					<label for="inputName">Pickup Location:</label>
-					{{$ap->pickup_location}}
-                     
-                    </div>
-					
-					<div class="col-6">
-					<label for="inputName">Pickup Time:</label>
-					{{$ap->actual_pickup_time}}
-                     
-                    </div>
-					<div class="col-6">
-					<label for="inputName">Flight Details:</label>
-					{{$ap->flight_no}}
-                     
-                    </div>
-                    <div class="col-12 pt-3">
-					<label for="inputName">Remark:</label>
-					{{$ap->remark}}
-                    </div>
-					@else
-					<div class="col-6">
-					<label for="inputName">Pickup Location:</label>
-					{{$ap->pickup_location}}
-                     
-                    </div>
-					
-					 
-					@if(($activity->pvt_TFRS=='1') && ($activity->pick_up_required=='1'))
-					<div class="col-6">
-					<label for="inputName">Pickup Time:</label>
-					{{$ap->actual_pickup_time}}
-                     
-                    </div>
-					
-					@endif
-					
-                    <div class="col-6">
-					<label for="inputName">Remark:</label>
-					{{$ap->remark}}
-                    </div>
-					
-					
-					@endif
-					
-                  </div>
-				   @endif
-				  @endforeach
-                 @endif
-				 
-                </div>
-                <!-- /.card-body -->
-
-               
-            </div>
-            @endif
-
-            @if(!empty($voucherHotel) && $voucher->is_hotel == 1)
-        @if($voucherHotel->count() > 0)
-              <div class="card card-default ">
-                <div class="card-header">
-                  <h3 class="card-title"><i class="nav-icon fas fa-book" style="color:black"></i> Additional Information Hotel</h3>
-                </div>
-                <!-- /.card-header -->
-                <!-- form start -->
-              
-                  <div class="card-body">
-            
-              @foreach($voucherHotel as $vah)
            
-                    <div class="row" style="margin-bottom: 15px;">
-                      <div class="col-12"><p>{{$vah->hotel->name}} - {{$vah->hotel->hotelcategory->name}}</p></div>
-                      <div class="col-4">
-                        <label for="inputName">Confirmation Number:</label>
-					{{$vah->confirmation_number}}
-
-                       
-                      </div>
-                     <div class="col-8">
-                        <label for="inputName">Remark:</label>
-					{{$vah->remark}}
-
-                       
-                      </div>
-                    </div>
-            
-            @endforeach
-                 
-            
-                  </div>
-         
-                  <!-- /.card-body -->
-  
-                 
-              </div>
-			    @endif
-              @endif
+          
 
             <!-- /.card -->
 
@@ -371,7 +195,7 @@
 					@php
 				$tourDt = date("Y-m-d",strtotime($ap->tour_date));
 				$validTime = SiteHelpers::checkCancelBookingTime($ap->variant_unique_code,$ap->activity_id,$tourDt,$ap->transfer_option);
-				
+				$activity = SiteHelpers::getActivity($ap->activity_id);
 				@endphp
             <div class="card card-default">
               <div class="card-header">
@@ -558,7 +382,102 @@
                   </div>
                 </div>
 				</div>
+				 @if(($ap->transfer_option == 'Shared Transfer') || ($ap->transfer_option == 'Pvt Transfer'))
+			   <div class="row" style="margin-bottom: 15px;">
+					@if($activity->entry_type=='Arrival')
+                    <div class="col-6">
+					<label for="inputName">Dropoff Location:</label>
+					{{$ap->dropoff_location}}
+                     
+                    </div>
+					 <div class="col-6">
+					<label for="inputName">Passenger Name:</label>
+					{{$ap->passenger_name}}
+                     
+                    </div>
+					<div class="col-6">
+					<label for="inputName">Arrival Time:</label>
+					{{$ap->actual_pickup_time}}
+                     
+                    </div>
+					<div class="col-6">
+					<label for="inputName">Flight Details:</label>
+					{{$ap->flight_no}}
+                     
+                    </div>
+                    <div class="col-8">
+					<label for="inputName">Remark:</label>
+					{{$ap->remark}}
+                    </div>
 				
+					@elseif($activity->entry_type=='Interhotel')
+					<div class="col-6">
+					<label for="inputName">Pickup Location:</label>
+					{{$ap->pickup_location}}
+                     
+                    </div>
+					 <div class="col-6">
+					<label for="inputName">Dropoff Location:</label>
+					{{$ap->dropoff_location}}
+                     
+                    </div>
+					<div class="col-6">
+					<label for="inputName">Pickup Time:</label>
+					{{$ap->actual_pickup_time}}
+                     
+                    </div>
+                    <div class="col-12 pt-3">
+					<label for="inputName">Remark:</label>
+					{{$ap->remark}}
+                    </div>
+					@elseif($activity->entry_type=='Departure')
+					<div class="col-6">
+					<label for="inputName">Pickup Location:</label>
+					{{$ap->pickup_location}}
+                     
+                    </div>
+					
+					<div class="col-6">
+					<label for="inputName">Pickup Time:</label>
+					{{$ap->actual_pickup_time}}
+                     
+                    </div>
+					<div class="col-6">
+					<label for="inputName">Flight Details:</label>
+					{{$ap->flight_no}}
+                     
+                    </div>
+                    <div class="col-12 pt-3">
+					<label for="inputName">Remark:</label>
+					{{$ap->remark}}
+                    </div>
+					@else
+					<div class="col-6">
+					<label for="inputName">Pickup Location:</label>
+					{{$ap->pickup_location}}
+                     
+                    </div>
+					
+					 
+					@if(($activity->pvt_TFRS=='1') && ($activity->pick_up_required=='1'))
+					<div class="col-6">
+					<label for="inputName">Pickup Time:</label>
+					{{$ap->actual_pickup_time}}
+                     
+                    </div>
+					
+					@endif
+					
+                    <div class="col-8">
+					<label for="inputName">Remark:</label>
+					{{$ap->remark}}
+                    </div>
+					
+					
+					@endif
+					
+                  </div>
+				  @endif
               </div>
               <!-- /.card-body -->
             </div>
@@ -662,7 +581,20 @@
                     </div>
                   </div>
           </div>
-          
+			<div class="row" style="margin-bottom: 15px;">
+                      <div class="col-6">
+                        <label for="inputName">Confirmation Number:</label>
+					{{$vh->confirmation_number}}
+
+                       
+                      </div>
+                     <div class="col-12">
+                        <label for="inputName">Remark:</label>
+					{{$vh->remark}}
+
+                       
+                      </div>
+                    </div>
                 </div>
                 <!-- /.card-body -->
               </div>

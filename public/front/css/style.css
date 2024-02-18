@@ -1,0 +1,14 @@
+.text-danger {
+    color: #dc3545!important;
+}
+
+.error {
+    color: #dc3545!important;
+}
+.hide{
+display: "none"!important;	
+}
+
+.show{
+display: "block"!important;	
+}

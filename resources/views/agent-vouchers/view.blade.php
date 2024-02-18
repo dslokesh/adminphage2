@@ -1,100 +1,74 @@
-@extends('layouts.app')
+@extends('layouts.appLogin')
 @section('content')
 
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1>Booking Details</h1>
-          </div>
-          
-        </div>
-      </div><!-- /.container-fluid -->
-    </section>
-    <!-- /.content-header -->
+     <section data-anim-wrap class="layout-pt-md layout-pb-lg mt-header">
+      <div class="container">
+	  
+        <div class="row">
+          <div data-anim-child="fade" class="col-lg-8">
+            @include('inc.errors-and-messages')
 
-  
-
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-      
-<div class="row multistep">
-        <div class="col-md-3 multistep-step complete">
-            <div class="text-center multistep-stepname" style="font-size: 16px;">Add to Cart</div>
-            <div class="progress"><div class="progress-bar"></div></div>
-            <a href="#" class="multistep-dot"></a>
-        </div>
-
-        <div class="col-md-3 multistep-step current">
-            <div class="text-center multistep-stepname" style="font-size: 16px;">Payment</div>
-            <div class="progress"><div class="progress-bar"></div></div>
-            <a href="#" class="multistep-dot"></a>
-        </div>
-
-        <div class="col-md-3 multistep-step next">
-            <div class="text-center multistep-stepname" style="font-size: 16px;">Voucher</div>
-            <div class="progress"><div class="progress-bar"></div></div>
-            <a href="#" class="multistep-dot"></a>
-        </div>
-
-        
-    </div>
-        <div class="row" style="margin-top: 30px;">
-		
-          <!-- left column -->
-          <div class="offset-md-1 col-md-6">
-		   <form id="cusDetails" method="post" action="{{route('agent.vouchers.status.change',$voucher->id)}}" >
+            <div class="bg-white rounded-12 shadow-2 py-30 px-30 md:py-20 md:px-20 mt-30">
+			
+              <h2 class="text-30 md:text-24 fw-700">Booking Details</h2>
+ <form id="cusDetails" method="post" action="{{route('agent.vouchers.status.change',$voucher->id)}}" >
 			 {{ csrf_field() }}
-            <!-- general form elements -->
-            <div class="card card-default">
-              <div class="card-header">
-                 <h3 class="card-title"><i class="nav-icon fas fa-user" style="color:black"></i> Passenger Details</h3>
-              </div>
-              <!-- /.card-header -->
-              <!-- form start -->
-            
-                <div class="card-body">
-                  <div class="row" style="margin-bottom: 15px;">
-                    <div class="col-2">
-                      <select class="form-control">
-                        <option>Mr.</option>
-                        <option>Mrs.</option>
-                        <option>Miss</option>
-                      </select>
-                    </div>
-                    <div class="col-5">
-                      <input type="text" name="fname" value="{{$fname}}"  class="form-control" placeholder="First Name" required>
-                    </div>
-                    <div class="col-5">
-                      <input type="text" name="lname" value="{{$lname}}" class="form-control" placeholder="Last Name" required>
-                    </div>
+              <div class="row y-gap-30 contactForm pt-30">
+			  
+                <div class="col-6">
+
+                  <div class="form-input ">
+                    <input type="text" name="fname" value="{{$fname}}" class="form-control"  required>
+                    <label class="lh-1 text-16 text-light-1">First Name</label>
                   </div>
-                  <div class="row" style="margin-bottom: 15px;">
-                    <div class="col-4">
-                     <input type="text" name="customer_email" value="{{(!empty($voucher->guest_email))?$voucher->guest_email:$voucher->agent->email}}" class="form-control" placeholder="Email ID">
-                    </div>
-                    <div class="col-4">
-                      <input type="text" name="customer_mobile" value="{{(!empty($voucher->guest_phone))?$voucher->guest_phone:$voucher->agent->mobile}}" class="form-control" placeholder="Mobile No.">
-                    </div>
-                    <div class="col-4">
-                      <input type="text" name="agent_ref_no"  value="{{$voucher->agent_ref_no}}" class="form-control" placeholder="Agent Reference No.">
-                    </div>
+					
+                </div>
+					<div class="col-6">
+
+                  <div class="form-input ">
+                    <input type="text" name="lname" value="{{$lname}}" class="form-control"  required>
+                    <label class="lh-1 text-16 text-light-1">Last Name</label>
                   </div>
-                  <div class="row" style="margin-bottom: 5px;">
-                    <div class="col-12">
-                      <textarea type="text" class="form-control" style="resize:none;" name="remark" placeholder="Remark" rows="2">{{$voucher->remark}}</textarea>
-                    </div>
-                   
+
+                </div>
+                <div class="col-md-6">
+
+                  <div class="form-input ">
+                     <input type="text" name="customer_email" value="{{(!empty($voucher->guest_email))?$voucher->guest_email:$voucher->agent->email}}" class="form-control" >
+                    <label class="lh-1 text-16 text-light-1">Email</label>
+                  </div>
+
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-input ">
+                    <input type="text" name="customer_mobile" value="{{(!empty($voucher->guest_phone))?$voucher->guest_phone:$voucher->agent->mobile}}" class="form-control" >
+                    <label class="lh-1 text-16 text-light-1">Mobile No</label>
                   </div>
                 </div>
-                <!-- /.card-body -->
-				
-               
-            </div>
-            <!-- /.card -->
-			@php
+
+                <div class="col-md-12">
+                  <div class="form-input ">
+                     <input type="text" name="agent_ref_no" value="{{$voucher->agent_ref_no}}" class="form-control" >
+                    <label class="lh-1 text-16 text-light-1">Agent Reference No.</label>
+                  </div>
+                </div>
+
+
+                
+
+                <div class="col-12">
+
+                  <div class="form-input ">
+                     <textarea type="text" class="form-control" style="resize:none;" name="remark" rows="2">{{$voucher->remark}}</textarea>
+                    <label class="lh-1 text-16 text-light-1">Remark</label>
+                  </div>
+
+                </div>
+
+			
+              </div>
+			  @php
 					$ii = 0;
 					@endphp
 			@if(!empty($voucherActivity) && $voucher->is_activity == 1)
@@ -106,18 +80,38 @@
 				@endif
 					@endforeach
 			
-            <div class="card card-default {{($ii=='0')?'hide':''}}">
+            <div class="card card-default contactForm  mt-2 {{($ii=='0')?'hide':''}}">
               <div class="card-header">
                 <h3 class="card-title"><i class="nav-icon fas fa-book" style="color:black"></i> Additional Information</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
             
-                <div class="card-body">
+                <div class="card-body row">
 					@if(!empty($voucherActivity))
 						 @php
 					$c=0;
+					$tkt=0;
 					@endphp
+					 @foreach($voucherActivity as $ap)
+						@if(($ap->transfer_option != 'Ticket Only'))
+							@php $tkt++; @endphp
+						@endif
+					  @endforeach
+					<div class="col-md-6 @if($tkt == 0) hide @endif">
+					<div class="form-input ">
+					<input type="text" class="form-control" id="defaut_dropoff_location" />
+					<label class="lh-1 text-16 text-light-1">Defaut Dropoff Location</label>
+					</div>
+					</div>
+					
+					<div class="col-md-6 @if($tkt == 0) hide @endif">
+					<div class="form-input ">
+					<input type="text" class="form-control" id="defaut_pickup_location" />
+					<label class="lh-1 text-16 text-light-1">Defaut Pickup Location</label>
+					</div>
+					</div>
+				
 					  @foreach($voucherActivity as $ap)
 				  @if(($ap->transfer_option == 'Shared Transfer') || ($ap->transfer_option == 'Pvt Transfer'))
 				  @php
@@ -127,17 +121,20 @@
 					@endphp
 					
                   <div class="row" style="margin-bottom: 15px;">
-                    <div class="col-12"><p><strong>{{$c}}. {{$ap->variant_name}} : {{$ap->transfer_option}}
+                    <div class="col-12">
+					<p><strong>{{$c}}. {{$ap->variant_name}} : {{$ap->transfer_option}}
 					@if($ap->transfer_option == 'Shared Transfer')
 					@php
 					$zone = SiteHelpers::getZoneName($ap->transfer_zone);
 					@endphp
-					- Zone :{{$zone->name}}
+					- Zone :{{@$zone->name}}
 					@endif</strong></p></div>
 					@if($activity->entry_type=='Arrival')
+						
 						<div class="form-group col-md-6">
 						 
 						<input type="text" class="form-control inputsave autodropoff_location" id="dropoff_location{{$ap->id}}" data-name="dropoff_location"  data-id="{{$ap->id}}" value="{{$ap->dropoff_location}}" required data-zone="{{$ap->transfer_zone}}"  placeholder="Dropoff Location*" />
+						
 						<label for="inputName" style="width: 100%;"> <span class="float-left"><input type="checkbox" data-idinput="dropoff_location{{$ap->id}}" class="chk_other " data-name="dropoff_other"  data-id="{{$ap->id}}" value="1"  /> Other<span></label>
 						</div>
 					
@@ -244,10 +241,7 @@
 
                
             </div>
-			
-            <!-- /.card -->
-
-            <div class="card card-default">
+			  <div class="card card-default mt-2">
               <div class="card-header">
                <h3 class="card-title"><i class="nav-icon fas fa-credit-card" style="color:black"></i>  Payment Options</h3>
               </div>
@@ -256,60 +250,77 @@
             
                 <div class="card-body">
                   <div class="row" style="margin-bottom: 5px;">
-                    <div class="col-12">
+				  <div class="col-auto">
 					@php
 					$balance  = $voucher->agent->agent_amount_balance - $voucher->agent->agent_credit_limit;
 					@endphp
-                      <input type="radio" checked name="payment"  /> Credit Limit (Wallet Balance AED {{($balance > 0)?$balance:0}})
+                  <div class="d-flex items-center">
+                    <div class="form-radio ">
+                      <input type="radio" checked name="payment"  />
                     </div>
+                    <div class="lh-11 ml-10"> Credit Limit (Wallet Balance AED {{($balance > 0)?$balance:0}})</div>
+					<div class="form-radio ">
+                     <input type="radio" disabled name="payment"  />
+                    </div>
+                    <div class="lh-11 ml-10">Credit Card / Debit Card</div>
+                  </div>
+				
+                </div>
+                    
                    
                   </div>
-                  <div class="row" style="margin-bottom: 15px;">
-                    <div class="col-12">
-                      <input type="radio" disabled name="payment"  /> Credit Card / Debit Card
-                    </div>
-                  </div>
+               
                 </div>
                 <!-- /.card-body -->
-
-               
-            </div>
-            <!-- /.card -->
- <!-- general form elements -->
- <div class="card card-default">
-  
+			
    
+	  <div class="col-auto">
 
-    <div class="card-footer">
-      <div class="row" style="margin-bottom: 5px;">
-        <div class="col-md-8 text-left">
-          <input type="checkbox" name="tearmcsk" required id="tearmcsk" /> By clicking Pay Now you agree that you have read ad understood our Terms and Conditions
-		  <br><label id="tearmcsk_message" for="tearmcsk" class="error hide" >This field is required.</label>
-        </div>
-        <div class="col-4 text-right">
-			 @if($voucher->status_main < 4)
-            <button type="submit" name="btn_hold" class="btn btn-primary">Hold</button>
-            @endif
-            @if($voucher->status_main < 5 )
-            <button type="submit" name="btn_paynow" class="btn btn-success">Pay Now</button>
-            @endif
-        </div>
-      </div>
-    </div>
+                  <div class="d-flex items-center">
+                    <div class="form-checkbox ">
+                      <input type="checkbox" name="tearmcsk" required id="tearmcsk" />
+                      <div class="form-checkbox__mark">
+                        <div class="form-checkbox__icon">
+                          <svg width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9.29082 0.971021C9.01235 0.692189 8.56018 0.692365 8.28134 0.971021L3.73802 5.51452L1.71871 3.49523C1.43988 3.21639 0.987896 3.21639 0.709063 3.49523C0.430231 3.77406 0.430231 4.22604 0.709063 4.50487L3.23309 7.0289C3.37242 7.16823 3.55512 7.23807 3.73783 7.23807C3.92054 7.23807 4.10341 7.16841 4.24274 7.0289L9.29082 1.98065C9.56965 1.70201 9.56965 1.24984 9.29082 0.971021Z" fill="white" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="lh-11 ml-10">By clicking Pay Now you agree that you have read ad understood our Terms and Conditions</div>
+
+                  </div>
+
+                </div>
+				<div class="row m-3">
+				<div class="col-6 text-right">
+				@if($voucher->status_main < 4)
+				<button type="submit" name="btn_hold" class="button -md -blue-1 bg-accent-2 text-white col-12 mt-30">Hold</button>
+				@endif
+				</div>
+				<div class="col-6 text-right">
+				@if($voucher->status_main < 5 )
+				<button type="submit" name="btn_paynow" class="button -md -dark-1 bg-accent-1 text-white col-12 mt-30">Pay Now</button>
+				@endif
+				</div>
 
 </div>
-<!-- /.card -->
+               
+            </div>
+			
+            </form>
+			</div>
 
-            <!-- Horizontal Form -->
-            
-            <!-- /.card -->
-</form>
-          </div>
-          <!--/.col (left) -->
-          <!-- right column -->
-          <div class="col-md-4" >
-            <!-- Form Element sizes -->
-			@php
+
+           </div>
+
+          <div data-anim-child="fade delay-2" class="col-lg-4">
+            <div class="pl-50 md:pl-0">
+              <div class="bg-white rounded-12 shadow-2 py-30 px-30 md:py-20 md:px-20">
+                <h2 class="text-20 fw-500">Your booking details</h2>
+
+				@php
 				$totalGrand =0; 
 			  @endphp
 			  @if(!empty($voucherActivity) && $voucher->is_activity == 1)
@@ -318,15 +329,10 @@
 				  @php
 					$activity = SiteHelpers::getActivity($ap->activity_id);
 					@endphp
-            <div class="card card-default">
-              <div class="card-header">
-                <div class="row">
-				<div class="col-md-8 text-left">
-                    <h3 class="card-title">
-                      <strong> {{$activity->title}}</strong></h3>
-                  </div>
-				<div class="col-md-4 text-right">
-                    <form id="delete-form-{{$ap->id}}" method="post" action="{{route('agent.voucher.activity.delete',$ap->id)}}" style="display:none;">
+				  <div class="d-flex mt-30">
+				   <img src="{{asset('uploads/activities/thumb/'.$activity->image)}}" style="width:50px" alt="image">
+                  <div class="ml-10">Tour Option : {{$ap->variant_name}}</div>
+				  <div class="ml-10"> <form id="delete-form-{{$ap->id}}" method="post" action="{{route('agent.voucher.activity.delete',$ap->id)}}" style="display:none;">
                                 {{csrf_field()}}
                                 {{method_field('DELETE')}}
                             </form>
@@ -342,144 +348,81 @@
                                     event.preventDefault();
                                 }
                             
-                            "><i class="fas fa-trash-alt"></i></a></small>
-                    
-                  </div>
-				   </div>
-              </div>
-              <div class="card-body">
-			  
-			  <div class="">
-                <div class="row" style="margin-bottom: 5px;">
-                    <div class="col-md-5 text-left">
-                      <strong>Tour Option</strong>
-                    </div>
-                    <div class="col-md-7 text-right">
-                      {{$ap->variant_name}}
-                    </div>
+                            "><i class="fas fa-trash-alt"></i></a></small></div>
                 </div>
-                <div class="row" style="margin-bottom: 5px;">
-                  <div class="col-md-5 text-left">
-                    <strong>Date</strong>
+
+                <div class="line mt-20 mb-20"></div>
+                <div class="">
+
+                  <div class="d-flex items-center justify-between">
+                    <div class="fw-500">Date:</div>
+                    <div class="">{{ $ap->tour_date ? date(config('app.date_format'),strtotime($ap->tour_date)) : null }}</div>
                   </div>
-                  <div class="col-md-7 text-right">
-				  {{ $ap->tour_date ? date(config('app.date_format'),strtotime($ap->tour_date)) : null }}
-                  
+
+                  <div class="d-flex items-center justify-between">
+                    <div class="fw-500">Transfer Type:</div>
+                    <div class="">{{$ap->transfer_option}}</div>
                   </div>
-                </div>
-                <div class="row" style="margin-bottom: 5px;">
-                  <div class="col-md-5 text-left">
-                    <strong>Transfer Type</strong>
-                  </div>
-                  <div class="col-md-7 text-right">
-                   {{$ap->transfer_option}}
-                  </div>
-                </div>
-               @if($ap->transfer_option == 'Shared Transfer')
+					@if($ap->transfer_option == 'Shared Transfer')
 					@php
-					$pickup_time = SiteHelpers::getPickupTimeByZone($activity->zones,$ap->transfer_zone);
+					$pickup_time = SiteHelpers::getPickupTimeByZone($ap->variant_zones,$ap->transfer_zone);
 					@endphp
-                <div class="row" style="margin-bottom: 5px;">
-                  <div class="col-md-5 text-left">
-                    <strong>Pickup Timing</strong>
+					 <div class="d-flex items-center justify-between">
+                    <div class="fw-500">Pickup Timing:</div>
+                    <div class="">{{$pickup_time}}</div>
                   </div>
-                  <div class="col-md-7 text-right">
-                   {{$pickup_time}}
-                  </div>
-                </div>
-				@endif
-				@if(($ap->transfer_option == 'Pvt Transfer') && ($activity->pick_up_required == '1')  && ($activity->pvt_TFRS == '1'))
+				  @endif
+				@if(($ap->transfer_option == 'Pvt Transfer') && ($ap->variant_pick_up_required == '1')  && ($ap->variant_pvt_TFRS == '1'))
 					@php
-					$pickup_time = SiteHelpers::getPickupTimeByZone($activity->zones,$ap->transfer_zone);
+					$pickup_time = SiteHelpers::getPickupTimeByZone($ap->variant_zones,$ap->transfer_zone);
 					@endphp
-                <div class="row" style="margin-bottom: 5px;">
-                  <div class="col-md-5 text-left">
-                    <strong>Pickup Timing</strong>
+					 <div class="d-flex items-center justify-between">
+                    <div class="fw-500">Pickup Timing:</div>
+                    <div class="">{{$ap->variant_pvt_TFRS_text}}</div>
                   </div>
-                  <div class="col-md-7 text-right">
-                   {{$activity->pvt_TFRS_text}}
+				  @endif
+                 
+
+                  <div class="d-flex items-center justify-between">
+                    <div class="fw-500">Pax:</div>
+                    <div class="">Adult x {{$ap->adult}}</div>
                   </div>
-                </div>
-				@endif
-                <div class="row" style="margin-bottom: 5px;">
-                  <div class="col-md-5 text-left">
-                    <strong>Pax</strong>
+
+                  <div class="d-flex items-center justify-between">
+                    <div class="fw-500"></div>
+                    <div class="">Child x{{$ap->child}}</div>
                   </div>
-                  <div class="col-md-7 text-right">
-                   {{$ap->adult}} Adult {{$ap->child}} Child
-                  </div>
-                </div>
-                <div class="row" style="margin-bottom: 5px;">
-                  <div class="col-md-5 text-left">
-                    <strong>Amount Incl. VAT</strong>
-                  </div>
-                  <div class="col-md-7 text-right">
-                   AED {{$ap->totalprice}}
+					<div class="d-flex items-center justify-between">
+                    <div class="fw-500">Amount Incl. VAT:</div>
+                    <div class="">AED {{$ap->totalprice}}</div>
                   </div>
                 </div>
-                <div class="row" style="margin-bottom: 5px;">
-                  <div class="col-md-5 text-left">
-                    <strong>Total</strong>
-                  </div>
-                  <div class="col-md-7 text-right">
-                   AED {{$ap->totalprice}}
-                  </div>
-                </div>
-				</div>
-				
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-@php
+
+                <div class="line mt-20 mb-20"></div>
+				@php
 					$totalGrand += $ap->totalprice; 
 				  @endphp
 				 @endforeach
                  @endif
 				  @endif
-            <div class="card card-default">
-              <div class="card-header">
-                <h3 class="card-title"><strong>Total Payment</strong></h3>
-              </div>
-              <div class="card-body">
-                <div class="row" style="margin-bottom: 5px;">
-                  <div class="col-md-6 text-left">
-                    <strong>Amount Incl. VAT</strong>
-                  </div>
-                  <div class="col-md-6 text-right">
-                   AED {{$totalGrand}}
-                  </div>
-                </div>
-               <!-- <div class="row" style="margin-bottom: 15px;">
-                  <div class="col-md-6 text-left">
-                    <strong>Handling charges (2%)</strong>
-                  </div>
-                  <div class="col-md-6 text-right">
-                   AED 2.30
-                  </div>
-                </div> -->
-                <div class="row" style="margin-bottom: 5px;">
-                  <div class="col-md-6 text-left">
-                    <h5>Final Amount</h5>
-                  </div>
-                  <div class="col-md-6 text-right">
-                   <h5>AED {{$totalGrand}}</h5>
-                  </div>
-                </div>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
+               
+                <div class="">
 
-            
+                  <div class="d-flex items-center justify-between">
+                    <div class="fw-500"><strong>Grand Total</strong></div>
+                    <div class=""> <strong>AED {{$totalGrand}}</strong></div>
+                  </div>
+
+                
+
+                </div>
+              </div>
+
+            </div>
           </div>
-          <!--/.col (right) -->
         </div>
-        <!-- /.row -->
-      </div><!-- /.container-fluid -->
+      </div>
     </section>
-  
-    <!-- /.content -->
 @endsection
 
 
@@ -490,26 +433,40 @@
 
 
 
-
 <script type="text/javascript">
+ 
   $(function(){
-	   $('.chk_other').each(function() {
+	 $('.chk_other').each(function() {
         var inputid = $(this).data('idinput');
         var isChecked = $(this).is(':checked');
 
         // Handle checkbox change
         $(this).on('change', function() {
             if ($(this).is(':checked')) {
-                $("#" + inputid).autocomplete("option", "disabled", true);
+                $("body #" + inputid).autocomplete("option", "disabled", true);
             } else {
-                $("#" + inputid).autocomplete("option", "disabled", false);
+                $("body #" + inputid).autocomplete("option", "disabled", false);
             }
         });
     });
-	
-$('#cusDetails').validate({});
+	 
 
-	 $(document).on('change', '.inputsave', function(evt) {
+$('#cusDetails').validate({
+        errorPlacement: function (error, element) {
+            // Customize error placement logic here
+            if (element.attr("name") === "fname") {
+                error.insertAfter(element.parent());
+            } else if (element.attr("name") === "lname") {
+                error.insertAfter(element.parent());
+            } else {
+                // Default behavior
+                error.insertAfter(element);
+            }
+        },
+        // Other validation options...
+    });
+
+	 $(document).on('blur', '.inputsave', function(evt) {
 		
 		$("#loader-overlay").show();
 		$.ajaxSetup({
@@ -533,10 +490,34 @@ $('#cusDetails').validate({});
           });
 	 }); 
 
- var path = "{{ route('auto.hotel') }}";
+   $(document).on('change', '.inputsavehotel', function(evt) {
+		
+		$("#loader-overlay").show();
+		$.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+		$.ajax({
+            url: "{{route('voucherHotelInputSave')}}",
+            type: 'POST',
+            dataType: "json",
+            data: {
+               id: $(this).data('id'),
+			   inputname: $(this).data('name'),
+			   val: $(this).val()
+            },
+            success: function( data ) {
+               //console.log( data );
+			  $("#loader-overlay").hide();
+            }
+          });
+	 }); 
+
+	 var path = "{{ route('auto.hotel') }}";
 	 var inputElement = $(this); // Store reference to the input element
-	 
- $(".autocom").each(function() {
+
+	 $(".autocom").each(function() {
     var inputElement = $(this);
     inputElement.autocomplete({
         source: function(request, response) {
@@ -566,7 +547,7 @@ $('#cusDetails').validate({});
     });
 });
 
-$(".autodropoff_location").each(function() {
+ $(".autodropoff_location").each(function() {
     var inputElement = $(this);
     inputElement.autocomplete({
         source: function(request, response) {
@@ -594,8 +575,124 @@ $(".autodropoff_location").each(function() {
         }
     });
 });
+
+
+	
+    $("#defaut_dropoff_location").autocomplete({
+        source: function(request, response) {
+            $.ajax({
+                url: path,
+                type: 'GET',
+                dataType: "json",
+                data: {
+                    search: request.term,
+                },
+                success: function(data) {
+                    response(data);
+                }
+            });
+        },
+        select: function(event, ui) {
+            $(this).val(ui.item.label);
+			var selectBox = $('.autodropoff_location'); // Adjust selector as per your HTML structure
+			selectBox.val(ui.item.label);
+			savedropoff_location(ui.item.label);
+            return false;
+        },
+        change: function(event, ui) {
+            if (ui.item == null) {
+               $(this).val('');
+            }
+        }
+    });
+
+ $("#defaut_pickup_location").autocomplete({
+        source: function(request, response) {
+            $.ajax({
+                url: path,
+                type: 'GET',
+                dataType: "json",
+                data: {
+                    search: request.term,
+                },
+                success: function(data) {
+                    response(data);
+                }
+            });
+        },
+        select: function(event, ui) {
+            $(this).val(ui.item.label);
+			var selectBox = $('.autocom'); // Adjust selector as per your HTML structure
+			selectBox.val(ui.item.label);
+			savepickup_location(ui.item.label);
+            return false;
+        },
+        change: function(event, ui) {
+            if (ui.item == null) {
+               $(this).val('');
+            }
+        }
+    });
+
+
 	});
 	
+	function savepickup_location(v){
+		
+		if(v!=''){
+		$(".autocom.inputsave").each(function() {
+			$("#loader-overlay").show();
+		$.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+		$.ajax({
+            url: "{{route('voucherReportSave')}}",
+            type: 'POST',
+            dataType: "json",
+            data: {
+               id: $(this).data('id'),
+			   inputname: $(this).data('name'),
+			   val: $(this).val()
+            },
+            success: function( data ) {
+               //console.log( data );
+			  $("#loader-overlay").hide();
+            }
+          });
+    });
+		}
+	}
+	
+	function savedropoff_location(v){
+		
+		if(v!=''){
+		$(".autodropoff_location.inputsave").each(function() {
+			$("#loader-overlay").show();
+		$.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+		$.ajax({
+            url: "{{route('voucherReportSave')}}",
+            type: 'POST',
+            dataType: "json",
+            data: {
+               id: $(this).data('id'),
+			   inputname: $(this).data('name'),
+			   val: $(this).val()
+            },
+            success: function( data ) {
+               //console.log( data );
+			  $("#loader-overlay").hide();
+            }
+          });
+    });
+		}
+	}
+
 
 </script>
 @endsection

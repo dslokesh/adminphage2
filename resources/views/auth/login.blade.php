@@ -1,49 +1,60 @@
 @extends('layouts.appLogin')
   
 @section('content')
-<div class="card-body" >
-      <p class="login-box-msg"></p>
-
-      <form action="{{ route('login.post') }}" method="POST" >
-       @csrf
-        <div class="input-group mb-3">
-          
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-envelope"></span>
+<section class="mt-header layout-pt-lg layout-pb-lg">
+      <div class="container">
+        <div data-anim="slide-up" class="row justify-center">
+          <div class="col-xl-6 col-lg-7 col-md-9">
+            <div class="text-center mb-60 md:mb-30">
+              <h1 class="text-30">Log In</h1>
+              <div class="text-18 fw-500 mt-20 md:mt-15"> @include('inc.errors-and-messages')</div>
+              <div class="mt-5">
+                Don't have an account? <a href="{{route('register')}}" class="text-accent-1">Sign Up!</a>
+              </div>
             </div>
-          </div>
-          <input type="text" id="email_address" class="form-control" name="email" placeholder="Email" required autofocus>
-        </div>
-        @if ($errors->has('email'))
+
+            <div class="contactForm border-1 rounded-12 px-60 py-60 md:px-25 md:py-30">
+			<form action="{{ route('login.post') }}" method="POST" >
+				@csrf
+              <div class="form-input ">
+			  <input type="text" id="email_address" class="form-control" name="email" placeholder="Email" required autofocus>
+                <label class="lh-1 text-16 text-light-1">Email Address </label>
+				 @if ($errors->has('email'))
                 <span class="text-danger">{{ $errors->first('email') }}</span>
             @endif
-        <div class="input-group mb-3">
-          
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-lock"></span>
-            </div>
-          </div>
-          <input type="password" id="password" class="form-control" name="password" placeholder="Password" required>
-        </div>
-        @if ($errors->has('password'))
+              </div>
+	
+
+              <div class="form-input mt-30">
+				 <input type="password" id="password" class="form-control" name="password" placeholder="Password" required>
+                <label class="lh-1 text-16 text-light-1">Password</label>
+				@if ($errors->has('password'))
                 <span class="text-danger">{{ $errors->first('password') }}</span>
             @endif
-        <div class="row">
-          
-          <!-- /.col -->
-          <div class="col-4 offset-md-4">
-            <button type="submit" class="btn btn-primary btn-block">Login</button>
-          </div>
-          <!-- /.col -->
-        </div>
-      </form>
+              </div>
 
-      <p class="mb-1 mt-20">
-        <a class="btn btn-link" href="{{route('resetpassword')}}"> {{ __('Forgot Your Password?') }}</a>
-		<a class="btn btn-link float-right" href="{{route('register')}}"> {{ __('Agency SignUp') }}</a>
-      </p>
-	  
-    </div>
+
+              <div class="row y-ga-10 justify-between items-center pt-30">
+                <div class="col-auto">
+
+                  <div class="d-flex items-center">
+                    
+
+                  </div>
+
+                </div>
+
+                <div class="col-auto">
+                 <a class="btn btn-link" href="{{route('resetpassword')}}"> {{ __('Forgot Your Password?') }}</a>
+                </div>
+              </div>
+				<button type="submit" class="button -md -dark-1 bg-accent-1 text-white col-12 mt-30">Login <i class="icon-arrow-top-right ml-10"></i></button>
+           
+			  </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+      
 @endsection

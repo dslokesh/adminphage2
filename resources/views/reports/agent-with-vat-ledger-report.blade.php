@@ -1,40 +1,13 @@
-@extends('layouts.app')
+
+@extends('layouts.appLogin')
 @section('content')
+<div class="dashboard__content mt-5">
+   <div class="dashboard__content_content">
 
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1>Agent/Supplier Ledger</h1>
-          </div>
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-              <li class="breadcrumb-item active">Agent/Supplier Ledger</li>
-            </ol>
-          </div>
-        </div>
-      </div><!-- /.container-fluid -->
-    </section>
-    <!-- /.content-header -->
+          <h1 class="text-30">Agent/Supplier Ledger</h1>
 
-    <!-- Main content -->
-    <section class="content">
-        
-    <div class="container-fluid">
-        <div class="row">
-          <div class="col-12">
-
-            <div class="card">
-              <div class="card-header">
-				<div class="card-tools">
-				 <div class="row">
-				<a href="{{ route('agentLedgerReportWithVatExportExcel', request()->input()) }}" class="btn btn-info btn-sm mb-2 mr-4">Export to CSV</a>
-				   </div></div>
-				   
-              </div>
-              <!-- /.card-header -->
+          <div class="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 md:mb-20 mt-60">
+            <div class="tabs -underline-2 js-tabs">
               <div class="card-body">
 			  <div class="row">
             <form id="filterForm" class="form-inline" method="get" action="{{ route('agentLedgerReportWithVat') }}" style="width:100%" >
@@ -72,9 +45,15 @@
             </form>
           </div>
         </div>
-                <table id="example1" class="table table-bordered table-striped">
-                  <thead>
-                  <tr>
+		 </div>
+
+              <div class="tabs__content js-tabs-content">
+
+                <div class="tabs__pane -tab-item-1 is-tab-el-active">
+                  <div class="overflowAuto">
+                    <table class="tableTest mb-30">
+                      <thead class="bg-light-1 rounded-12">
+                      <tr>
                     <th>Agency/Supplier Name</th>
 					<th>Date</th>
 					<th>Receipt No/ Invoice No.</th>
@@ -84,10 +63,10 @@
 					<th>Guest Name</th>
 					<th>Remark</th>
                   </tr>
-				  
-                  </thead>
-                  <tbody>
-				  @php
+                      </thead>
+
+                      <tbody>
+ @php
 				  $totalCredit = 0;
 				  $totalDebit = 0;
 				  @endphp
@@ -98,7 +77,7 @@
 					<td>{{ $record->date_of_receipt ? date(config('app.date_format'),strtotime($record->date_of_receipt)) : null }}</td>
 					<td>
 					@if(isset($record->voucher))
-						 <a class="" style="color:#007bff!important" href="{{route('voucherView',$record->voucher->id)}}">{{ ($record->receipt_no)}}</a>
+						 <a class="" style="color:#007bff!important" href="{{route('agentVoucherView',$record->voucher->id)}}">{{ ($record->receipt_no)}}</a>
 					
 					@else
 						{{ ($record->receipt_no)}}
@@ -180,23 +159,28 @@
 					
            
 					</tr>
-                </table>
-				<div class="pagination pull-right mt-3"> 
-				
-				</div> 
-				
+                      </tbody>
+                    </table>
+                  </div>
+
+
+              
+
+
+                  
+                </div>
+
+              
               </div>
-              <!-- /.card-body -->
             </div>
-            <!-- /.card -->
           </div>
-          <!-- /.col -->
+
+          <div class="text-center pt-30">
+            © Copyright Viatours 2023
+          </div>
+
         </div>
-        <!-- /.row -->
-      </div>
-      <!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
+  </div>    
 @endsection
 @section('scripts')
  <!-- Script -->

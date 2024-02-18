@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use App\Models\VoucherActivity;
 use App\Models\Ticket;
 use SiteHelpers;
+use PriceHelper;
 use Carbon\Carbon;
 use SPDF;
 use Illuminate\Support\Facades\Auth;
@@ -33,20 +34,24 @@ class AgentVouchersController extends Controller
      */
     public function index(Request $request)
     {
+		if (!auth()->check()) {
+        // User is not authenticated, redirect to the login page
+        return redirect()->route('login');
+    }
 		 $perPage = config("constants.ADMIN_PAGE_LIMIT");
 		 $data = $request->all();
 		$query = VoucherActivity::whereHas('voucher', function($q){
-    $q->where('agent_id', '=', Auth::user()->id);
-	$q->where(function ($q) {
-		$q->where('status_main', 4)->orWhere('status_main', 5);
+			$q->where('agent_id', '=', Auth::user()->id);
+			$q->where(function ($q) {
+				$q->where('status_main', 4)->orWhere('status_main', 5);
+				});
 		});
-});
 		
 		if(isset($data['booking_type']) && !empty($data['booking_type'])) {
 			
 			if (isset($data['from_date']) && !empty($data['from_date']) &&  isset($data['to_date']) && !empty($data['to_date'])) {
-			$startDate = $data['from_date'];
-			$endDate =  $data['to_date'];
+			$startDate = date("Y-m-d",strtotime($data['from_date']));
+			$endDate = date("Y-m-d",strtotime($data['to_date']));
 				if($data['booking_type'] == 2) {
 				 $query->whereDate('tour_date', '>=', $startDate);
 				 $query->whereDate('tour_date', '<=', $endDate);
@@ -123,7 +128,6 @@ class AgentVouchersController extends Controller
 		
         $request->validate([
             
-			'country_id'=>'required',
 			'travel_from_date'=>'required',
 			'nof_night'=>'required',
         ], [
@@ -137,8 +141,8 @@ class AgentVouchersController extends Controller
 		
 		
 		$arrival_date = $request->input('arrival_date'); // get the value of the date input
-		$depature_date = $request->input('depature_date'); // get the value of the date input
-		$customer = Customer::where('mobile',$request->input('customer_mobile'))->first();
+		$depature_date = '';//$request->input('depature_date'); // get the value of the date input
+		$customer = Customer::where('mobile',Auth::user()->mobile)->first();
 		
 		$timestamp = strtotime($request->input('travel_from_date'));
 		$travel_from_date = date('Y-m-d', $timestamp);
@@ -150,7 +154,7 @@ class AgentVouchersController extends Controller
 		{
 			$customer = new Customer();
 			$customer->name = $request->input('customer_name');
-			$customer->mobile = $request->input('customer_mobile');
+			$customer->mobile = Auth::user()->mobile;
 			$customer->email = $request->input('customer_email');
 			$customer->save();
 		}
@@ -164,29 +168,17 @@ class AgentVouchersController extends Controller
 		
 
         $record = new Voucher();
-        $record->agent_id = $request->input('agent_id_select');
+        $record->agent_id = Auth::user()->id;
 		$record->customer_id = $customer->id;
 		$record->country_id = '1';
-		$record->is_hotel = $request->input('is_hotel');
-		$record->is_flight = $request->input('is_flight');
-		$record->is_activity = $request->input('is_activity');
-		$record->arrival_airlines_id = $request->input('arrival_airlines_id');
+		$record->is_hotel = 0;
+		$record->is_flight = 0;
+		$record->is_activity = 1;
 		$record->arrival_date = $arrival_date;
-		$record->arrival_airport = $request->input('arrival_airport');
-		$record->arrival_terminal = $request->input('arrival_terminal');
-		$record->depature_airlines_id = $request->input('depature_airlines_id');
-		$record->depature_date = $depature_date;
-		$record->depature_airport = $request->input('depature_airport');
-		$record->depature_terminal = $request->input('depature_terminal');
 		$record->travel_from_date = $travel_from_date;
 		$record->travel_to_date = $travel_to_date;
 		$record->nof_night = $request->input('nof_night');
-		$record->vat_invoice = $request->input('vat_invoice');
-		$record->agent_ref_no = $request->input('agent_ref_no');
-		$record->guest_name = $request->input('guest_name');
-		$record->arrival_flight_no = $request->input('arrival_flight_no');
-		$record->depature_flight_no = $request->input('depature_flight_no');
-		$record->remark = $request->input('remark');
+		$record->vat_invoice = 1;
 		$record->status = 1;
 		$record->created_by = Auth::user()->id;
         $record->save();
@@ -217,19 +209,31 @@ class AgentVouchersController extends Controller
      * @param  \App\Models\Voucher  $voucher
      * @return \Illuminate\Http\Response
      */
-    public function show($vid)
+	 
+	public function show($id)
     {
-		$voucher = Voucher::where('id',$vid)->where('agent_id',Auth::user()->id)->first();
+		$voucher = Voucher::with('agent')->find($id);
 		
 		if (empty($voucher)) {
             return abort(404); //record not found
         }
+		
+		$voucherHotel = VoucherHotel::where('voucher_id',$voucher->id)->get();
+		$voucherActivity = VoucherActivity::where('voucher_id',$voucher->id)->orderBy("tour_date","ASC")->orderBy("serial_no","ASC")->get();
+		
+		if(empty($voucherActivity))
+		{
+			return redirect()->route('agent-vouchers.add.activity',$voucher->id);
+		}
+		
 		if($voucher->status_main  > 4)
 		{
 			return redirect()->route('agentVoucherView',$voucher->id);
 		}
-		$voucherHotel = VoucherHotel::where('voucher_id',$voucher->id)->get();
-		$voucherActivity = VoucherActivity::where('voucher_id',$voucher->id)->get();
+		
+		
+		$voucherStatus = config("constants.voucherStatus");
+	
 		$name = explode(' ',$voucher->guest_name);
 		
 		$fname = '';
@@ -239,10 +243,11 @@ class AgentVouchersController extends Controller
 			unset($name[0]);
 			$lname = trim(implode(' ', $name));
 		}
-		$voucherStatus = config("constants.voucherStatus");
+
         return view('agent-vouchers.view', compact('voucher','voucherHotel','voucherActivity','voucherStatus','fname','lname'));
     }
-
+	
+   
     /**
      * Show the form for editing the specified resource.
      *
@@ -399,20 +404,15 @@ class AgentVouchersController extends Controller
     }
 	
 	
-	
-	
-	/**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function addActivityList(Request $request,$vid)
+	 public function addActivityList(Request $request,$vid)
     {
        $data = $request->all();
 		$typeActivities = config("constants.typeActivities"); 
-        $perPage = config("constants.ADMIN_PAGE_LIMIT");
+        //$perPage = config("constants.ADMIN_PAGE_LIMIT");
+		$perPage = "1000";
 		$voucher = Voucher::find($vid);
-		
+		$startDate = $voucher->travel_from_date;
+		$endDate = $voucher->travel_to_date;
 		if($voucher->status_main  == '4')
 		{
 			return redirect()->route('agent-vouchers.show',$voucher->id)->with('error', 'You can not add more activity. your voucher already confirmed.');
@@ -422,27 +422,30 @@ class AgentVouchersController extends Controller
 			return redirect()->route('agentVoucherView',$voucher->id)->with('error', 'You can not add more activity. your voucher already vouchered.');
 		}
 		
-		$startDate = $voucher->travel_from_date;
-		$endDate = $voucher->travel_to_date;
-        $query = Activity::with('prices')->where('status',1)->where('is_price',1);
-	
+        $query = Activity::has('activityVariants')->with('activityVariants.prices')->where('status',1);
+		
         if (isset($data['name']) && !empty($data['name'])) {
             $query->where('title', 'like', '%' . $data['name'] . '%');
         }
+		
        
-	  $records = $query->whereHas('prices', function ($query) use($startDate,$endDate) {
-           $query->where('rate_valid_from', '<=', $startDate)->where('rate_valid_to', '>=', $endDate)->where('for_backend_only', '0');
+       $records = $query->whereHas('activityVariants.prices', function ($query) use($startDate,$endDate) {
+           $query->where('rate_valid_from', '<=', $startDate)->where('rate_valid_to', '>=', $endDate);
+		   $query->where('rate_valid_from', '<=', $startDate)->where('rate_valid_to', '>=', $endDate);
        })->orderBy('created_at', 'DESC')->paginate($perPage); 
 	   
-       //$records = $query->orderBy('created_at', 'DESC')->paginate($perPage);
+	  // dd($records);
+		//$records = $query->orderBy('created_at', 'DESC')->paginate($perPage);
+	
 		
-		$voucherActivityCount = VoucherActivity::where('voucher_id',$vid)->count();
 		$voucherHotel = VoucherHotel::where('voucher_id',$vid)->get();
 		$voucherActivity = VoucherActivity::where('voucher_id',$vid)->orderBy('tour_date','ASC')->get();
-        return view('agent-vouchers.activities-list', compact('records','typeActivities','vid','voucher','voucherActivityCount','voucherActivity'));
 		
-       
+		$voucherActivityCount = VoucherActivity::where('voucher_id',$vid)->count();
+        return view('agent-vouchers.activities-list', compact('records','typeActivities','vid','voucher','voucherActivityCount','voucherActivity'));
     }
+	
+	
 	
 	 public function addActivityView($aid,$vid)
     {
@@ -465,77 +468,81 @@ class AgentVouchersController extends Controller
        return view('agent-vouchers.activities-add-details', compact('activity','aid','vid','voucher','typeActivities','activityPrices'));
     } 
 	
+	
 	public function getActivityVariant(Request $request)
     {
 		$data = $request->all();
+		$activityData = [];
 		$aid = $data['act'];
 		$vid = $data['vid'];
-		$query = Activity::where('id', $data['act']);
-		$activity = $query->where('status', 1)->first();
 		$voucher = Voucher::find($data['vid']);
 		$startDate = $voucher->travel_from_date;
 		$endDate = $voucher->travel_to_date;
+		$user = auth()->user();
 		
-		/* $activityPrices = ActivityPrices::where('activity_id', $data['act'])
-			->where('rate_valid_from', '<=', $startDate)->where('rate_valid_to', '>=', $endDate)->where('for_backend_only', '0')
-			->orderByRaw('CAST(adult_rate_without_vat AS DECIMAL(10, 2))')
-			->get(); */
-	
-
-		$activityPrices = ActivityPrices::where('activity_id', $data['act'])->where('rate_valid_from', '<=', $startDate)->where('rate_valid_to', '>=', $endDate)->where('for_backend_only', '0')->get();
-
-		$dates = SiteHelpers::getDateListBoth($voucher->travel_from_date,$voucher->travel_to_date,$activity->black_sold_out);
-		$disabledDay = SiteHelpers::getNovableActivityDays($activity->availability);
+		$variantData = PriceHelper::getActivityVariantListArrayByTourDate($startDate,$aid);
+		//dd($variantData );
+		
 		$typeActivities = config("constants.typeActivities"); 
 		
-		$returnHTML = view('agent-vouchers.activities-add-view', compact('activity','aid','vid','voucher','typeActivities','activityPrices'))->render();
+		$returnHTML = view('agent-vouchers.activities-add-view', compact('variantData','voucher','aid','vid'))->render();
+		//$dates = SiteHelpers::getDateListBoth($voucher->travel_from_date,$voucher->travel_to_date,$activity->black_sold_out);
+		//$disabledDay = SiteHelpers::getNovableActivityDays($activity->availability);
 		
-		return response()->json(array('success' => true, 'html'=>$returnHTML, 'dates'=>$dates,'disabledDay'=>$disabledDay));	
+		$dates = [];
+		$disabledDay = [];
+		return response()->json(array('success' => true, 'html'=>$returnHTML, 'dates'=>json_encode($dates),'disabledDay'=>json_encode($disabledDay)));	
+			
+    }
+	
+	public function getActivityVariantPrice(Request $request)
+    {
+		$data = $request->all();
+		$variantData = PriceHelper::getActivityPriceByVariant($data);
+		
+		return response()->json(array('success' => true,  'variantData'=>$variantData));	
 			
     }
 	
 	
 	public function getPVTtransferAmount(Request $request)
     {
-		$activity = Activity::where('id', $request->acvt_id)->where('status', 1)->first();
+		$variant = Variant::select('transfer_plan','pvt_TFRS')->where('id', $request->variant_id)->where('status', 1)->first();
+		
 		$price = 0;
 		$total = 0;
-		$markupPer = $request->markupPer;
+		$totalPerson = $request->adult+$request->child;
 		//$activityPrices = ActivityPrices::where('activity_id', $aid)->get();
-		if($activity->pvt_TFRS == 1)
+		
+		if($variant->pvt_TFRS == 1)
 		{
-			$td = TransferData::where('transfer_id', $activity->transfer_plan)->where('qty', $request->adult)->first();
+			$td = TransferData::where('transfer_id', $variant->transfer_plan)->where('qty', $totalPerson)->first();
+			
 			if(!empty($td))
 			{
 				$price = $td->price;
 			}
 		}
 		
-		$totalPrice  = $price*$request->adult;
-		$markup = (($markupPer/100) * $totalPrice);
-		//$total = ($markup + $totalPrice);
-		$total = $totalPrice;
-		return $total;
+		$totalPrice  = $price*$totalPerson;
+		
+		return $totalPrice;
     }
 	
 	
 	public function activitySaveInVoucher(Request $request)
     {
-		
 		$activity_select = $request->input('activity_select');
+		
 	if(isset($activity_select))
 	{
 		
 		$voucher_id = $request->input('v_id');
 		$activity_id = $request->input('activity_id');
+		$activity_variant_id = $request->input('activity_variant_id');
 		$voucher = Voucher::find($voucher_id);
-		$activity = Activity::find($activity_id);
 		$startDate = $voucher->travel_from_date;
 		$endDate = $voucher->travel_to_date;
-		$getAvailableDateList = SiteHelpers::getDateList($voucher->travel_from_date,$voucher->travel_to_date,$activity->black_sold_out);
-		
-		$variant_name = $request->input('variant_name');
-		$variant_code = $request->input('variant_code');
 		$transfer_option = $request->input('transfer_option');
 		$tour_date = $request->input('tour_date');
 		$transfer_zone = $request->input('transfer_zone');
@@ -543,20 +550,30 @@ class AgentVouchersController extends Controller
 		$child = $request->input('child');
 		$infant = $request->input('infant');
 		$discount = $request->input('discount');
-		$variant_unique_code = $request->input('variant_unique_code');
-		
+		//dd($request->input('ucode'));
+		//dd($request->all());
 		$data = [];
 		$total_activity_amount = 0;
-		foreach($activity_select as $k => $v)
+		$k  = $request->input('ucode');
+		$timeslot  = $request->input('timeslot');
+		$activitySelectNew[$k] = $k;
+		if(!empty($k)){
+		foreach($activitySelectNew as $k => $v)
 		{
-			$totalmember = $adult[$k] + $child[$k];
-			$priceCal = SiteHelpers::getActivityPriceSaveInVoucherActivity($transfer_option[$k],$activity_id,$voucher->agent_id,$voucher,$variant_unique_code[$k],$adult[$k],$child[$k],$infant[$k],$discount[$k]);
-			if($priceCal['totalprice'] > 0){
-				$tour_dt = date("Y-m-d",strtotime($tour_date[$k]));
-				if(!in_array($tour_dt,$getAvailableDateList)){
-				return redirect()->back()->with('error', 'This Tour is not available for Selected Date.');
-				}
+			$activityVariant = ActivityVariant::with('variant', 'activity')->find($activity_variant_id[$k]);
+			$activity = $activityVariant->activity;
+			$variant = $activityVariant->variant;
 			
+
+			$getAvailableDateList = SiteHelpers::getDateList($voucher->travel_from_date,$voucher->travel_to_date,$variant->black_out,$variant->sold_out);
+			$totalmember = $adult[$k] + $child[$k];
+			$tour_dt = date("Y-m-d",strtotime($tour_date[$k]));
+			$priceCal = PriceHelper::getActivityPriceSaveInVoucher($transfer_option[$k],$activity_variant_id[$k],$voucher->agent_id,$voucher,$activityVariant->ucode,$adult[$k],$child[$k],$infant[$k],$discount[$k],$tour_dt);
+				
+			if($priceCal['totalprice'] > 0){
+				if(!in_array($tour_dt,$getAvailableDateList)){
+				return redirect()->back()->with('error', $variant->title.' Tour is not available for Selected Date.');
+				}
 			
 			
 			
@@ -564,13 +581,19 @@ class AgentVouchersController extends Controller
 			'voucher_id' => $voucher_id,
 			'activity_id' => $activity_id,
 			'activity_vat' => $priceCal['activity_vat'],
-			'variant_unique_code' => $variant_unique_code[$k],
-			'variant_name' => $variant_name[$k],
-			'variant_code' => $variant_code[$k],
+			'variant_unique_code' => $activityVariant->ucode,
+			'variant_name' => $variant->title,
+			'variant_code' => $variant->ucode,
+			'activity_entry_type' => $activity->entry_type,
+			'variant_pvt_TFRS' => $variant->pvt_TFRS,
+			'variant_pick_up_required' => $variant->pick_up_required,
+			'activity_title' => $activity->title,
+			'variant_zones' => $variant->zones,
+			'variant_pvt_TFRS_text' => $variant->pvt_TFRS_text,
 			'transfer_option' => $transfer_option[$k],
 			'tour_date' => $tour_dt,
 			'pvt_traf_val_with_markup' => $priceCal['pvt_traf_val_with_markup'],
-			'transfer_zone' => $transfer_zone[$k],
+			'transfer_zone' => (array_key_exists($k,$transfer_zone))?$transfer_zone[$k]:'',
 			'zonevalprice_without_markup' => $priceCal['zonevalprice_without_markup'],
 			'adult' => $adult[$k],
 			'child' => $child[$k],
@@ -582,6 +605,7 @@ class AgentVouchersController extends Controller
 			'childPrice' => $priceCal['childPrice'],
 			'infPrice' => $priceCal['infPrice'],
 			'discountPrice' => $discount[$k],
+			'time_slot' => $timeslot,
 			'totalprice' => number_format($priceCal['totalprice'], 2, '.', ''),
 			'created_by' => Auth::user()->id,
 			'updated_by' => Auth::user()->id,	
@@ -591,6 +615,8 @@ class AgentVouchersController extends Controller
 			}
 		}
 		
+		
+		
 		if(count($data) > 0)
 		{
 			VoucherActivity::insert($data);
@@ -599,11 +625,14 @@ class AgentVouchersController extends Controller
 			$voucher->save();
 		}
 
+		} else {
+			return redirect()->back()->with('error', $variant->title.' Please Select Tour Option.');
+		}
 		
 		
 		if ($request->has('save_and_continue')) {
-        //return redirect()->back()->with('success', 'Activity added Successfully.');
-		return redirect()->route('agent-vouchers.add.activity',$voucher_id)->with('success', 'Activity added Successfully.');
+			//return redirect()->back()->with('success', 'Activity added Successfully.');
+        return redirect()->route('agent-vouchers.add.activity',$voucher_id)->with('success', 'Activity added Successfully.');
 		} else {
 			return redirect()->back()->with('success', 'Activity added Successfully.');
         //return redirect('vouchers')->with('success', 'Activity Added Successfully.');
@@ -649,8 +678,9 @@ class AgentVouchersController extends Controller
 	public function statusChangeVoucher(Request $request,$id)
     {
 		$data = $request->all();
-		
-		$record = Voucher::where('id',$id)->where('agent_id',Auth::user()->id)->first();
+		$hotelPriceTotal = 0;
+		$grandTotal = 0;
+		$record = Voucher::where('id',$id)->first();
 		
 		if (empty($record)) {
             return abort(404); //record not found
@@ -658,10 +688,13 @@ class AgentVouchersController extends Controller
 
 		$voucherActivity = VoucherActivity::where('voucher_id',$record->id);
 		$voucherActivityRecord = $voucherActivity->get();
-		if($voucherActivity->count() == 0){
-			return redirect()->back()->with('error', 'Please add activity this booking.');
+		$voucherHotels = VoucherHotel::where('voucher_id',$record->id);
+		if(($voucherActivity->count() == 0) && ($voucherHotels->count() == 0)){
+			return redirect()->back()->with('error', 'Please add Activity or Hotel this booking.');
 	   }
+	   
 		$paymentDate = date('Y-m-d', strtotime('-2 days', strtotime($record->travel_from_date)));
+		
 		$record->guest_name = $data['fname'].' '.$data['lname'];
 		$record->guest_email = $data['customer_email'];
 		$record->guest_phone = $data['customer_mobile'];
@@ -669,37 +702,51 @@ class AgentVouchersController extends Controller
 		$record->remark = $data['remark'];
 		$record->updated_by = Auth::user()->id;
 		$record->payment_date = $paymentDate;
-
+		
 		if ($request->has('btn_paynow')) {
 		$agent = User::find($record->agent_id);
+		
+		
 		if(!empty($agent))
 		{
+			$voucherCnt = Voucher::where('agent_id',$agent->id)->where('status_main',7)->count();
+			if($voucherCnt > 0)
+			{
+				return redirect()->back()->with('error', 'Booking is already in the process of being edited in an invoice. Please complete that process first before proceeding with this one.');
+			}
+			
+			$voucherActivity = VoucherActivity::where('voucher_id',$record->id)->get();
 			
 			
 			$agentAmountBalance = $agent->agent_amount_balance;
 			$total_activity_amount = $record->voucheractivity->sum('totalprice');
-			if($agentAmountBalance >= $total_activity_amount)
+			$grandTotal = $total_activity_amount + $hotelPriceTotal;
+			if($agentAmountBalance >= $grandTotal)
 			{
 			
-			$voucherCount = Voucher::where('status_main',5)->count();
-			$voucherCountNumber = $voucherCount +1;
 			if($record->vat_invoice == 1)
 			{
-			$code = 'VIN-1100001'.$voucherCountNumber;
-			}else{
-			$code = 'WVIN-1100001'.$voucherCountNumber;
+				$voucherCount = Voucher::where('status_main',5)->where('vat_invoice',1)->whereDate('booking_date', '>', '2023-11-30')->count();
+				$voucherCountNumber = $voucherCount +1;
+				$code = 'VIN-1100001'.$voucherCountNumber;
+			}
+			else
+			{
+				$voucherCount = Voucher::where('status_main',5)->where('vat_invoice',0)->whereDate('booking_date', '>', '2023-11-30')->count();
+				$voucherCountNumber = $voucherCount +1;
+				$code = 'WVIN-1100001'.$voucherCountNumber;
 			}
 			
 			$record->booking_date = date("Y-m-d");
 			$record->invoice_number = $code;
 			$record->status_main = 5;
 			$record->save();
-			$agent->agent_amount_balance -= $total_activity_amount;
+			$agent->agent_amount_balance -= $grandTotal;
 			$agent->save();
 			
 			$agentAmount = new AgentAmount();
 			$agentAmount->agent_id = $record->agent_id;
-			$agentAmount->amount = $total_activity_amount;
+			$agentAmount->amount = $grandTotal;
 			$agentAmount->date_of_receipt = date("Y-m-d");
 			$agentAmount->transaction_type = "Payment";
 			$agentAmount->transaction_from = 2;
@@ -707,17 +754,16 @@ class AgentVouchersController extends Controller
 			$agentAmount->created_by = Auth::user()->id;
 			$agentAmount->updated_by = Auth::user()->id;
 			$agentAmount->save();
+			
 			$recordUser = AgentAmount::find($agentAmount->id);
 			$recordUser->receipt_no = $code;
 			$recordUser->is_vat_invoice = $record->vat_invoice;
 			$recordUser->save(); 
 			
-			$voucherHotel = VoucherHotel::where('voucher_id',$record->id)->get();
-			
 			$emailData = [
 			'voucher'=>$record,
 			'voucherActivity'=>$voucherActivityRecord,
-			'voucherHotel'=>$voucherHotel,
+			'voucherHotel'=>[],
 			];
 			if(!empty($record->guest_email)){
 			//Mail::to($record->guest_email,'Booking Confirmation.')->cc($agent->email)->send(new VoucheredBookingEmailMailable($emailData)); 
@@ -736,15 +782,22 @@ class AgentVouchersController extends Controller
 		
 		}
 		else if ($request->has('btn_hold')) {
-		
-			$record->booking_date = date("Y-m-d");
+			//$record->booking_date = date("Y-m-d");
 			$record->status_main = 4;
 			$record->save();
 		}
 		
-	
+		foreach($voucherActivityRecord as $vac){
+			if($record->status_main == 5){
+				$voucherActivityU = VoucherActivity::find($vac->id);
+				$voucherActivityU->status = 3;
+				$voucherActivityU->save();
+			}
+			SiteHelpers::voucherActivityLog($record->id,$vac->id,$vac->discountPrice,$vac->totalprice,$record->status_main);
+		}
 		
-        return redirect()->route('agentVoucherView',$record->id)->with('success', 'Voucher Created Successfully.');
+		return redirect()->route('agentVoucherView',$record->id)->with('success', 'Voucher Created Successfully.');
+        
     }
 	
 	 public function agentVoucherView($vid)

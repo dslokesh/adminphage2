@@ -1,37 +1,12 @@
-@extends('layouts.app')
+@extends('layouts.appLogin')
 @section('content')
+<div class="dashboard__content mt-5">
+   <div class="dashboard__content_content">
 
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1>Bookings</h1>
-          </div>
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-              <li class="breadcrumb-item active">Bookings</li>
-            </ol>
-          </div>
-        </div>
-      </div><!-- /.container-fluid -->
-    </section>
-    <!-- /.content-header -->
+          <h1 class="text-30">My Booking</h1>
 
-    <!-- Main content -->
-    <section class="content">
-        
-    <div class="container-fluid">
-        <div class="row">
-          <div class="col-12">
-
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">Bookings</h3>
-			
-              </div>
-              <!-- /.card-header -->
+          <div class="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 md:mb-20 mt-60">
+            <div class="tabs -underline-2 js-tabs">
               <div class="card-body">
 			  <div class="row">
             <form id="filterForm" class="form-inline" method="get" action="{{ route('agent-vouchers.index') }}" >
@@ -42,16 +17,16 @@
                     <div class="input-group-text">Search Result</div>
                   </div>
                  <select name="booking_type" id="booking_type" class="form-control">
-                    <option value = "1">Booking Date</option>
-					<option value = "2">Travel Date</option>
+                   <option value="1" {{ (request('booking_type') == 1) ? 'selected' : '' }}>Booking Date</option>
+					<option value="2" {{ (request('booking_type') == 2) ? 'selected' : '' }}>Travel Date</option>
 					<!--<option value = "3">Deadline Date</option>-->
                  </select>
                 </div>
               </div>
 			  <div class="col-auto col-md-3">
-                  <div class="input-group mb-2">
+                  <div class="input-group mb-2 ">
                     <div class="input-group-prepend"><div class="input-group-text">From Date</div></div>
-                    <input type="text" name="from_date" value="{{ request('from_date') }}" autocomplete ="off" class="form-control datepicker"  placeholder="From Date" />
+                    <input type="text" name="from_date" value="{{ request('from_date') }}" autocomplete ="off" class="form-control  datepicker"  placeholder="From Date" />
                   </div>
                 </div>
 				<div class="col-auto col-md-3">
@@ -93,10 +68,14 @@
           </div>
         </div>
 		 </div>
-			  <div class="col-md-12" style="overflow-x:auto">
-                <table id="example1" class="table rounded-corners">
-                  <thead>
-                  <tr>
+
+              <div class="tabs__content js-tabs-content">
+
+                <div class="tabs__pane -tab-item-1 is-tab-el-active">
+                  <div class="overflowAuto">
+                    <table class="tableTest mb-30">
+                      <thead class="bg-light-1 rounded-12">
+                        <tr>
                   <th>Booking Number</th>
                   <th>Booking Date</th>
                   <th>Service Type</th>
@@ -116,12 +95,10 @@
 				
                     <th></th>
                   </tr>
-				  
-                  </thead>
-                  <tbody>
-				   
-                 
-                  @foreach ($records as $record)
+                      </thead>
+
+                      <tbody>
+ @foreach ($records as $record)
                   <tr>
                   <td>{{ ($record->voucher->code)}}</td>
                   <td>
@@ -144,32 +121,10 @@
                     <td>{!! SiteHelpers::voucherStatus($record->voucher->status_main) !!}</td>
                 
 
-					
-					 <td class="hide">
-					 @if($record->voucher->is_activity == 1)
-						 @if($record->voucher->status_main < 4)
-					 <a class="btn btn-info btn-sm" href="{{route('agent-vouchers.add.activity',$record->voucher->id)}}">
-                              <i class="fas fa-plus">
-                              </i>
-                             
-                          </a>
-						  @endif
-						  @endif
-						  </td>
-						  <td class="hide">
-						   @if(($record->voucher->status_main == 4) OR ($record->voucher->status_main == 5))
-					 <a class="btn btn-info btn-sm" href="{{route('voucherInvoicePdf',$record->voucher->id)}}" >
-                              <i class="fas fa-download">
-                              </i>
-                             
-                          </a>
-						  @endif
-						  </td>
-					
-                     <td>
+                     <td width="12%">
 					 @if($record->voucher->status_main == '4')
 					 
-					 <a class="btn btn-info btn-sm" alt="View Details" href="{{route('agent-vouchers.show',$record->voucher->id)}}">
+					 <a class="button -dark-1 size-35 bg-light-1 rounded-full flex-center" alt="View Details" href="{{route('agent-vouchers.show',$record->voucher->id)}}">
                               <i class="fas fa-eye">
                               </i>
                               
@@ -177,54 +132,42 @@
 					@endif
           @if($record->voucher->status_main > 4)
 					 
-          <a class="btn btn-info btn-sm" alt="View Details" href="{{route('agentVoucherView',$record->voucher->id)}}">
+          <a class="button -dark-1 size-35 bg-light-1 rounded-full flex-center" alt="View Details" href="{{route('agentVoucherView',$record->voucher->id)}}">
                              <i class="fas fa-eye">
                              </i>
                              
                          </a>
          @endif
-					 <a class="btn btn-info btn-sm hide" href="{{route('agent-vouchers.edit',$record->voucher->id)}}">
-                              <i class="fas fa-pencil-alt">
-                              </i>
-                              
-                          </a>
-						   <form id="delete-form-{{$record->voucher->id}}" method="post" action="{{route('agent-vouchers.destroy',$record->voucher->id)}}" style="display:none;">
-                                {{csrf_field()}}
-                                {{method_field('DELETE')}}
-                            </form>
-                            <a class="btn btn-danger btn-sm hide" href="javascript:void(0)" onclick="
-                                if(confirm('Are you sure, You want to delete this?'))
-                                {
-                                    event.preventDefault();
-                                    document.getElementById('delete-form-{{$record->voucher->id}}').submit();
-                                }
-                                else
-                                {
-                                    event.preventDefault();
-                                }
-                            
-                            "><i class="fas fa-trash"></i></a>
+					
+						  
                          </td>
                   </tr>
 				 
                   @endforeach
-                  </tbody>
-                 
-                </table>
-				</div>
-				<div class="pagination pull-right mt-3"> {!! $records->appends(request()->query())->links() !!} </div> 
+                      </tbody>
+                    </table>
+                  </div>
+
+
+               <div class="pagination justify-center">
+    <div class="pagination pull-right mt-3"> {!! $records->appends(request()->query())->links() !!} </div> 
+</div>
+
+
+                  
+                </div>
+
+              
               </div>
-              <!-- /.card-body -->
             </div>
-            <!-- /.card -->
           </div>
-          <!-- /.col -->
+
+          <div class="text-center pt-30">
+            © Copyright Viatours 2023
+          </div>
+
         </div>
-        <!-- /.row -->
-      </div>
-      <!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
+  </div>    
 @endsection
 @section('scripts')
 <script type="text/javascript">
