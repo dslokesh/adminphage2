@@ -2,7 +2,7 @@
 			$activity = $variantData['activity'];
 			 
 			@endphp
-				<form action="{{route('voucher.activity.save')}}" method="post" class="form" id="cartForm" >
+				<form action="{{route('agent-voucher.activity.save')}}" method="post" class="form" id="cartForm" >
 				{{ csrf_field() }}
 				 <input type="hidden" id="activity_id" name="activity_id" value="{{ $aid }}"  />
 				 <input type="hidden" id="v_id" name="v_id" value="{{ $vid }}"  />

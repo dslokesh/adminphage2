@@ -73,7 +73,9 @@
                   <div class="tourCard__content">
                   
                     <h3 class="tourCard__title mt-5">
-                      <span> {{$record->title}}</span>
+                      <span> <a class="" href="{{route('agent-vouchers.activity.view',[$record->id,$vid])}}" target="_blank">
+                            {{$record->title}}
+                          </a></span>
                     </h3>
 
                    

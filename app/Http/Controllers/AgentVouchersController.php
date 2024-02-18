@@ -12,6 +12,7 @@ use App\Models\Hotel;
 use App\Models\VoucherHotel;
 use App\Models\Activity;
 use App\Models\ActivityPrices;
+use App\Models\ActivityVariant;
 use App\Models\TransferData;
 use Illuminate\Http\Request;
 use App\Models\VoucherActivity;
@@ -471,31 +472,21 @@ class AgentVouchersController extends Controller
 	
 	
 	
-	 public function addActivityView($aid,$vid)
+	public function addActivityView($aid,$vid,$d="",$a="",$c="",$i="",$tt="")
     {
-		$redirectResponse = $this->chekAgentLogin();
-		if ($redirectResponse) {
-		return $redirectResponse;
-		}
-		
 		$query = Activity::with('images')->where('id', $aid);
 		$activity = $query->where('status', 1)->first();
 		
 		$voucher = Voucher::find($vid);
 		$startDate = $voucher->travel_from_date;
 		$endDate = $voucher->travel_to_date;
-		
-
-		$activityPrices = ActivityPrices::where('activity_id', $aid)
-->where('rate_valid_from', '<=', $startDate)->where('rate_valid_to', '>=', $endDate)->get();
-
-		
+		$variantData = PriceHelper::getActivityVariantListArrayByTourDate($startDate,$aid);
+		$voucherActivity = VoucherActivity::where('voucher_id',$vid)->orderBy('tour_date','ASC')->get();
 		$typeActivities = config("constants.typeActivities"); 
-		
-			
-			
-       return view('agent-vouchers.activities-add-details', compact('activity','aid','vid','voucher','typeActivities','activityPrices'));
-    } 
+			$voucherActivityCount = VoucherActivity::where('voucher_id',$vid)->count();
+       return view('agent-vouchers.activities-add-details', compact('activity','aid','vid','voucher','typeActivities','variantData','voucherActivity','voucherActivityCount'));
+    }
+	
 	
 	
 	public function getActivityVariant(Request $request)

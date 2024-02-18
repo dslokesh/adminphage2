@@ -104,7 +104,7 @@
 								|
 							</li>
 							<li style="padding-right: 10px;">
-								<a href="#tour_options">Tour Options</a>
+								<a href="#tour_options">Bundle Product Cancellation</a>
 							</li>
 							<li style="padding-right: 10px;">
 								|
@@ -127,6 +127,21 @@
 				 
                 <h4>Short Description</h4>
 				{!! $activity->sort_description !!}
+              </div>
+			  <div class="form-group col-md-12" id="tour_options"  >
+				 <div class="form-group col-md-12" id="inclusion"  >
+				 
+                <h4>Bundle Product Cancellation</h4>
+				{!! $activity->bundle_product_cancellation !!}
+              </div>
+                <h4>Description</h4>
+				{!! $activity->description !!}
+              </div>
+			  
+			  <div class="form-group col-md-12" id="booking"  >
+				 
+                <h4>Notes</h4>
+				{!! $activity->notes !!}
               </div>
 			  <hr class="col-md-12 p-30" id="tour_options">
 		

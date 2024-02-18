@@ -84,7 +84,9 @@
   </button>
 
   <main>
-
+<div id="loader-overlay">
+  <div class="loader"></div>
+</div>
 
     <header class="header -type-1 -secondary js-header">
       <div data-anim="fade delay-3" class="header__container container">
