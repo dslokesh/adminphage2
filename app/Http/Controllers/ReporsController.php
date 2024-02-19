@@ -187,7 +187,7 @@ return Excel::download(new LogisticReportExport($records), 'logistic_records'.da
 			}
 			}
 		else{
-			//$query->whereDate('tour_date', '>=', $twoDaysAgo);
+			$query->whereDate('tour_date', '>=', $twoDaysAgo);
 		}
 		
         if(isset($data['vouchercode']) && !empty($data['vouchercode'])) {
