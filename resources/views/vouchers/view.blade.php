@@ -306,7 +306,7 @@
 					
 					@endif
                   </div>
-				   @endif
+				   
 				  @endforeach
                  @endif
 				  
