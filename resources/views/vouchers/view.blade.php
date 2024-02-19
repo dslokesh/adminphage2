@@ -164,7 +164,7 @@
 					@php
 					$zone = SiteHelpers::getZoneName($ap->transfer_zone);
 					@endphp
-					- Zone :{{$zone->name}}
+					- Zone :{{@$zone->name}}
 					@endif</strong></p></div>
            
 			      <div class="form-group col-md-6 ">
