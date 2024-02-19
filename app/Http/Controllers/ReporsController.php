@@ -284,7 +284,7 @@ return Excel::download(new LogisticReportExport($records), 'logistic_records'.da
 			}else if (($data['inputname'] == 'discountPrice') && !empty($data['val'])) {
 				$discount = $data['val'];
 				$totalPrice = $record->totalprice;
-				if(($totalPrice > $discount) && $discount > -1){
+				if(($totalPrice > $discount)){
 				$discountPrice = $record->discountPrice;
 				$tpD = $discountPrice + $totalPrice;
 				$record->{$data['inputname']} = $discount;
