@@ -187,7 +187,7 @@ return Excel::download(new LogisticReportExport($records), 'logistic_records'.da
 			}
 			}
 		else{
-			$query->whereDate('tour_date', '>=', $twoDaysAgo);
+			//$query->whereDate('tour_date', '>=', $twoDaysAgo);
 		}
 		
         if(isset($data['vouchercode']) && !empty($data['vouchercode'])) {
@@ -267,12 +267,13 @@ return Excel::download(new LogisticReportExport($records), 'logistic_records'.da
 		$data = $request->all();
 		
 		$record = VoucherActivity::find($data['id']);
-        $record->{$data['inputname']} = $data['val'];
+        
 		
 		
 		
 		if(($data['inputname'] == 'supplier_ticket') && !empty($data['val']))
 		{
+			$record->{$data['inputname']} = $data['val'];
 			$totalprice = 0;
 			$voucher = Voucher::find($record->voucher_id);
 			$priceCal = SiteHelpers::getActivitySupplierCost($record->activity_id,$data['val'],$voucher,$record->variant_code,$record->adult,$record->child,$record->infant,$record->discount);
@@ -280,9 +281,22 @@ return Excel::download(new LogisticReportExport($records), 'logistic_records'.da
 			$record->actual_total_cost = $totalprice;
        		
 			$response[] = array("status"=>2,'cost'=>$totalprice);
+			}else if (($data['inputname'] == 'discountPrice') && !empty($data['val'])) {
+				$discount = $data['val'];
+				$totalPrice = $record->totalprice;
+				if(($totalPrice > $discount) && $discount > 0){
+				$discountPrice = $record->discountPrice;
+				$tpD = $discountPrice + $totalPrice;
+				$record->{$data['inputname']} = $discount;
+				$totalPrice = $tpD - $discount;
+
+				$record->totalprice = $totalPrice;
+				}
+				$response[] = array("status" => 2, 'cost' => $record->totalprice);
 		}
 		else
 		{
+			$record->{$data['inputname']} = $data['val'];
 			$response[] = array("status"=>1,'cost'=>"0");
 		}
 		$record->save();

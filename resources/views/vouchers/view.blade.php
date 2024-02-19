@@ -177,6 +177,34 @@
                  <input type="text" id="serial_no{{$ap->id}}" value="{{$ap->serial_no}}"  required="required" class="form-control inputsave"  placeholder="Tour Sequence" required data-id="{{$ap->id}}" data-name="serial_no" />
 				
               </div>
+			  
+			  
+			  @if(($ap->transfer_option == 'Ticket Only'))
+			  <div class="form-group col-md-6 ">
+              <label>TKT Supplier</label>
+			  <select name="supplier_ticket{{$ap->id}}" id="supplier_ticket{{$ap->id}}" class="form-control inputsaveSp">
+						<option data-name="supplier_ticket"  data-id="{{$ap->id}}" value="">All</option>
+						@foreach($supplier_ticket as  $stv)
+						
+						<option data-name="supplier_ticket"  data-id="{{$ap->id}}" value = "{{$stv->id}}" @if($ap->supplier_ticket==$stv->id) selected="selected" @endif >{{$stv->company_name}}</option>
+						@endforeach
+                 </select>
+				 
+              </div>
+			  <div class="form-group col-md-6 ">
+              <label>TKT Net Cost</label>
+			  <input type="text" class="form-control inputsave" id="actual_total_cost{{$ap->id}}" data-name="actual_total_cost"  data-id="{{$ap->id}}" value="{{$ap->actual_total_cost}}" />
+				 
+              </div>
+			  
+			  @endif
+			  
+			  <div class="form-group col-md-6 ">
+              <label>Discount</label>
+                 <input type="text" id="discountPrice{{$ap->id}}" value="{{$ap->discountPrice}}"   class="form-control inputsaveDis"  placeholder="Discount"  data-id="{{$ap->id}}" data-name="discountPrice" />
+				
+              </div>
+			  
 					@if($ap->activity_entry_type=='Arrival')
 						<div class="form-group col-md-6">
 						 
@@ -890,6 +918,67 @@ $('#cusDetails').validate({});
         }
     });
 
+ $(document).on('change', '.inputsaveSp', function(evt) {
+		$("#loader-overlay").show();
+		var id = $(this).find(':selected').data('id');
+		var inputname = $(this).find(':selected').data('name');
+		//alert(inputname);
+		$.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+			
+		$.ajax({
+            url: "{{route('voucherReportSave')}}",
+            type: 'POST',
+            dataType: "json",
+            data: {
+               id: id,
+			   inputname: inputname,
+			   val: $(this).val(),
+            },
+            success: function( data ) {
+			   if(inputname == 'supplier_ticket'){
+          
+				   $("#actual_total_cost"+id).val(data[0].cost);
+			   }
+			  $("#loader-overlay").hide();
+            }
+          });
+	 });
+	 
+	 $(document).on('change', '.inputsaveDis', function(evt) {
+		$("#loader-overlay").show();
+		var id = $(this).data('id');
+		var inputname = $(this).data('name');
+		//alert(id);
+		$.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+			
+		$.ajax({
+            url: "{{route('voucherReportSave')}}",
+            type: 'POST',
+            dataType: "json",
+            data: {
+               id: id,
+			   inputname: inputname,
+			   val: $(this).val(),
+            },
+            success: function( data ) {
+			   if(inputname == 'supplier_ticket'){
+          
+				   $("#actual_total_cost"+id).val(data[0].cost);
+			   }
+			  $("#loader-overlay").hide();
+            }
+          });
+	 });
+	 
+	 
 
 	});
 	

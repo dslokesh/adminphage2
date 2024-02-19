@@ -266,8 +266,9 @@ class VouchersController extends Controller
 			unset($name[0]);
 			$lname = trim(implode(' ', $name));
 		}
-
-        return view('vouchers.view', compact('voucher','voucherHotel','voucherActivity','voucherStatus','fname','lname'));
+		
+		$supplier_ticket = User::where("service_type",'Ticket')->orWhere('service_type','=','Both')->get();
+        return view('vouchers.view', compact('voucher','voucherHotel','voucherActivity','voucherStatus','fname','lname','supplier_ticket'));
     }
 
 	public function voucherView($vid)

@@ -474,6 +474,10 @@ class AgentVouchersController extends Controller
 	
 	public function addActivityView($aid,$vid,$d="",$a="",$c="",$i="",$tt="")
     {
+		$redirectResponse = $this->chekAgentLogin();
+		if ($redirectResponse) {
+		return $redirectResponse;
+		}
 		$query = Activity::with('images')->where('id', $aid);
 		$activity = $query->where('status', 1)->first();
 		
