@@ -82,8 +82,8 @@
 					<select name="tour_date[{{$ap->ucode}}]" id="tour_date{{$kk}}"  class="form-control priceChange" data-inputnumber="{{$kk}}"  >
 						
 						<option value="">--Select--</option>
-						@foreach($tourDates as $tourDate)
-						<option value="{{$tourDate}}" >{{$tourDate}}</option>
+						@foreach($tourDates as $k => $tourDate)
+						<option value="{{$tourDate}}" {{($k==0)?'selected':'' }} >{{$tourDate}}</option>
 						@endforeach
 						</select>
 						
@@ -93,16 +93,24 @@
 						<option value="">0</option>
 						@for($a=$ap->prices->adult_min_no_allowed; $a<=$ap->prices->adult_max_no_allowed; $a++)
 						@if($ap->prices->adult_max_no_allowed > 0)
+							@if($voucher->adults > 0)
 						<option value="{{$a}}" @if($voucher->adults==$a) selected="selected" @endif>{{$a}}</option>
+							@else
+							<option value="{{$a}}" @if($a==$ap->prices->adult_min_no_allowed) selected="selected" @endif>{{$a}}</option>	
+							@endif
 						@endif
 						@endfor
 						</select></td>
                     <td><select name="child[{{$ap->ucode}}]" id="child{{$kk}}" class="form-control priceChange" data-inputnumber="{{$kk}}" @if($kk > '0') disabled="disabled" @endif>
-						<option value="">0</option>
+						<option value="">{{$ap->prices->child_min_no_allowed}}</option>
 						
 						@for($child=$ap->prices->child_min_no_allowed; $child<=$ap->prices->child_max_no_allowed; $child++)
 							@if($child > 0)
+								@if($voucher->childs > 0)
 						<option value="{{$child}}" @if($voucher->childs==$child) selected="selected" @endif>{{$child}}</option>
+							@else
+							<option value="{{$child}}" @if($child==$ap->prices->child_min_no_allowed) selected="selected" @endif>{{$child}}</option>	
+							@endif
 					@endif
 						@endfor
 						</select></td>
