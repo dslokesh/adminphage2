@@ -117,7 +117,7 @@
                     </ul>
                 </li>
 				 <li>
-                    <a href="{{ route('logout') }}" class="drop-down">Logout</a>
+                    <a href="{{ route('logout') }}" class="drop-down">Ledger</a>
                 </li>
 			@else
 				<li class=" ">
