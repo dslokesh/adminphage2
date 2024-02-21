@@ -6,6 +6,7 @@
    <div class="col-lg-6 text-center">
                     <div class="contact-form-area mb-5  mt-5">
                         <h3>Register</h3>
+						
 						@include('inc.errors-and-messages')
                         <form action="{{ route('register.post') }}" method="post" class="form" enctype="multipart/form-data">
 			{{ csrf_field() }}
