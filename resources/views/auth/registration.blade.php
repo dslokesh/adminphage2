@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
             <div class="row g-lg-4 gy-5">
-   <div class="col-lg-6 text-center">
+   <div class="col-lg-6 offset-md-4 text-center">
                     <div class="contact-form-area mb-5  mt-5">
                         <h3>Register</h3>
 						
@@ -125,8 +125,8 @@
                                       
                                     </div>
 									<div class="row">
-									<div class="col-lg-6">
-                <a href="{{route('login')}}" class="text-accent-1" style="text-align:left">Login</a>
+									<div class="col-lg-6 text-start">
+                <a href="{{route('login')}}" class="text-accent-1">Login</a>
               </div>
 									
 				 </div>

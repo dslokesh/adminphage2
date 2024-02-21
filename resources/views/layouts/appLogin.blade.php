@@ -241,10 +241,10 @@
     <!-- Marquee  JS -->
     <script src="{{asset('front/assets/js/jquery.marquee.min.js')}}"></script>
     <!-- Select2  JS -->
-    <script src="{{asset('front/assets/js/jquery.nice-select.min.js')}}"></script>
+   <!-- <script src="{{asset('front/assets/js/jquery.nice-select.min.js')}}"></script> -->
     <!-- Select2  JS -->
-    <script src="{{asset('front/assets/js/select2.min.js')}}"></script>
-    <!--<script src="{{asset('front/assets/js/range-slider.js')}}"></script>-->
+    <!--<script src="{{asset('front/assets/js/select2.min.js')}}"></script>
+    <script src="{{asset('front/assets/js/range-slider.js')}}"></script>-->
 
     <script src="{{asset('front/assets/js/jquery.fancybox.min.js')}}"></script>
     <!-- Custom JS -->
