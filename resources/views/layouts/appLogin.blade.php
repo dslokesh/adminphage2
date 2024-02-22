@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 
@@ -117,7 +118,7 @@
                     </ul>
                 </li>
 				 <li>
-                    <a href="{{ route('logout') }}" class="drop-down">Ledger</a>
+                    <a href="{{ route('logout') }}" class="drop-down">Logout</a>
                 </li>
 			@else
 				<li class=" ">
@@ -140,10 +141,17 @@
 				if(!empty($lastVoucher)){
 				$voucherActivityCount = App\Models\VoucherActivity::where('voucher_id',$lastVoucher->id)->count();
 				}
+				
+				$currentAction = \Route::currentRouteAction();		
+				list($controller, $action) = explode('@', $currentAction);
+				$controller = preg_replace('/.*\\\/', '', $controller);
+				
 				@endphp
+				@if($controller == 'AgentVouchersController' and in_array($action,array('addActivityList','show','addActivityView')))
                 <div class="icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"></svg>
                 </div>
+				@endif
 				@endif
 				@endif
                 <div class="content">
@@ -154,7 +162,20 @@
         </div>
         <div class="nav-right d-flex jsutify-content-end align-items-center">
             <ul class="icon-list">
-                
+                @if(auth()->check())
+				@if(auth()->user()->role_id == '3')
+				@php
+				$lastVoucher = SiteHelpers::getAgentlastVoucher();
+				if(!empty($lastVoucher)){
+				$voucherActivityCount = App\Models\VoucherActivity::where('voucher_id',$lastVoucher->id)->count();
+				}
+				
+				$currentAction = \Route::currentRouteAction();		
+				list($controller, $action) = explode('@', $currentAction);
+				$controller = preg_replace('/.*\\\/', '', $controller);
+				
+				@endphp
+				@if($controller == 'AgentVouchersController' and in_array($action,array('addActivityList','show','addActivityView')))
                 <li class="right-sidebar-button">
                     <svg class="sidebar-toggle-button" width="25" height="25" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
                         <path d="M1.29608 0.0658336C0.609639 0.31147 0.139209 0.899069 0.0432028 1.63598C-0.0144009 2.09353 -0.0144009 5.4939 0.0432028 5.95146C0.129608 6.59686 0.489632 7.11703 1.07047 7.42046L1.36329 7.57458H3.83545H6.30761L6.59563 7.42046C6.96525 7.2278 7.25807 6.93401 7.45008 6.56314L7.60369 6.27416V3.79372V1.31328L7.45008 1.02429C7.25807 0.653433 6.96525 0.359633 6.59563 0.166978L6.30761 0.0128531L3.90745 0.00322056C1.83372 -0.00641251 1.4785 0.00322056 1.29608 0.0658336ZM6.2356 0.802741C6.52842 0.956866 6.65803 1.08209 6.79244 1.34699L6.90765 1.57336V3.80817V6.03816L6.74924 6.29824C6.53322 6.66429 6.2068 6.85694 5.74117 6.90029C5.54916 6.91956 4.55549 6.92437 3.52343 6.91474L1.65131 6.90029L1.41129 6.77025C1.12807 6.62094 1.00807 6.49571 0.854455 6.20191L0.739248 5.98518V3.79372V1.60226L0.854455 1.38552C1.05607 0.995397 1.33929 0.778659 1.74731 0.706413C1.85292 0.687148 2.85618 0.677515 3.97946 0.677515L6.01959 0.687148L6.2356 0.802741Z"></path>
@@ -163,6 +184,9 @@
                         <path d="M13.2441 10.4934C11.8856 10.8498 10.8583 11.8853 10.5079 13.2531C10.3735 13.7781 10.3735 14.6162 10.5079 15.1412C10.8343 16.4127 11.732 17.3808 12.9945 17.8239C13.3593 17.9491 13.4937 17.9732 14.0601 17.9925C14.617 18.0117 14.7754 17.9973 15.1162 17.9106C16.5179 17.5542 17.5452 16.5283 17.9052 15.1219C18.0348 14.6162 18.03 13.7685 17.9004 13.2531C17.55 11.8757 16.5179 10.8401 15.145 10.4885C14.6314 10.3585 13.7529 10.3585 13.2441 10.4934ZM15.2314 11.2784C15.7066 11.4518 16.0475 11.6782 16.4363 12.0828C17.0075 12.6848 17.2763 13.3639 17.2763 14.2068C17.2763 15.0882 17.0075 15.7288 16.3691 16.3645C15.721 17.0099 15.0826 17.2796 14.2186 17.2845C13.7001 17.2845 13.3113 17.193 12.8121 16.957C12.5336 16.8221 12.3608 16.692 12.0392 16.3694C11.396 15.724 11.132 15.0882 11.132 14.1972C11.132 13.3495 11.396 12.6896 11.972 12.0828C12.3608 11.6782 12.7017 11.4518 13.1817 11.2736C13.7913 11.0521 14.6218 11.0521 15.2314 11.2784Z"></path>
                     </svg>
                 </li>
+				@endif
+				@endif
+				@endif
             </ul>
             <div class="hotline-area d-xl-flex d-none">
                 <div class="icon">
