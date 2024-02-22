@@ -1,101 +1,109 @@
 @extends('layouts.appLogin')
 @section('content')
-<div class="dashboard__content mt-5">
-   <div class="dashboard__content_content">
 
-          <h1 class="text-30">My Booking</h1>
 
-          <div class="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 md:mb-20 mt-60">
-            <div class="tabs -underline-2 js-tabs">
-              <div class="card-body">
-			  <div class="row">
-            <form id="filterForm" class="form-inline" method="get" action="{{ route('agent-vouchers.index') }}" >
-              <div class="form-row align-items-center">
-			   <div class="col-auto col-md-3">
-                <div class="input-group mb-2">
-                  <div class="input-group-prepend">
-                    <div class="input-group-text">Search Result</div>
-                  </div>
+
+
+
+
+
+<div class="breadcrumb-section" style="background-image: linear-gradient(270deg, rgba(0, 0, 0, .3), rgba(0, 0, 0, 0.3) 101.02%), url(assets/img/innerpage/inner-banner-bg.png);">  
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 d-flex justify-content-center">
+                    <div class="banner-content">
+                        <h1>My Bookings</h1>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Start Checkout section -->
+    <div class="checkout-page pt-120 mb-120">
+        <div class="container">
+          <div class="row g-lg-4 gy-5 mb-30">
+            <div class="col-md-12">
+              <div class="inquiry-form ">
+              <form id="filterForm" class="form-inline" method="get" action="{{ route('agent-vouchers.index') }}" >
+              <div class="row">
+              <div class="col-md-3">
+              <div class="form-inner mb-30">
                  <select name="booking_type" id="booking_type" class="form-control">
                    <option value="1" {{ (request('booking_type') == 1) ? 'selected' : '' }}>Booking Date</option>
 					<option value="2" {{ (request('booking_type') == 2) ? 'selected' : '' }}>Travel Date</option>
 					<!--<option value = "3">Deadline Date</option>-->
                  </select>
+</div>
                 </div>
-              </div>
-			  <div class="col-auto col-md-3">
-                  <div class="input-group mb-2 ">
-                    <div class="input-group-prepend"><div class="input-group-text">From Date</div></div>
+                <div class="col-md-3">
+                <div class="form-inner mb-30">
                     <input type="text" name="from_date" value="{{ request('from_date') }}" autocomplete ="off" class="form-control  datepicker"  placeholder="From Date" />
-                  </div>
-                </div>
-				<div class="col-auto col-md-3">
-                  <div class="input-group mb-2">
-                    <div class="input-group-prepend"><div class="input-group-text">To Date</div></div>
+</div>
+                    </div>
+                <div class="col-md-3">
+                <div class="form-inner mb-30">
                     <input type="text" name="to_date" value="{{ request('to_date') }}" class="form-control datepicker" autocomplete ="off"  placeholder="To Date" />
-                  </div>
-                </div>
-                <div class="col-auto col-md-3">
-                  <div class="input-group mb-2">
-                    <div class="input-group-prepend"><div class="input-group-text">Agent Reference</div></div>
+                    </div>
+</div>
+                <div class="col-md-3">
+                <div class="form-inner mb-30">
                     <input type="text" name="reference" value="{{ request('reference') }}" class="form-control"  placeholder="Agent Reference Number" />
-                  </div>
-                </div>
-				 <div class="col-auto col-md-3">
-                  <div class="input-group mb-2">
-                    <div class="input-group-prepend"><div class="input-group-text">Booking Number</div></div>
+                    </div>
+                    </div>
+                <div class="col-md-3">
+                <div class="form-inner mb-30">
                     <input type="text" name="vcode" value="{{ request('vcode') }}" class="form-control"  placeholder="Booking Number" />
-                  </div>
-                </div>
-                <div class="col-auto col-md-3">
-                  <div class="input-group mb-2">
-                    <div class="input-group-prepend"><div class="input-group-text">Service Name</div></div>
+                    </div>
+                    </div>
+                <div class="col-md-3">
+                <div class="form-inner mb-30">
                     <input type="text" name="activity_name" value="{{ request('activity_name') }}" class="form-control"  placeholder="Service Name" />
-                  </div>
-                </div>
-                <div class="col-auto col-md-3">
-                  <div class="input-group mb-2">
-                    <div class="input-group-prepend"><div class="input-group-text">Customer</div></div>
+                    </div>
+                    </div>
+                <div class="col-md-3">
+                <div class="form-inner mb-30">
                     <input type="text" name="customer" value="{{ request('customer') }}" class="form-control"  placeholder="Customer" />
-                  </div>
-                </div>
-				
-              <div class="col-auto col-md-2">
-                <button class="btn btn-info mb-2" type="submit">Filter</button>
+                    </div>
+                    </div>
+                <div class="col-md-3">
+                <div class="form-inner mb-30">
+                <button class="secondary-btn2" type="submit">Filter</button>
                 <a class="btn btn-default mb-2  mx-sm-2" href="{{ route('agent-vouchers.index') }}">Clear</a>
+                </div>
+                </div>
               </div>
             </form>
+              </div>
+            </div>
           </div>
-        </div>
-		 </div>
-
-              <div class="tabs__content js-tabs-content">
-
-                <div class="tabs__pane -tab-item-1 is-tab-el-active">
-                  <div class="overflowAuto">
-                    <table class="tableTest mb-30">
-                      <thead class="bg-light-1 rounded-12">
+            <div class="row g-lg-4 gy-5">
+                <div class="col-lg-12">
+                    
+                <table class="table table-condensed table-striped">
+                      <tdead class="bg-light-1 rounded-12">
                         <tr>
-                  <th>Booking Number</th>
-                  <th>Booking Date</th>
-                  <th>Service Type</th>
+                  <td>Booking Number</td>
+                  <td>Booking Date</td>
+                  <td>Service Type</td>
 					
-					<th>Service Name</th>
-          <th>Travel Date</th>
-					<th>Agent Ref. No.</th>
-					<th>Customer</th>
-					<th>Adult</th>
-					<th>Child</th>
-					<th>Infant</th>
+					<td>Service Name</td>
+          <td>Travel Date</td>
+					<td>Agent Ref. No.</td>
+					<td>Customer</td>
+					<td>Adult</td>
+					<td>Child</td>
+					<td>Infant</td>
 					
 				
 					
-                    <th>Status</th>
+                    <td>Status</td>
                   
 				
-                    <th></th>
+                    <td></td>
                   </tr>
-                      </thead>
+                      </tdead>
 
                       <tbody>
  @foreach ($records as $record)
@@ -121,7 +129,7 @@
                     <td>{!! SiteHelpers::voucherStatus($record->voucher->status_main) !!}</td>
                 
 
-                     <td width="12%">
+                     <td>
 					 @if($record->voucher->status_main == '4')
 					 
 					 <a class="button -dark-1 size-35 bg-light-1 rounded-full flex-center" alt="View Details" href="{{route('agent-vouchers.show',$record->voucher->id)}}">
@@ -146,28 +154,19 @@
                   @endforeach
                       </tbody>
                     </table>
-                  </div>
-
-
-               <div class="pagination justify-center">
+                    <div class="pagination justify-center">
     <div class="pagination pull-right mt-3"> {!! $records->appends(request()->query())->links() !!} </div> 
 </div>
 
 
-                  
+
                 </div>
-
-              
-              </div>
+                
             </div>
-          </div>
-
-          <div class="text-center pt-30">
-            © Copyright Viatours 2023
-          </div>
-
         </div>
-  </div>    
+    </div>
+    <!-- End Checkout section -->
+ 
 @endsection
 @section('scripts')
 <script type="text/javascript">

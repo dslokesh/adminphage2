@@ -1,261 +1,279 @@
 @extends('layouts.appLogin')
 @section('content')
-<section data-anim="fade" class="pageHeader -type-3">
-      <div class="container">
-        <div class="row justify-between">
-          <div class="col-auto">
-           
-          </div>
 
-          <div class="col-auto">
-            <div class="pageHeader__subtitle"></div>
-          </div>
-        </div>
-
-        <div class="row pt-30">
-          <div class="col-auto">
-            <h1 class="pageHeader__title"></h1>
-          </div>
-        </div>
-      </div>
-    </section>
-	
-  <section class="layout-pb-xl">
-      <div class="container">
-        <div class="row">
-          
-
-          <div data-anim="slide-up delay-2" class="@if($voucherActivityCount > 0) col-xl-9 col-lg-8 @else col-xl-12 @endif" >
-            <div class="row y-gap-5 justify-between">
-              <div class="col-auto">
-                <div>Activities & Tours</div>
-              </div>
-				 <div class="col-md-12 card card-default">
-              <!-- form start -->
-              <form id="filterForm" class="form-inline" method="get" action="{{ route('agent-vouchers.add.activity',$vid) }}" >
-                <div class="card-body">
-                  <div class="row">
-                      <div class="col-md-9">
-                        <div class="input-group">
-                          <input type="text" name="name" value="{{ request('name') }}" class="form-control"  placeholder="Filter with Name" />
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="input-group ">
-                            <button class="btn btn-info" type="submit">   <i class="fas fa-search"></i> Search</button>
-                            <a class="btn btn-default  mx-sm-2" href="{{ route('agent-vouchers.add.activity',$vid) }}">Clear</a>
-                        </div>
-                      </div>
-                     
-                      
-                  </div>
-                </div>
-                <!-- /.card-body -->
-                </form>
-                </div>
-              
-            </div>
-				@foreach ($records as $record)
-				@php
-				$minPrice = $record->min_price;
-				$cutoffTime = SiteHelpers::getActivityVarByCutoffCancellation($record->id);
-				@endphp
-            <div class="row y-gap-30 pt-30">
-
-              <div class="col-12">
-
-                <div class="tourCard -type-2">
-                  <div class="tourCard__image">
-                    <img src="{{asset('uploads/activities/'.$record->image)}}" alt="image">
-
-                  </div>
-
-                  <div class="tourCard__content">
-                  
-                    <h3 class="tourCard__title mt-5">
-                      <span> <a class="" href="{{route('agent-vouchers.activity.view',[$record->id,$vid])}}" target="_blank">
-                            {{$record->title}}
-                          </a></span>
-                    </h3>
-
-                   
-
-                    <div class="row x-gap-20 y-gap-5 pt-30">
-                      <div class="col-auto">
-					 
-                        <div class="text-14 text-accent-1">
-						 @if($record->entry_type == 'Tour')
-                          <i class="icon-price-tag mr-10"></i>
-                          Instant Confirmation
-						  @endif
-                        </div>
-                      </div>
-					   
-                      <div class="col-auto">
-                        <div class="text-14">
-                          <i class="icon-check mr-10"></i>
-                          {!!$cutoffTime!!}
-                        </div>
-                      </div>
+<div class="breadcrumb-section"
+        style="background-image: linear-gradient(270deg, rgba(0, 0, 0, .3), rgba(0, 0, 0, 0.3) 101.02%), url(assets/img/innerpage/inner-banner-bg.png);">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 d-flex justify-content-center">
+                    <div class="banner-content">
+                        <h1>Activities & Tours</h1>
+                        
                     </div>
-                  </div>
-
-                  <div class="tourCard__info">
-                    <div>
-                      <div class="d-flex items-center text-14">
-                        <i class="icon-clock mr-10"></i>
-                        {{$voucher->nof_night+1}} Days {{$voucher->nof_night}} Nights
-                      </div>
-
-                      <div class="tourCard__price">
-                        <div></div>
-
-                        <div class="d-flex items-center">
-                          From <span class="text-20 fw-500 ml-5">AED {{$minPrice}}</span>
-                        </div>
-                      </div>
-                    </div>
-					
-			  
-                    <button class="button -outline-accent-1 text-accent-1 loadvari" data-act="{{ $record->id }}"  data-vid="{{ $vid }}" data-card-widget="collapse" title="Collapse">
-                      SELECT
-                      <i class="icon-arrow-top-right ml-10"></i>
-                    </button>
-                  </div>
                 </div>
+            </div>
+        </div>
+    </div>
 
-              </div>
-			<div class="pdivvarc tourCard -type-2" id="pdivvar{{ $record->id }}" style="display: none;">
-         
-			 
-            <div class="col-md-12 var_data_div_cc" id="var_data_div{{ $record->id }}">
-                    
-                  </div>
+
+
+    <!-- Start Room Details section -->
+    <div class="room-suits-page pt-120 mb-120">
+        <div class="container">
+            <div class="row g-lg-4 gy-5">
+                <div class="col-xl-4 order-lg-1 order-2">
+                    <div class="sidebar-area">
+                        <div class="single-widget mb-30">
+                            <h5 class="widget-title">Search Here</h5>
+                            <form id="filterForm" class="form-inline" method="get" action="{{ route('agent-vouchers.add.activity',$vid) }}" >
+                                <div class="search-box">
+                                <input type="text" name="name" value="{{ request('name') }}" class="form-control" style="border-radius: 5px 0px 0px 5px;"  placeholder="Filter with Name" />
+                                    
+                                    <button type="submit"><i class="bx bx-search"></i></button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- <div class="single-widget mb-30">
+                            <h5 class="widget-title">Tags</h5>
+                            <div class="checkbox-container">
+                                <ul>
+                                    <li>
+                                        <label class="containerss">
+                                            <input type="checkbox">
+                                            <span class="checkmark"></span>
+                                            <span class="text">Book without credit card</span>
+                                            <span class="qty">250</span>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label class="containerss">
+                                            <input type="checkbox">
+                                            <span class="checkmark"></span>
+                                            <span class="text">Free cancellation</span>
+                                            <span class="qty">90</span>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label class="containerss">
+                                            <input type="checkbox">
+                                            <span class="checkmark"></span>
+                                            <span class="text">Breakfast Included</span>
+                                            <span class="qty">35</span>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label class="containerss">
+                                            <input type="checkbox">
+                                            <span class="checkmark"></span>
+                                            <span class="text">No prepayment</span>
+                                            <span class="qty">28</span>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label class="containerss">
+                                            <input type="checkbox">
+                                            <span class="checkmark"></span>
+                                            <span class="text">Romantic</span>
+                                            <span class="qty">12</span>
+                                        </label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div> -->
+                        <!-- <div class="single-widget mb-30">
+                            <h5 class="shop-widget-title">Price Filter</h5>
+                                <div class="range-wrap">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                        <form>
+                                            <input type="hidden" name="min-value" value="">
+                                            <input type="hidden" name="max-value" value="">
+                                        </form>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                        <div id="slider-range"></div>
+                                        </div>
+                                    </div>
+                                    <div class="slider-labels">
+                                        <div class="caption">
+                                            <span id="slider-range-value1"></span>
+                                        </div>
+                                        <a href="#">Apply</a>
+                                        <div class="caption">
+                                            <span id="slider-range-value2"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div> -->
+                        
+                        
+                    </div>
+                </div>
+                <div class="col-xl-8 order-lg-2 order-1">
+                @foreach ($records as $record)
+                @php
+                  $minPrice = $record->min_price;
+                  $cutoffTime = SiteHelpers::getActivityVarByCutoffCancellation($record->id);
+                @endphp
+
+                    <div class="room-suits-card mb-30">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                            <div class="room-img">
+                                    <a href="{{route('agent-vouchers.activity.view',[$record->id,$vid])}}"><img src="{{asset('uploads/activities/'.$record->image)}}" alt=""></a>
+                                </div>
+                               
+                            </div>
+                            <div class="col-md-8">
+                                <div class="room-content">
+                                    <div class="content-top">
+                                        <h5>
+                                            <a class="" href="{{route('agent-vouchers.activity.view',[$record->id,$vid])}}" target="_blank">
+                                              {{$record->title}}
+                                            </a>
+                                        </h5>
+                                       
+                                        <ul class="facilisis">
+                                            @if($record->entry_type == 'Tour')
+                                              <li>
+                                                  <i class="icon-price-tag mr-10"></i>
+                                                  Instant Confirmation
+                                              </li>
+                                            @endif
+                                            <li> {!!$cutoffTime!!}</li>
+                                           
+                                        </ul>
+                                    </div>
+                                    <div class="content-bottom">
+                                        <div class="room-type">
+                                            <div class="deals">
+                                                <!-- <span><strong>Free cancellation</strong> <br> before 48 hours</span> -->
+                                            </div>
+                                        </div>
+                                       <div class="price-and-book">
+                                            <div class="price-area">
+                                               
+                                                <span>AED {{$minPrice}}</span>
+                                                
+                                            </div>
+                                            <div class="book-btn">
+
+                                            <a class="primary-btn2 loadvari" data-act="{{ $record->id }}" style="cursor:pointer;"  data-vid="{{ $vid }}" data-card-widget="collapse" title="Collapse">
+                                            Select <i class="bi bi-arrow-right"></i>
+                    </a>
+                                               
+                                            </div>
+                                       </div>
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+
+                        <div style="padding: 0px 20px;">
+                                <div class="col-md-12">
+			                              <div class="pdivvarc tourCard -type-2" id="pdivvar{{ $record->id }}" style="display: none;">
+                                       <div class="col-md-12 var_data_div_cc" id="var_data_div{{ $record->id }}">
+
+                                        </div>
+                                    </div>
+
+                                </div>
               
           
-        </div>
-			 
-            </div>
-@endforeach 
-          <div class="pagination pull-right mt-3"> {!! $records->appends(request()->query())->links() !!} </div>  
+                         </div>
+                       
+                    </div>
+
+                    @endforeach 
+          <div class="pagination pull-right mt-3"> 
+            
+<!--           
+          <div class="row mt-70">
+                        <div class="col-lg-12">
+                            <nav class="inner-pagination-area">
+                                <ul class="pagination-list">
+                                    <li>
+                                        <a href="#" class="shop-pagi-btn"><i class="bi bi-chevron-left"></i></a>
+                                    </li>
+                                    <li>
+                                        <a href="#">1</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="active">2</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">3</a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="bi bi-three-dots"></i></a>
+                                    </li>
+                                    <li>
+                                        <a href="#">6</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="shop-pagi-btn"><i class="bi bi-chevron-right"></i></a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div> -->
+          
+          {!! $records->appends(request()->query())->links() !!} </div>  
           </div>
 		  @php
 					$total = 0;
 					
 					@endphp
- @if(($voucherActivity->count() > 0) && $voucher->is_activity == 1)
-          <div class="col-xl-3 col-lg-4">
-            <div class="lg:d-none">
-              <div class="sidebar -type-1 rounded-12">
-              
-
-                <div class="sidebar__content" style="padding:15px 0px 0px 0px">
-               
-
-				
-			  
-					@if(!empty($voucherActivity))
-					  @foreach($voucherActivity as $ap)
-				  @php
-          $total += $ap->totalprice;
-		  $activityImg = SiteHelpers::getActivityImageName($ap->activity_id);
-					@endphp
-            <div class="card">
-			
-              
-              <div class="card-body card-body-hover" >
-             
-              <div class="row">
-              <div class="col-10">
-              <span class="cart-title font-size-21 text-dark">
-              {{$ap->activity_title}}
-              </span>
-              </div>
-              <div class="col-2  text-right">
-              <form id="delete-form-{{$ap->id}}" method="post" action="{{route('agent.voucher.activity.delete',$ap->id)}}" style="display:none;">
-                                {{csrf_field()}}
-                                {{method_field('DELETE')}}
-                            </form>
-                            <small>
-                            <a class="btn btn-xs btn-danger border-round" title="delete" href="javascript:void(0)" onclick="
-                                if(confirm('Are you sure, You want to delete this?'))
-                                {
-                                    event.preventDefault();
-                                    document.getElementById('delete-form-{{$ap->id}}').submit();
-                                }
-                                else
-                                {
-                                    event.preventDefault();
-                                }
-                            
-                            "><small><i class="fas fa-trash-alt "></i></small></a></small>
-              </div>
-              </div>
-             
-                                  <div class="row" >
-				  <div class="col-md-3" style="padding: 5px 0px 5px 5px; ">
-              <img src="{{asset('uploads/activities/'.$activityImg)}}" class="img-fluid" style="border-radius: 5px;" />
-            </div>
-			<div class="col-md-9">
-              <ul class="list-unstyled" style="">
-             
-                <li>
-                 {{$ap->variant_name}}
-                </li>
-				<li>
-                  {{$ap->transfer_option}}
-                </li>
-                <li>
-                   {{ $ap->tour_date ? date(config('app.date_format'),strtotime($ap->tour_date)) : null }}
-                </li>
-                <li>
-
-                 <i class="fas fa-male color-grey" style="font-size:16px;" title="Adult"></i> <span class="color-black">{{$ap->adult}}</span> <i class="fas fa-child color-grey" title="Child"></i>  <span class="color-black">{{$ap->child}}</span>
-
-                  <span class="float-right " ><h2 class="card-title text-right color-black"><strong>AED {{$ap->totalprice}}</strong></h2></span>
-                </li>
-                
-              </ul>
-			   
-            </div>
-			
+                    
+                    
                 </div>
-              
-              </div>
-              <!-- /.card-body -->
             </div>
-			
-				 @endforeach
-                 @endif
-                 <div class="input-group  text-right float-right mb-3">
-                            @if($voucherActivityCount > 0)
-                               <h2 class="card-title color-black " style="width:100%"><strong>Total Amount : AED {{$total}}</strong></h2>
-                            @endif
-                        </div>
-						
-                 <div class="input-group  text-right float-right mb-2">
-                            @if($voucherActivityCount > 0)
-                                  <a href="{{ route('agent-vouchers.show',$voucher->id) }}" class="button -md -dark-1 bg-accent-1 text-white col-12 mt-30" style="width:100%">
-                                <i class="fas fa-shopping-cart"></i>
-                                Checkout({{$voucherActivityCount}})
-                            </a>
-                            @endif
-                        </div>
-				
-
-
-                </div>
-              </div>
-            </div>
-
-          
-          </div>  
-		  @endif
         </div>
-		
-      </div>
-    </section>
-<div class="modal fade" id="timeSlotModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    </div>
+
+<!-- CART VIEW -->
+
+@include("inc.sidebar_cart")
+
+
+
+<div class="modal login-modal " id="timeSlotModal" data-bs-keyboard="false" tabindex="-1"  aria-modal="true" role="dialog" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-clode-btn" data-bs-dismiss="modal"></div>
+                <div class="modal-header">
+                  <!-- Select Time Slot -->
+                </div>
+                <div class="modal-body">
+                    <div class="login-registration-form">
+                        <div class="form-title">
+                           <p>Select Time Slot</p>
+                             <!-- <p>Enter your email address for Login.</p> -->
+                        </div>
+                        <form>
+                            <div class="form-inner mb-20">
+                              <select class="form-control" required id="timeSlotDropdown">
+                       
+                              </select>
+                            </div>
+                            
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="secondary-btn1 btn-sm" id="selectTimeSlotBtn">Add To Cart</button>
+              
+            </div>
+            </div>
+        </div>
+    </div>
+<!-- 
+
+    <div class="modal fade" id="timeSlotModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -268,17 +286,17 @@
                 <div class="form-group">
                     <label for="timeSlotDropdown">Choose a time slot:</label>
                     <select class="form-control" required id="timeSlotDropdown">
-                        <!-- Time slots will be dynamically added here -->
+                        Time slots will be dynamically added here 
                     </select>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-primary-flip btn-sm" id="selectTimeSlotBtn"><i class="fa fa-cart-plus"></i></button>
-                <!-- You can add a button here for further actions if needed -->
+               You can add a button here for further actions if needed 
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
     <!-- /.content -->
 @endsection

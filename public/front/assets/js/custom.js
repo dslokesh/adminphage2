@@ -11,7 +11,7 @@
 
 	// Preloader
 	jQuery(window).on('load', function () {
-		$(".egns-preloader").delay(1600).fadeOut("slow");
+		$(".egns-preloader").delay(500).fadeOut("slow");
 	});
 	$('.preloader-close-btn').on("click", function () {
 		$('.egns-preloader').addClass('close');
@@ -107,6 +107,53 @@
 			}
 		}, function (start, end, label) {
 			var years = moment().diff(start, 'years');
+		});
+
+		$('input[name="from_date"]').daterangepicker({
+			singleDatePicker: true,
+			showDropdowns: false,
+			minYear: 2023,
+			maxDate:new Date(),
+			locale: {
+				format: 'DD-MM-YYYY'
+			}
+		}, function (start, end, label) {
+			var years = moment().diff(start, 'years');
+		});
+		$('input[name="to_date"]').daterangepicker({
+			singleDatePicker: true,
+			showDropdowns: false,
+			maxDate:new Date(),
+			minYear: 2023,
+			locale: {
+				format: 'DD-MM-YYYY'
+			}
+		}, function (start, end, label) {
+			var years = moment().diff(start, 'years');
+		});
+
+
+		$('input[name="travel_from_date"]').daterangepicker({
+			singleDatePicker: true,
+			showDropdowns: false,
+			minDate:new Date(),
+			minYear: 2023,
+			locale: {
+				format: 'DD-MM-YYYY'
+			}
+		}, function (start, end, label) {
+			var years = moment().diff(start, 'years');
+		});
+
+		$('input[name="travel_from_to_date"]').daterangepicker({
+			opens: 'left',
+			minYear: '2023',
+			minDate:new Date(),
+			locale: {
+				format: 'DD-MM-YYYY'
+			}
+		}, function (start, end, label) {
+			console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
 		});
 
 		$('input[name="daterange"]').daterangepicker({

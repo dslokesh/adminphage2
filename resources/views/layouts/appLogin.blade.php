@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 
@@ -34,10 +33,12 @@
     <link href="{{asset('front/assets/css/nice-select.css')}}" rel="stylesheet">
     <!--  Style CSS  -->
     <link rel="stylesheet" href="{{asset('front/assets/css/style.css')}}">
+    <link href="{{asset('front/assets/css/custom.css')}}" rel="stylesheet">
     <!-- Title -->
     <title>{{ config('app.name', 'Laravel') }}</title>
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
 	 <meta name="csrf-token" content="{{ csrf_token() }}" />
+     <script src="{{asset('front/assets/js/jquery-3.7.1.min.js')}}"></script>
 </head>
 
 <body>
@@ -46,9 +47,7 @@
 </div>
    
     <div class="egns-preloader">
-        <div class="preloader-close-btn">
-            <span><i class="bi bi-x-lg"></i> Close</span>
-        </div>
+        
         <div class="container">
             <div class="row d-flex justify-content-center">
                 <div class="col-6">
@@ -56,11 +55,7 @@
                         <div class="moving-circle"></div>
                         <div class="moving-circle"></div>
                         <div class="moving-circle"></div>
-                        <svg width="180px" height="150px" viewBox="0 0 187.3 93.7" preserveAspectRatio="xMidYMid meet"
-                            style="left: 50%; top: 50%; position: absolute; transform: translate(-50%, -50%) matrix(1, 0, 0, 1, 0, 0);">
-                            <path stroke="#D90A2C" id="outline" fill="none" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M93.9,46.4c9.3,9.5,13.8,17.9,23.5,17.9s17.5-7.8,17.5-17.5s-7.8-17.6-17.5-17.5c-9.7,0.1-13.3,7.2-22.1,17.1 c-8.9,8.8-15.7,17.9-25.4,17.9s-17.5-7.8-17.5-17.5s7.8-17.5,17.5-17.5S86.2,38.6,93.9,46.4z" />
-                            <path id="outline-bg" opacity="0.05" fill="none" stroke="#959595" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M93.9,46.4c9.3,9.5,13.8,17.9,23.5,17.9s17.5-7.8,17.5-17.5s-7.8-17.6-17.5-17.5c-9.7,0.1-13.3,7.2-22.1,17.1 c-8.9,8.8-15.7,17.9-25.4,17.9s-17.5-7.8-17.5-17.5s7.8-17.5,17.5-17.5S86.2,38.6,93.9,46.4z" />
-                        </svg>
+                        <img src="{{asset('Abatera_logo.jpg')}}" style="width: 100px;margin: 20px 18px;" alt="" />
                     </div>
                 </div>
             </div>
@@ -68,7 +63,7 @@
     </div>
 
      <!-- Sidebar Menu -->
-@include("inc.sidebar_cart")
+
    
     <!-- Start header section -->
     <header class="header-area style-1">
@@ -91,80 +86,57 @@
             <ul class="menu-list icon-list">
 			@if(auth()->check())
 				@permission('agency.voucher.booking') 
-                <li class=" ">
-                    <a href="{{ route('agent-vouchers.index') }}" class="drop-down">My Booking</a>
-                    
-                </li>
+                
                 <li class="">
                     <a href="{{ route('agent-vouchers.create') }}" class="drop-down">Book Now</a>
                     
                 </li>
                @endpermission
 		  @permission('list.agent.ledger') 
-                <li>
-                    <a href="{{ route('agentLedgerReportWithVat') }}" class="drop-down">Ledger</a>
-                </li>
+                
 				@endpermission
+
+                <li><a href="javascript:void(0);"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"><path fill="currentColor" d="M16 12h2v4h-2z"/><path fill="currentColor" d="M20 7V5c0-1.103-.897-2-2-2H5C3.346 3 2 4.346 2 6v12c0 2.201 1.794 3 3 3h15c1.103 0 2-.897 2-2V9c0-1.103-.897-2-2-2M5 5h13v2H5a1.001 1.001 0 0 1 0-2m15 14H5.012C4.55 18.988 4 18.805 4 18V8.815c.314.113.647.185 1 .185h15z"/></svg> AED {{\Auth::user()->agent_amount_balance}}</a></li>
 				
 				 <li class="menu-item-has-children">
-                    <a href="{{ route('profile-edit',Auth::user()->id) }}" class="drop-down">{{\Auth::user()->company_name}} (&nbsp;AED  {{\Auth::user()->agent_amount_balance}})
+                    <a href="{{ route('profile-edit',Auth::user()->id) }}" class="drop-down">{{\Auth::user()->company_name}}
               </a><i class="bi bi-plus chevron-icon"></i>
                     <ul class="sub-menu">
+                            <li>
+                            <a href="{{ route('agentLedgerReportWithVat') }}" class="drop-down">Ledger</a>
+                        </li>
+                        <li class=" ">
+                    <a href="{{ route('agent-vouchers.index') }}" class="drop-down">My Booking</a>
+                    
+                </li>
                         <li><a href="{{ route('profile-edit',Auth::user()->id) }}">Profile</a></li>
                         <li>
                             <a href="{{ route('change-password') }}">Change Password</a>
                         </li>
                        
-                    </ul>
-                </li>
-				 <li>
+                        <li>
                     <a href="{{ route('logout') }}" class="drop-down">Logout</a>
                 </li>
-			@else
-				<li class=" ">
-                    <a href="{{route('register')}}" class="drop-down">Sign up</a>
-                    
+                    </ul>
                 </li>
-                <li class="">
-                    <a href="{{route('login')}}" class="drop-down">Log in</a>
-                    
+                
+				 <li>
+                    <a href="{{ route('logout') }}" class="drop-down"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h7v2H5v14h7v2zm11-4l-1.375-1.45l2.55-2.55H9v-2h8.175l-2.55-2.55L16 7l5 5z"/></svg></a>
                 </li>
+		
 			@endif
 			
             </ul>
 			
-            <div class="hotline-area d-lg-none d-flex">
-			@if(auth()->check())
-				@if(auth()->user()->role_id == '3')
-				@php
-				$lastVoucher = SiteHelpers::getAgentlastVoucher();
-				if(!empty($lastVoucher)){
-				$voucherActivityCount = App\Models\VoucherActivity::where('voucher_id',$lastVoucher->id)->count();
-				}
-				
-				$currentAction = \Route::currentRouteAction();		
-				list($controller, $action) = explode('@', $currentAction);
-				$controller = preg_replace('/.*\\\/', '', $controller);
-				
-				@endphp
-				@if($controller == 'AgentVouchersController' and in_array($action,array('addActivityList','show','addActivityView')))
-                <div class="icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"></svg>
-                </div>
-				@endif
-				@endif
-				@endif
-                <div class="content">
-                    <span>To More Inquiry</span>
-                    <h6><a href="tel:+990737621432">+971 4 591 7098</a></h6>
-                </div>
-            </div>
+            
         </div>
         <div class="nav-right d-flex jsutify-content-end align-items-center">
-            <ul class="icon-list">
-                @if(auth()->check())
+
+
+        @if(auth()->check())
 				@if(auth()->user()->role_id == '3')
 				@php
+                $voucherActivityCount = 0;
 				$lastVoucher = SiteHelpers::getAgentlastVoucher();
 				if(!empty($lastVoucher)){
 				$voucherActivityCount = App\Models\VoucherActivity::where('voucher_id',$lastVoucher->id)->count();
@@ -175,19 +147,33 @@
 				$controller = preg_replace('/.*\\\/', '', $controller);
 				
 				@endphp
-				@if($controller == 'AgentVouchersController' and in_array($action,array('addActivityList','show','addActivityView')))
+				@if($controller == 'AgentVouchersController' and in_array($action,array('addActivityList','addActivityView')))
+                
+                @php
+                $voucherActivityCount = App\Models\VoucherActivity::where('voucher_id',$vid)->count();
+                @endphp
+                @if($voucherActivityCount > 0)
+               
+                <ul class="icon-list">
+                
                 <li class="right-sidebar-button">
-                    <svg class="sidebar-toggle-button" width="25" height="25" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1.29608 0.0658336C0.609639 0.31147 0.139209 0.899069 0.0432028 1.63598C-0.0144009 2.09353 -0.0144009 5.4939 0.0432028 5.95146C0.129608 6.59686 0.489632 7.11703 1.07047 7.42046L1.36329 7.57458H3.83545H6.30761L6.59563 7.42046C6.96525 7.2278 7.25807 6.93401 7.45008 6.56314L7.60369 6.27416V3.79372V1.31328L7.45008 1.02429C7.25807 0.653433 6.96525 0.359633 6.59563 0.166978L6.30761 0.0128531L3.90745 0.00322056C1.83372 -0.00641251 1.4785 0.00322056 1.29608 0.0658336ZM6.2356 0.802741C6.52842 0.956866 6.65803 1.08209 6.79244 1.34699L6.90765 1.57336V3.80817V6.03816L6.74924 6.29824C6.53322 6.66429 6.2068 6.85694 5.74117 6.90029C5.54916 6.91956 4.55549 6.92437 3.52343 6.91474L1.65131 6.90029L1.41129 6.77025C1.12807 6.62094 1.00807 6.49571 0.854455 6.20191L0.739248 5.98518V3.79372V1.60226L0.854455 1.38552C1.05607 0.995397 1.33929 0.778659 1.74731 0.706413C1.85292 0.687148 2.85618 0.677515 3.97946 0.677515L6.01959 0.687148L6.2356 0.802741Z"></path>
-                        <path d="M11.6647 0.0658336C10.9783 0.31147 10.5079 0.899069 10.4119 1.63598C10.3879 1.82863 10.3687 2.80154 10.3687 3.79372C10.3687 4.7859 10.3879 5.75881 10.4119 5.95146C10.4983 6.59686 10.8583 7.11703 11.4391 7.42046L11.7319 7.57458H14.2041H16.6763L16.9643 7.42046C17.3339 7.2278 17.6267 6.93401 17.8187 6.56314L17.9723 6.27416V3.79372V1.31328L17.8187 1.02429C17.6267 0.653433 17.3339 0.359633 16.9643 0.166978L16.6763 0.0128531L14.2761 0.00322056C12.2024 -0.00641251 11.8471 0.00322056 11.6647 0.0658336ZM16.6043 0.802741C16.9019 0.956866 17.0267 1.08209 17.1611 1.35181L17.2811 1.583L17.2763 3.79854C17.2763 5.73472 17.2667 6.03816 17.1995 6.1682C17.0555 6.45237 16.9067 6.61131 16.6475 6.7558L16.3882 6.90029H14.2041H12.02L11.7799 6.77025C11.4967 6.62094 11.3767 6.49571 11.2231 6.20191L11.1079 5.98518V3.79372V1.60226L11.2231 1.38552C11.4247 0.995397 11.7079 0.778659 12.116 0.706413C12.2216 0.687148 13.2248 0.677515 14.3481 0.677515L16.3882 0.687148L16.6043 0.802741Z"></path>
-                        <path d="M1.29608 10.4693C0.609639 10.7149 0.139209 11.3025 0.0432028 12.0394C-0.0144009 12.497 -0.0144009 15.8973 0.0432028 16.3549C0.129608 17.0003 0.489632 17.5205 1.07047 17.8239L1.36329 17.978H3.83545H6.30761L6.59563 17.8239C6.96525 17.6312 7.25807 17.3374 7.45008 16.9666L7.60369 16.6776V14.1972V11.7167L7.45008 11.4277C7.25807 11.0569 6.96525 10.7631 6.59563 10.5704L6.30761 10.4163L3.90745 10.4067C1.83372 10.397 1.4785 10.4067 1.29608 10.4693ZM6.2356 11.2062C6.52842 11.3603 6.65803 11.4855 6.79244 11.7504L6.90765 11.9768V14.2116V16.4416L6.74924 16.7017C6.53322 17.0677 6.2068 17.2604 5.74117 17.3037C5.54916 17.323 4.55549 17.3278 3.52343 17.3182L1.65131 17.3037L1.41129 17.1737C1.12807 17.0244 1.00807 16.8992 0.854455 16.6054L0.739248 16.3886V14.1972V12.0057L0.854455 11.789C1.05607 11.3988 1.33929 11.1821 1.74731 11.1099C1.85292 11.0906 2.85618 11.081 3.97946 11.081L6.01959 11.0906L6.2356 11.2062Z"></path>
-                        <path d="M13.2441 10.4934C11.8856 10.8498 10.8583 11.8853 10.5079 13.2531C10.3735 13.7781 10.3735 14.6162 10.5079 15.1412C10.8343 16.4127 11.732 17.3808 12.9945 17.8239C13.3593 17.9491 13.4937 17.9732 14.0601 17.9925C14.617 18.0117 14.7754 17.9973 15.1162 17.9106C16.5179 17.5542 17.5452 16.5283 17.9052 15.1219C18.0348 14.6162 18.03 13.7685 17.9004 13.2531C17.55 11.8757 16.5179 10.8401 15.145 10.4885C14.6314 10.3585 13.7529 10.3585 13.2441 10.4934ZM15.2314 11.2784C15.7066 11.4518 16.0475 11.6782 16.4363 12.0828C17.0075 12.6848 17.2763 13.3639 17.2763 14.2068C17.2763 15.0882 17.0075 15.7288 16.3691 16.3645C15.721 17.0099 15.0826 17.2796 14.2186 17.2845C13.7001 17.2845 13.3113 17.193 12.8121 16.957C12.5336 16.8221 12.3608 16.692 12.0392 16.3694C11.396 15.724 11.132 15.0882 11.132 14.1972C11.132 13.3495 11.396 12.6896 11.972 12.0828C12.3608 11.6782 12.7017 11.4518 13.1817 11.2736C13.7913 11.0521 14.6218 11.0521 15.2314 11.2784Z"></path>
-                    </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"><path fill="currentColor" d="M17 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2M1 2v2h2l3.6 7.59l-1.36 2.45c-.15.28-.24.61-.24.96a2 2 0 0 0 2 2h12v-2H7.42a.25.25 0 0 1-.25-.25c0-.05.01-.09.03-.12L8.1 13h7.45c.75 0 1.41-.42 1.75-1.03l3.58-6.47c.07-.16.12-.33.12-.5a1 1 0 0 0-1-1H5.21l-.94-2M7 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2"/></svg>({{$voucherActivityCount}})
                 </li>
-				@endif
-				@endif
-				@endif
+                <script>
+                    jQuery(window).on('load', function () {
+		$( ".right-sidebar-button" ).trigger( "click" );
+        setTimeout(function() {
+            $( ".right-sidebar-close-btn" ).trigger( "click" ) }, 2000);
+  
+	});
+                </script>
             </ul>
+            @endif
+				@endif
+				@endif
+				@endif
+
+      
             <div class="hotline-area d-xl-flex d-none">
                 <div class="icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
@@ -200,8 +186,8 @@
                     </svg>
                 </div>
                 <div class="content">
-                    <span>To More Inquiry</span>
-                    <h6><a href="tel:+990737621432">+990-737 621 432</a></h6>
+                    <span>Contact Us</span>
+                    <h6><a href="tel:+971 4 591 7098">+971 4 591 7098</a></h6>
                 </div>
             </div>
             <div class="sidebar-button mobile-menu-btn">
@@ -244,7 +230,7 @@
     
 
     <!--  Main jQuery  -->
-    <script src="{{asset('front/assets/js/jquery-3.7.1.min.js')}}"></script>
+   
     <script src="{{asset('front/assets/js/jquery-ui.js')}}"></script>
     <script src="{{asset('front/assets/js/moment.min.js')}}"></script>
     <script src="{{asset('front/assets/js/daterangepicker.min.js')}}"></script>
@@ -265,10 +251,10 @@
     <!-- Marquee  JS -->
     <script src="{{asset('front/assets/js/jquery.marquee.min.js')}}"></script>
     <!-- Select2  JS -->
-   <!-- <script src="{{asset('front/assets/js/jquery.nice-select.min.js')}}"></script> -->
+    <!-- <script src="{{asset('front/assets/js/jquery.nice-select.min.js')}}"></script> -->
     <!-- Select2  JS -->
-    <!--<script src="{{asset('front/assets/js/select2.min.js')}}"></script>
-    <script src="{{asset('front/assets/js/range-slider.js')}}"></script>-->
+    <script src="{{asset('front/assets/js/select2.min.js')}}"></script>
+    <!--<script src="{{asset('front/assets/js/range-slider.js')}}"></script>-->
 
     <script src="{{asset('front/assets/js/jquery.fancybox.min.js')}}"></script>
     <!-- Custom JS -->
@@ -293,34 +279,7 @@
             startVisible: true,
         });
     </script>
-<script>
- $(document).ready(function () {
-	  $("#loader-overlay").hide();
-    $('.datepickerAgent').datepicker({
-        weekStart: 1,
-        minDate: 0,
-        daysOfWeekHighlighted: "6,0",
-        autoclose: true,
-        todayHighlight: true,
-        dateFormat: 'dd-mm-yy'
-    });
-	
-	$('.datepicker').datepicker({
-        weekStart: 1,
-        daysOfWeekHighlighted: "6,0",
-        autoclose: true,
-        todayHighlight: true,
-		dateFormat: 'dd-mm-yy'
-    });
-	$('.datepickerdmy').datepicker({
-        weekStart: 1,
-        daysOfWeekHighlighted: "6,0",
-        autoclose: true,
-        todayHighlight: true,
-		dateFormat: 'dd-mm-yy'
-    });
-});
- </script>
+
  @yield('scripts')
 </body>
 

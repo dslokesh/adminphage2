@@ -1,312 +1,188 @@
 @extends('layouts.appLogin')
 @section('content')
 
-<div data-anim="fade" class="container">
-      <div class="row justify-between py-30 mt-80">
-        <div class="col-auto">
-          <div class="text-14"></div>
-        </div>
 
-        <div class="col-auto">
-          <div class="text-14"></div>
+
+
+<div class="breadcrumb-section"
+        style="background-image: linear-gradient(270deg, rgba(0, 0, 0, .3), rgba(0, 0, 0, 0.3) 101.02%), url(assets/img/innerpage/inner-banner-bg.png);">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 d-flex justify-content-center">
+                    <div class="banner-content">
+                        <h1> {{$activity->title}}</h1>
+                        
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-
-    <section class="">
-      <div data-anim-wrap class="container">
-	   <div class="col-auto">
-            @include('inc.errors-and-messages')
-			 </div>
-        <div data-anim-child="slide-up" class="row y-gap-20 justify-between items-end">
-		
-          <div class="col-auto">
-            
-
-            <h2 class="text-40 sm:text-30 lh-14 mt-20">
-             {{$activity->title}}
-            </h2>
-
+    @include('inc.errors-and-messages')
+    <!-- Start Room Details section -->
+    <div class="package-details-area pt-120 mb-120 position-relative">
+        <div class="container">
+            <div class="row">
+                <div class="co-lg-12">
+                    <div class="package-img-group mb-50">
+                        <div class="row align-items-center g-3">
+                            <div class="col-lg-6">
+                                <div class="gallery-img-wrap">
+                                @if(!empty($activity->image))
+                                  <img src="{{asset('uploads/activities/'.$activity->image)}}"  class="img-fluid" style="border-radius: 5px;" />
+                                  @endif
+                                  
+                                </div>
+                            </div>
+                            <div class="col-lg-6 h-100">
+                                <div class="row g-3 h-100">
+                                
+                                  @if($activity->images->count() > 0)
+                                  @foreach($activity->images as $k => $image)
+                                  @if($k<=3)
+                                  <div class="col-6">
+                                        <div class="gallery-img-wrap">
+                                        <img src="{{asset('uploads/activities/'.$image->filename)}}" alt="image">
+                                        </div>
+                                    </div>
+                                  @endif
+                                  @endforeach
+                                  @endif 
+                                    <div class="col-6">
+                                   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
            
-          </div>
-
-          <div class="col-auto">
-            <div class="d-flex x-gap-30 y-gap-10">
-			 @php
+            <div class="row g-xl-4 gy-5">
+                <div class="col-xl-12">
+                    <h2>{{$activity->title}}</h2>
+                    <div class="tour-price">
+                        <h3> @php
             $minPrice = $activity->min_price;
           @endphp
-              Starting From : AED {{$minPrice}}
-            </div>
-			
-          </div>
-        </div>
-<div data-anim-child="slide-up delay-2" class="tourSingleGrid -type-1 mt-30">
-          <div class="tourSingleGrid__grid mobile-css-slider-2">
-				@if(!empty($activity->image))
-				<img src="{{asset('uploads/activities/'.$activity->image)}}"  class="img-fluid" style="border-radius: 5px;" />
-				@endif
-				@if($activity->images->count() > 0)
-				@foreach($activity->images as $k => $image)
-				<img src="{{asset('uploads/activities/'.$image->filename)}}" alt="image">
-				@endforeach
-				@endif 
-            
-          </div>
+              Starting From : AED {{$minPrice}} </h3><span>per person</span>
+                    </div>
+                    <ul class="tour-info-metalist">
+                        <li>
+                            <svg width="14" height="14" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M14 7C14 8.85652 13.2625 10.637 11.9497 11.9497C10.637 13.2625 8.85652 14 7 14C5.14348 14 3.36301 13.2625 2.05025 11.9497C0.737498 10.637 0 8.85652 0 7C0 5.14348 0.737498 3.36301 2.05025 2.05025C3.36301 0.737498 5.14348 0 7 0C8.85652 0 10.637 0.737498 11.9497 2.05025C13.2625 3.36301 14 5.14348 14 7ZM7 3.0625C7 2.94647 6.95391 2.83519 6.87186 2.75314C6.78981 2.67109 6.67853 2.625 6.5625 2.625C6.44647 2.625 6.33519 2.67109 6.25314 2.75314C6.17109 2.83519 6.125 2.94647 6.125 3.0625V7.875C6.12502 7.95212 6.14543 8.02785 6.18415 8.09454C6.22288 8.16123 6.27854 8.2165 6.3455 8.25475L9.408 10.0048C9.5085 10.0591 9.62626 10.0719 9.73611 10.0406C9.84596 10.0092 9.93919 9.93611 9.99587 9.83692C10.0525 9.73774 10.0682 9.62031 10.0394 9.50975C10.0107 9.39919 9.93982 9.30426 9.842 9.24525L7 7.62125V3.0625Z">
+                                </path>
+                            </svg>
+                            30 Mins
+                        </li>
+                        <li>
+                            <svg width="14" height="14" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M7 7C7.92826 7 8.8185 6.63125 9.47487 5.97487C10.1313 5.3185 10.5 4.42826 10.5 3.5C10.5 2.57174 10.1313 1.6815 9.47487 1.02513C8.8185 0.368749 7.92826 0 7 0C6.07174 0 5.1815 0.368749 4.52513 1.02513C3.86875 1.6815 3.5 2.57174 3.5 3.5C3.5 4.42826 3.86875 5.3185 4.52513 5.97487C5.1815 6.63125 6.07174 7 7 7ZM14 12.8333C14 14 12.8333 14 12.8333 14H1.16667C1.16667 14 0 14 0 12.8333C0 11.6667 1.16667 8.16667 7 8.16667C12.8333 8.16667 14 11.6667 14 12.8333Z">
+                                </path>
+                            </svg>
+                            Max People : 40
+                        </li>
+                        
+                    </ul>
+         
+<h4 class="text-30">Description</h4>
+            <p class="mt-20">{!! $activity->description !!}</p>
 
-          <div class="tourSingleGrid__button">
-		  @if(!empty($activity->image))
-			    <a href="{{asset('uploads/activities/'.$activity->image)}}" class="js-gallery" data-gallery="gallery1">
-              <span class="button -accent-1 py-10 px-20 rounded-200 bg-dark-1 lh-16 text-white">See all photos</span>
-            </a>
-				@endif
-          @if($activity->images->count() > 0)
-				@foreach($activity->images as $k => $image)
-			 <a href="{{asset('uploads/activities/'.$image->filename)}}" class="js-gallery" data-gallery="gallery1"></a>
-				@endforeach
-				@endif 
-            
-          </div>
-        </div>
-       
-      </div>
-    </section>
 
-    <section class="layout-pt-md js-pin-container">
-      <div class="container">
-        <div class="row y-gap-30 justify-between">
-          <div class="col-lg-8">
-            <div class="row y-gap-20 justify-between items-center layout-pb-md">
-
-              <div class="col-lg-3 col-6">
-                <div class="d-flex items-center">
-                  <div class="flex-center size-50 rounded-12 border-1">
-                    <i class="text-20 fas fa-fw fa-clock"></i>
-                  </div>
-
-                  <div class="ml-10">
-                    <div class="lh-16">Duration</div>
-                    <div class="text-14 text-light-2 lh-16">2 Hours Approx</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-lg-3 col-6">
-                <div class="d-flex items-center">
-                  <div class="flex-center size-50 rounded-12 border-1">
-                    <i class="text-20 far fa-fw  fa-check-circle"></i>
-                  </div>
-
-                  <div class="ml-10">
-                    <div class="lh-16">Mobile Voucher Accepted</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-lg-3 col-6">
-                <div class="d-flex items-center">
-                  <div class="flex-center size-50 rounded-12 border-1">
-                    <i class="text-20 far fa-fw  fa-check-circle"></i>
-                  </div>
-
-                  <div class="ml-10">
-                    <div class="lh-16"> Instant Confirmation</div>
-                  </div>
-                </div>
-              </div>
-
-             <div class="col-lg-3 col-6">
-                <div class="d-flex items-center">
-                  <div class="flex-center size-50 rounded-12 border-1">
-                   <i class="fas fa-exchange-alt"></i>
-                  </div>
-
-                  <div class="ml-10">
-                    <div class="lh-16"> Transfer Available </div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-			 <div class="card-body pdivvarc" id="pdivvar" style="display: none;">
+            <div class="pdivvarc" id="pdivvar" style="display: none;">
+            <h4>Tour Options</h4>
 					  <div class="row p-2">
-						 
+           
 						<div class="col-md-12 var_data_div_cc" id="var_data_div">
 								
 							  </div>
 						  
 					   </div>
 					</div>
-		<div class="line mt-60 mb-60"></div>
-            <h2 class="text-30">Short Description</h2>
-            <p class="mt-20">{!! $activity->sort_description !!}</p>
 
-<h2 class="text-30">Description</h2>
-            <p class="mt-20">{!! $activity->description !!}</p>
-
-<h2 class="text-30">Bundle Product Cancellation</h2>
-            <p class="mt-20">{!! $activity->bundle_product_cancellation !!}</p>
-<h2 class="text-30">Bundle Product Cancellation</h2>
-            <p class="mt-20">{!! $activity->notes !!}</p>
-
-			
-			
-
-            <div class="line mt-60 mb-60"></div>
-
-
-            
-          </div>
-
-          <div class="col-lg-4" @if($voucherActivityCount==0) style="display:none" @endif>
-            <div class="d-flex justify-end js-pin-content">
-              <div class="tourSingleSidebar">
-                <div class="d-flex items-center">
-                  <div>Tour Details</div>
+          @include("inc.sidebar_cart")       
+                   
+    <div class="modal login-modal " id="timeSlotModal" data-bs-keyboard="false" tabindex="-1"  aria-modal="true" role="dialog" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-clode-btn" data-bs-dismiss="modal"></div>
+                <div class="modal-header">
+                  <!-- Select Time Slot -->
                 </div>
-
-                <div class="searchForm -type-1 -sidebar mt-20">
-                  <div class="searchForm__form">
-                    <div class="searchFormItem js-select-control js-form-dd js-calendar">
-                      <div class="searchFormItem__button" data-x-click="calendar">
-                         @php
-					$total = 0;
-					@endphp
- @if(!empty($voucherActivity) && $voucher->is_activity == 1)
- <div class="col-md-12  mt-2 " id="div-cart-list" >
-				
-			  
-					@if(!empty($voucherActivity))
-					  @foreach($voucherActivity as $ap)
-				  @php
-          $total += $ap->totalprice;
-		  $activityImg = SiteHelpers::getActivityImageName($ap->activity_id);
-					@endphp
-            <div class="card">
-			
-              
-              <div class="card-body card-body-hover" >
-             
-              <div class="row">
-              <div class="col-10">
-              <span class="cart-title font-size-21 text-dark">
-              {{$ap->activity_title}}
-              </span>
-              </div>
-              <div class="col-2  text-right">
-              <form id="delete-form-{{$ap->id}}" method="post" action="{{route('voucher.activity.delete',$ap->id)}}" style="display:none;">
-                                {{csrf_field()}}
-                                {{method_field('DELETE')}}
-                            </form>
-                            <small>
-                            <a class="btn btn-xs btn-danger border-round" title="delete" href="javascript:void(0)" onclick="
-                                if(confirm('Are you sure, You want to delete this?'))
-                                {
-                                    event.preventDefault();
-                                    document.getElementById('delete-form-{{$ap->id}}').submit();
-                                }
-                                else
-                                {
-                                    event.preventDefault();
-                                }
-                            
-                            "><small><i class="fas fa-trash-alt "></i></small></a></small>
-              </div>
-              </div>
-             
-                                  <div class="row" >
-				  <div class="col-md-3" style="padding: 5px 0px 5px 5px; ">
-              <img src="{{asset('uploads/activities/'.$activityImg)}}" class="img-fluid" style="border-radius: 5px;" />
-            </div>
-			<div class="col-md-9">
-              <ul class="list-unstyled" style="">
-             
-                <li>
-                 {{$ap->variant_name}}
-                </li>
-				<li>
-                  {{$ap->transfer_option}}
-                </li>
-                <li>
-                   {{ $ap->tour_date ? date(config('app.date_format'),strtotime($ap->tour_date)) : null }}
-                </li>
-                <li>
-
-                 <i class="fas fa-male color-grey" style="font-size:16px;" title="Adult"></i> <span class="color-black">{{$ap->adult}}</span> <i class="fas fa-child color-grey" title="Child"></i>  <span class="color-black">{{$ap->child}}</span>
-
-                  <span class="float-right " ><h2 class="card-title text-right color-black"><strong>AED {{$ap->totalprice}}</strong></h2></span>
-                </li>
-                
-              </ul>
-			   
-            </div>
-			
-                </div>
-              
-              </div>
-              <!-- /.card-body -->
-            </div>
-			
-				 @endforeach
-                 @endif
-                 <div class="input-group  text-right float-right mb-3">
-                            @if($voucherActivityCount > 0)
-                               <h2 class="card-title color-black " style="width:100%"><strong>Total Amount : AED {{$total}}</strong></h2>
-                            @endif
+                <div class="modal-body">
+                    <div class="login-registration-form">
+                        <div class="form-title">
+                           <p>Select Time Slot</p>
+                             <!-- <p>Enter your email address for Login.</p> -->
                         </div>
-						
-                 <div class="input-group  text-right float-right">
-                            @if($voucherActivityCount > 0)
-                                  <a href="{{ route('agent-vouchers.show',$voucher->id) }}" class="btn btn-lg btn-primary pull-right" style="width:100%">
-                                <i class="fas fa-shopping-cart"></i>
-                                Checkout({{$voucherActivityCount}})
-                            </a>
-                            @endif
-                        </div>
-				
-</div>
-  @endif 
+                        <form>
+                            <div class="form-inner mb-20">
+                              <select class="form-control" required id="timeSlotDropdown">
                        
-                      </div>
-
-
-                      
+                              </select>
+                            </div>
+                            
+                        </form>
                     </div>
-
-                    
-                  </div>
                 </div>
-
-              </div>
+                <div class="modal-footer">
+                <button type="button" class="secondary-btn1 btn-sm" id="selectTimeSlotBtn">Add To Cart</button>
+              
             </div>
-          </div>
+            </div>
         </div>
-      </div>
-    </section>
-
- <div class="modal fade" id="timeSlotModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Select Time Slot</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="timeSlotDropdown">Choose a time slot:</label>
-                    <select class="form-control" required id="timeSlotDropdown">
-                        <!-- Time slots will be dynamically added here -->
-                    </select>
+    </div> 
+                    
+                    <!-- <h4>Tour Options</h4>
+                    <div class="accordion tour-plan" id="tourPlan">
+                        <div class="accordion-item">
+                          <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                <span>Varaint 01 :</span>  Preparation and Departure
+                            </button>
+                          </h2>
+                          <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#tourPlan">
+                            <div class="accordion-body">
+                              <h4>Included and Excluded</h4>
+                                <div class="includ-and-exclud-area mb-20">
+                                    <ul>
+                                        <li><i class="bi bi-check-lg"></i> Meal as per hotel Plan and drinks free too.</li>
+                                        <li><i class="bi bi-check-lg"></i> Return airport and round trip transfers.</li>
+                                        <li><i class="bi bi-check-lg"></i> Accommodation on twin sharing basis.</li>
+                                        <li><i class="bi bi-check-lg"></i> The above rates are on per day disposal basi</li>
+                                        <li><i class="bi bi-check-lg"></i> Enjoy Brussels day tours. Overnight Brussels</li>
+                                    </ul>
+                                    <ul class="exclud">
+                                        <li><i class="bi bi-x-lg"></i> AC will not be functional on Hills or Slopes.</li>
+                                        <li><i class="bi bi-x-lg"></i> Any other service not mentioned</li>
+                                        <li><i class="bi bi-x-lg"></i> Additional entry fees other than specified</li>
+                                        <li><i class="bi bi-x-lg"></i> Amsterdam canal cruise not included for basic</li>
+                                    </ul>
+                                </div>
+                                <div class="highlight-tour mb-20">
+                                    <h4>Highlights of the Tour</h4>
+                                    <ul>
+                                        <li><span><i class="bi bi-check"></i></span> Our team of knowledgeable guides and travel experts are dedicated to making your journey memorable and worry-free</li>
+                                        <li><span><i class="bi bi-check"></i></span> Dive into rich cultures and traditions. Explore historic sites, savor authentic cuisine, and connect with locals.</li>
+                                        <li><span><i class="bi bi-check"></i></span> We take care of all the details, so you can focus on creating memories. Rest assured that your journey is in capable hands</li>
+                                        <li><span><i class="bi bi-check"></i></span> Sip cocktails on the beach as you watch the sun dip below the horizon.</li>
+                                        <li><span><i class="bi bi-check"></i></span> From accommodations to dining experiences, we select the best partners to ensure your comfort and enjoyment throughout your journey.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                       
+                        
+                      </div> -->
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-primary-flip btn-sm" id="selectTimeSlotBtn"><i class="fa fa-cart-plus"></i></button>
-                <!-- You can add a button here for further actions if needed -->
             </div>
         </div>
     </div>
-</div>
+    <!-- End Room Details section -->
+
+
+
 
     
 @endsection
@@ -495,8 +371,7 @@
 			  }
 		});
 		  
-	 }
-	
+	 }	
  });
  });
  

@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
             <div class="row g-lg-4 gy-5">
-   <div class="col-lg-6 offset-md-4 text-center">
+   <div class="col-lg-6 offset-md-3 text-center">
                     <div class="contact-form-area mb-5  mt-5">
                         <h3>Register</h3>
 						
@@ -71,7 +71,7 @@
 								<div class="col-lg-12 mb-20">
                                     <div class="form-inner">
                                         <label>Country</label>
-									<select name="country_id" id="country_id" class="">
+									<select name="country_id" id="country_id" class="form-control">
 									<option value="">Country</option>
 									@foreach($countries as $country)
 									<option value="{{$country->id}}" @if(old('country_id') == $country->id) {{'selected="selected"'}} @endif>{{$country->name}}</option>
@@ -87,7 +87,7 @@
 								<div class="col-lg-12 mb-20">
                                     <div class="form-inner">
                                         <label>State</label>
-									<select name="state_id" id="state_id" class="">
+									<select name="state_id" id="state_id" class="form-control">
 									<option value="">State</option>
 									</select>
 									
@@ -99,7 +99,7 @@
 								<div class="col-lg-12 mb-20">
                                     <div class="form-inner">
                                         <label>City</label>
-										<select name="city_id" id="city_id" class="">
+										<select name="city_id" id="city_id" class="form-control">
 										<option value="">City</option>
 										</select>
 									

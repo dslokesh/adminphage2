@@ -4,7 +4,7 @@
 <div class="container">
             <div class="row g-lg-4 gy-5">
 
-   <div class="col-lg-6 offset-md-4 text-center">
+   <div class="col-lg-6 offset-md-3 text-center">
                     <div class="contact-form-area mb-5  mt-5">
                         <h3>Change Password</h3>
 						@include('inc.errors-and-messages')
@@ -22,7 +22,7 @@
                                 </div>
                                <div class="col-lg-12 mb-20">
                                     <div class="form-inner">
-                                        <label>Password</label>
+                                        <label>New Password</label>
                                         <input type="password" id="password" class="" name="password" placeholder="8 characters, 1 upper case & 1 number." required>
 									@if ($errors->has('password'))
 									<span class="text-danger">{{ $errors->first('password') }}</span>

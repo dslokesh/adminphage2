@@ -11,23 +11,23 @@
 				 <input type="hidden" id="ucode" name="ucode" value=""  />
 				 <input type="hidden" id="timeslot" name="timeslot" value=""  />
 				 <table class="table rounded-corners" style="border-radius: 10px !important;font-size:10pt;">
-                  <thead>
+                  <tdead>
 				 
 				  @if(!empty($variantData))
 					 
 					  @foreach($variantData['activityVariants'] as $kk => $ap)
 				  @if($kk == 0)
                   <tr>
-					<th valign="middle">Tour Option</th>
-                    <th id="top" valign="middle"  colspan="2">Transfer Option</th>
-					<th valign="middle">Tour Date</th>
-					<th valign="middle">Adult</th>
-                    <th valign="middle">Child<br/><small>({{$ap->prices->child_start_age}}-{{$ap->prices->child_end_age}} Yrs)</small></th>
-                    <th valign="middle">Infant<br/><small>(Below {{$ap->prices->child_start_age}} Yrs)</small></th>
-					<th valign="middle">Total Amount</th>
-					<th valign="middle"></th>
+					<td valign="middle">Tour Option</td>
+                    <td id="top" valign="middle"  colspan="2">Transfer Option</td>
+					<td valign="middle">Tour Date</td>
+					<td valign="middle">Adult</td>
+                    <td valign="middle">Child<br/><small>({{$ap->prices->child_start_age}}-{{$ap->prices->child_end_age}} Yrs)</small></td>
+                    <td valign="middle">Infant<br/><small>(Below {{$ap->prices->child_start_age}} Yrs)</small></td>
+					<td valign="middle">Total Amount</td>
+					<td valign="middle"></td>
                   </tr>
-				  </thead>
+				  </tdead>
 				  @endif
 				  <tbody>
 				 @php
@@ -39,7 +39,7 @@
 					
 					<input type="hidden"  name="activity_variant_id[{{$ap->ucode}}]" id="activity_variant_id{{$kk}}" value="{{$ap->id}}" data-inputnumber="{{$kk}}" /> 
 					
-					<input type="radio"  name="activity_select" required id="activity_select{{$kk}}" value="{{ $ap->ucode }}" @if($kk == '0')  @endif class="actcsk" data-inputnumber="{{$kk}}" /> <strong>{{$ap->variant->title}} </strong>
+					<input type="radio"  name="activity_select" required id="activity_select{{$kk}}" value="{{ $ap->ucode }}" @if($kk == '0')  @endif class="actcsk" data-inputnumber="{{$kk}}" /> {{$ap->variant->title}} 
 					</td>
 					<td> <select name="transfer_option[{{$ap->ucode}}]" id="transfer_option{{$kk}}" class="form-control priceChange" data-inputnumber="{{$kk}}" @if($kk > '0') disabled="disabled" @endif >
 						@if($kk > '0')
@@ -133,7 +133,7 @@
 						
 						<td class="text-center" >
 						
-						<button type="button" class="btn btn-sm  btn-primary-flip float-right addToCart" data-inputnumber="{{$kk}}" data-variantid="{{$ap->variant_id}}" id="addToCart{{$kk}}" name="save"><i class="fa fa-cart-plus"></i> </button>
+						<button type="button" class="primary-btn1-sm btn-sm addToCart" data-inputnumber="{{$kk}}" data-variantid="{{$ap->variant_id}}" id="addToCart{{$kk}}" name="save">Add to Cart </button>
 						</td>
 						
                   </tr>

@@ -4,7 +4,7 @@
 <div class="container">
             <div class="row g-lg-4 gy-5">
 
-   <div class="col-lg-6 offset-md-4 text-center">
+   <div class="col-lg-6 offset-md-3 text-center">
                     <div class="contact-form-area mb-5  mt-5">
                         <h3>Log In</h3>
 						@include('inc.errors-and-messages')
@@ -37,11 +37,11 @@
                                       
                                     </div>
 									<div class="row">
-									<div class="col-lg-6 text-start">
-                <a href="{{route('register')}}" class="text-accent-1">Sign Up!</a>
+									<div class="col-lg-6">
+                <a href="{{route('register')}}" class="text-accent-1" style="text-align:left">Sign Up!</a>
               </div>
-									<div class="col-lg-6 text-end">
-                 <a class="btn btn-link" href="{{route('resetpassword')}}"> {{ __('Forgot Your Password?') }}</a>
+									<div class="col-lg-6">
+                 <a class="btn btn-link" href="{{route('resetpassword')}}" style="text-align:right"> {{ __('Forgot Your Password?') }}</a>
                 </div>
 				 </div>
                                 </div>
