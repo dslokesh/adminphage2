@@ -177,7 +177,7 @@ class PriceHelper
 	
 	public static function getActivityPriceByVariant($data)
     {
-		
+		$currency = SiteHelpers::getCurrencyPrice();
 		$transfer_option = (isset($data['transfer_option']))?$data['transfer_option']:0;
 		$activity_variant_id = (isset($data['activity_variant_id']))?$data['activity_variant_id']:0;
 		$agent_id = (isset($data['agent_id']))?$data['agent_id']:0;
@@ -288,8 +288,12 @@ class PriceHelper
 				}
 				
 				//$total = round(($grandTotal+$vatPrice - $discount),2);
-				$total = round(($grandTotal+$vatPrice),2);
+				$subTotal = $grandTotal+round($vatPrice,2);
+				$priceConvert = $subTotal * round(($currency['value']),2);
+				$total = round(($priceConvert),2);
 		}
+		
+		
 		$data = [
 		'adultPrice' =>$adultPrice,
 		'childPrice' =>$childPrice,

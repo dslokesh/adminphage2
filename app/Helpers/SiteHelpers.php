@@ -20,6 +20,7 @@ use App\Models\Activity;
 use App\Models\Voucher;
 use App\Models\Ticket;
 use App\Models\VoucherActivityLog;
+use App\Models\Currency;
 
 class SiteHelpers
 {
@@ -742,6 +743,29 @@ class SiteHelpers
     }
 	
 	
+	public static function getCurrencyAll()
+    {
+		$records = Currency::where('status',1)->orderBy('created_at', 'DESC')->get();
+		return $records;
+    }
 	
-	
+	public static function getCurrencyPrice()
+    {
+		$user = auth()->user();
+		$data = [];
+		$record = Currency::where('id', $user->currency_id)->first();
+		if(!empty($record)){
+			$data['name'] = $record->name;
+			$data['code'] = $record->code;
+			$data['value'] = $record->value;
+			$data['markup_value'] = $record->markup_value;
+		} else {
+			$data['name'] = 'AED';
+			$data['code'] = 'AED';
+			$data['value'] = '1';
+			$data['markup_value'] = '1';
+		}
+		
+		return $data;
+    }
 }

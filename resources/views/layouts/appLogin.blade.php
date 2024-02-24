@@ -92,19 +92,23 @@
                     
                 </li>
                @endpermission
-		  @permission('list.agent.ledger') 
+			  
+				
+		 
                 
-				@endpermission
-
+				
                 <li><a href="javascript:void(0);"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"><path fill="currentColor" d="M16 12h2v4h-2z"/><path fill="currentColor" d="M20 7V5c0-1.103-.897-2-2-2H5C3.346 3 2 4.346 2 6v12c0 2.201 1.794 3 3 3h15c1.103 0 2-.897 2-2V9c0-1.103-.897-2-2-2M5 5h13v2H5a1.001 1.001 0 0 1 0-2m15 14H5.012C4.55 18.988 4 18.805 4 18V8.815c.314.113.647.185 1 .185h15z"/></svg> AED {{\Auth::user()->agent_amount_balance}}</a></li>
 				
 				 <li class="menu-item-has-children">
                     <a href="{{ route('profile-edit',Auth::user()->id) }}" class="drop-down">{{\Auth::user()->company_name}}
               </a><i class="bi bi-plus chevron-icon"></i>
                     <ul class="sub-menu">
+					 @permission('list.agent.ledger') 
                             <li>
                             <a href="{{ route('agentLedgerReportWithVat') }}" class="drop-down">Ledger</a>
                         </li>
+						@endpermission
+
                         <li class=" ">
                     <a href="{{ route('agent-vouchers.index') }}" class="drop-down">My Booking</a>
                     
@@ -123,7 +127,27 @@
 				 <li>
                     <a href="{{ route('logout') }}" class="drop-down"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h7v2H5v14h7v2zm11-4l-1.375-1.45l2.55-2.55H9v-2h8.175l-2.55-2.55L16 7l5 5z"/></svg></a>
                 </li>
-		
+				 @php
+                $voucherActivityCount = 0;
+				$currencyDD = SiteHelpers::getCurrencyAll();
+				$userCR =  auth()->user()->currency_id;
+				@endphp
+			   <li class="">
+			   <form action="{{ route('currency.change') }}" method="post"  >
+			{{ csrf_field() }}
+				<select name="user_currency" id="user_currency" onchange="this.form.submit()" class="form-control">
+						@foreach($currencyDD as $currency)
+						@if($userCR == '')
+						<option value="AED" selected="selected">AED(AED)</option>
+						@elseif($userCR == $currency->id)
+						<option value="{{$currency->code}}" selected="selected">{{$currency->name}}({{$currency->code}})</option>
+						@else
+						<option value="{{$currency->code}}" >{{$currency->name}}({{$currency->code}})</option>	
+						@endif
+						@endforeach
+						</select>
+					</form>
+			   </li>
 			@endif
 			
             </ul>

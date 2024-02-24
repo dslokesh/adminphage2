@@ -154,8 +154,10 @@
                                         </div>
                                        <div class="price-and-book">
                                             <div class="price-area">
-                                               
-                                                <span>AED {{$minPrice}}</span>
+											@php
+											$currency = SiteHelpers::getCurrencyPrice();
+											@endphp
+                                                <span>{{$currency['code']}} {{$minPrice*$currency['value']}}</span>
                                                 
                                             </div>
                                             <div class="book-btn">

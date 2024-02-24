@@ -662,4 +662,16 @@ class AgentsController extends Controller
         return response()->json($response);
     }
 	
+	public function CurrencyChange(Request $request)
+    {
+		$user = Auth::user();
+		$input = $request->all();
+		$currency = Currency::where('code', $input['user_currency'])->first();
+		if(!empty($currency)){
+        $user->currency_id = $currency->id;
+		$user->save();
+		}
+		return redirect()->back();
+    }
+	
 }
