@@ -62,7 +62,7 @@
 					<td>{{ $record->code}}</td>
 					<td>{{ $record->value}}</td>
 					<td>{{ $record->markup_value}}</td>
-                    <td>{!! SiteHelpers::statusColor($record->is_default) !!}</td>
+                    <td>{!! SiteHelpers::statusColorYesNo($record->is_default) !!}</td>
 					 <td>{!! SiteHelpers::statusColor($record->status) !!}</td>
                     <td>{{ $record->created_at ? date(config('app.date_format'),strtotime($record->created_at)) : null }}</td>
                     <td>{{ $record->updated_at ? date(config('app.date_format'),strtotime($record->updated_at)) : null }}</td>
