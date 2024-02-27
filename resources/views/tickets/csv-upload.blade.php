@@ -103,6 +103,27 @@
                     <span class="text-danger">{{ $errors->first('valid_till') }}</span>
                 @endif
               </div>
+			  <div class="form-group col-md-6">
+                <label for="inputName">Supplier: <span class="red">*</span></label>
+                <select name="supplier_ticket" id="supplier_ticket" class="form-control ">
+						<option data-name="supplier_ticket"   value="">All</option>
+						@foreach($supplier_ticket as  $stv)
+						
+						<option data-name="supplier_ticket"  value = "{{$stv->id}}" @if(old('supplier_ticket') ==$stv->id) {{'selected="selected"'}} @endif >{{$stv->company_name}}</option>
+						@endforeach
+                 </select>
+				  @if ($errors->has('supplier_ticket'))
+                    <span class="text-danger">{{ $errors->first('supplier_ticket') }}</span>
+				
+                @endif
+				</div>
+				<div class="form-group col-md-6">
+                <label for="inputName">Net Cost:</label>
+              <input type="text" id="net_cost" autocomplete="off" name="net_cost" value="{{ old('net_cost') }}" class="form-control"  placeholder="Net Cost" />
+                @if ($errors->has('net_cost'))
+                    <span class="text-danger">{{ $errors->first('net_cost') }}</span>
+                @endif
+				</div>
 			   <div class="form-group col-md-12">
                 <label for="inputName">Tickets No.: <span class="red">*</span></label>
 				

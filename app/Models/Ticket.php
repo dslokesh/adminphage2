@@ -24,6 +24,9 @@ class Ticket extends Model
         return $this->belongsTo(Voucher::class,'voucher_id','id');
     }
 	
-	
+	public function supplier()
+    {
+        return $this->belongsTo(User::class,'supplier_ticket','id');
+    }
 	
 }

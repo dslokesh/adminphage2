@@ -54,6 +54,8 @@
                     <th>Variant</th>
 					<th>Ticket For</th>
 					<th>Type Of Ticket</th>
+					<th>Supplier</th>
+					<th>Net Cost</th>
                     <th width="17%">Created</th>
                     <th></th>
                   </tr>
@@ -77,6 +79,8 @@
 				<option value="Both" @if(request('ticket_for') == 'Both') {{'selected="selected"'}} @endif>Both</option>
 				</select></th>
                    <th></th>
+				   <th></th>
+				   <th></th>
                     <th width="10%"><button class="btn btn-info btn-sm" type="submit">Filter</button>
                     <a class="btn btn-default btn-sm" href="{{route('tickets.index')}}">Clear</a></th>
                    <th ></th>
@@ -95,6 +99,8 @@
                     <td>{{ ($record->variant)?$record->variant->title:''}}</td>
 					<td>{{ $record->ticket_for}}</td>
                     <td>{{ $record->type_of_ticket}}</td>
+					<td>{{ @$record->supplier->name}}</td>
+					<td>{{ $record->net_cost}}</td>
                     <td>{{ $record->created_at ? date(config('app.date_format'),strtotime($record->created_at)) : null }}</td>
                    
                      <td > <form id="delete-form-{{$record->id}}" method="post" action="{{route('tickets.destroy',$record->id)}}" style="display:none;">

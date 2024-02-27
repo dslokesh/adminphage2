@@ -62,11 +62,27 @@
 					 <td>{!! SiteHelpers::statusColor($record->status) !!}</td>
                     <td>{{ $record->created_at ? date(config('app.date_format'),strtotime($record->created_at)) : null }}</td>
                     <td>{{ $record->updated_at ? date(config('app.date_format'),strtotime($record->updated_at)) : null }}</td>
-                     <td><a class="btn btn-info btn-sm" href="{{route('tags.edit',$record->id)}}">
+                     <td>
+					 
+						  <a class="btn btn-info btn-sm" href="{{route('tags.edit',$record->id)}}">
                               <i class="fas fa-pencil-alt">
                               </i>
                               
-                          </a>
+                          </a> <form id="delete-form-{{$record->id}}" method="post" action="{{route('tag.delete.image',$record->id)}}" style="display:none;">
+                                {{csrf_field()}}
+                            </form>
+					 <a class="btn btn-danger btn-sm" href="javascript:void(0)" onclick="
+                                if(confirm('Are you sure, You want to delete image?'))
+                                {
+                                    event.preventDefault();
+                                    document.getElementById('delete-form-{{$record->id}}').submit();
+                                }
+                                else
+                                {
+                                    event.preventDefault();
+                                }
+                            
+                            ">Delele Image </a>
                           </td>
                   </tr>
 				 

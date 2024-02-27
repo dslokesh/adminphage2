@@ -91,6 +91,7 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
 		
         Route::resource('pages', PagesController::class);
 		Route::resource('tags', TagsController::class);
+		Route::post('tag/delete-image/{id?}', [TagsController::class, 'deleteImage'])->name('tag.delete.image');
         Route::resource('modules', ModulesController::class);
         Route::resource('roles', RolesController::class);
         Route::resource('countries', CountryController::class);

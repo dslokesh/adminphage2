@@ -302,7 +302,8 @@ class TicketsController extends Controller
 		$this->checkPermissionMethod('list.ticket');
 		$variants = Variant::where('status', 1)->orderBy('title', 'ASC')->get();
 		$activities = Activity::where('status', 1)->orderBy('title', 'ASC')->get();
-		return view('tickets.csv-upload',  compact('activities','variants'));
+		$supplier_ticket = User::where("service_type",'Ticket')->orWhere('service_type','=','Both')->get();
+		return view('tickets.csv-upload',  compact('activities','variants','supplier_ticket'));
     }
 	
 	public function csvUploadPost(Request $request)
@@ -335,6 +336,8 @@ class TicketsController extends Controller
 			$activity_variant = $request->input('activity_variant');
 			$serial_number = $request->input('serial_number');
 			$valid_from = $request->input('valid_from');
+			$supplier_ticket = $request->input('supplier_ticket');
+			$net_cost = $request->input('net_cost');
 			$valid_till = $request->input('valid_till');
 			$terms_and_conditions = $request->input('terms_and_conditions');
 			$ticket_nos = nl2br(trim($_POST['ticket_no']));
@@ -353,6 +356,8 @@ class TicketsController extends Controller
 					'serial_number' => $serial_number,
                     'valid_from' => $d_from,
 					'valid_till' => $d_till,
+					'supplier_ticket' => $supplier_ticket,
+					'net_cost' => $net_cost,
 				];
 				$j++;
 				}

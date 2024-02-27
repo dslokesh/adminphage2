@@ -157,4 +157,12 @@ class TagsController extends Controller
         $record->delete();
         return redirect('tags')->with('success', 'Tag Deleted.');
     }
+	
+	public function deleteImage($id)
+    {
+        $record = Tag::find($id);
+        $record->image = 'no-image.png';
+        $record->save();
+        return redirect('tags')->with('success', 'Tag Image Deleted.');
+    }
 }

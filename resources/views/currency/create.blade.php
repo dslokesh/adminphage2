@@ -46,14 +46,14 @@
               </div>
 			   <div class="form-group">
                 <label for="inputName">Currency Value (From Default Currency): <span class="red">*</span></label>
-                <input type="text" id="value" name="value" value="{{ old('value') }}" class="form-control onlynumbr"  placeholder="Value" />
+                <input type="text" id="value" name="value" value="{{ old('value') }}" class="form-control onlynumbrf"  placeholder="Value" />
                 @if ($errors->has('value'))
                     <span class="text-danger">{{ $errors->first('value') }}</span>
                 @endif
               </div>
 			   <div class="form-group">
                 <label for="inputName">Markup Value in Default Currency: <span class="red">*</span></label>
-                <input type="text" id="markup_value" name="markup_value" value="{{ old('markup_value') }}" class="form-control onlynumbr"  placeholder="Markup Value in Default Currency" />
+                <input type="text" id="markup_value" name="markup_value" value="{{ old('markup_value') }}" class="form-control onlynumbrf"  placeholder="Markup Value in Default Currency" />
                 @if ($errors->has('value'))
                     <span class="text-danger">{{ $errors->first('value') }}</span>
                 @endif
@@ -87,15 +87,15 @@
  <!-- Script -->
  <script type="text/javascript">
     $(document).ready(function() {
-		 $(document).on('input', '.onlynumbr', function() {
-			$(this).val(function(index, value) {
-				return value.replace(/[^0-9]/g, '');
-			});
-
-			if (isNaN(parseInt($(this).val()))) {
-				$(this).val(0);
-			}
+		$(document).on('input', '.onlynumbrf', function() {
+		$(this).val(function(index, value) {
+			return value.replace(/[^0-9.]/g, '');
 		});
+
+		if (isNaN(parseFloat($(this).val()))) {
+			$(this).val(0);
+		}
+	});
 		});
 		  </script>   
 @endsection
