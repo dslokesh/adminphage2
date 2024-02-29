@@ -807,7 +807,7 @@ public function voucherActivtyRefundedReport(Request $request)
 		$data = $request->all();
 		$perPage = config("constants.ADMIN_PAGE_LIMIT");
 		$activities = Activity::where('status', 1)->orderBy('title', 'ASC')->get();
-		$query = Ticket::with(['activity','voucheractivity'])
+		$query = Ticket::with(['activity','variant'])
             ->select(
                 'activity_id',
                 'activity_variant',

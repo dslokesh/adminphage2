@@ -115,7 +115,7 @@
 				  @foreach ($records as $record)
                   <tr>
                     <td>{{ @$record->activity->title}}</td>
-					<td>{{ @$record->voucheractivity->variant_name}}</td>
+					<td>{{ @$record->variant->title}}</td>
 					<td>{{ $record->valid_till ? date(config('app.date_format'),strtotime($record->valid_till)) : null }}</td>
 					<td></td>
 					
