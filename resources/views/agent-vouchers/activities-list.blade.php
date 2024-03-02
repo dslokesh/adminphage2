@@ -68,9 +68,9 @@
 								@foreach($tags as $tag)
                                     <li>
                                         <label class="containerss">
-                                            <input type="checkbox" class="tagsinput" name="tags[]" value="{{$tag->id}}">
+                                            <input type="checkbox" class="tagsinput" name="tags[]" value="{{$tag}}">
                                             <span class="checkmark"></span>
-                                            <span class="text">{{$tag->name}}</span>
+                                            <span class="text">{{$tag}}</span>
                                         </label>
                                     </li>
                                   @endforeach
@@ -433,8 +433,8 @@ $(document).on('change', '.tagsinput', function(evt) {
  });
  
 $(document).ready(function() {
-	var min = "{{$min}}";
-	var max = "{{$max}}";
+	var min = "{{$minPrice}}";
+	var max = "{{$maxPrice}}";
     $('.noUi-handle').on('click', function() {
       $(this).width(50);
     });

@@ -461,22 +461,34 @@ class AgentVouchersController extends Controller
        });
 	   
 	   $records = $query->orderBy('created_at', 'DESC')->paginate($perPage); 
-	   $activities = Activity::where('status', 1)->get();
-
-		if (!$activities->isEmpty()) {
-			$min = (int)$activities->min('min_price');
-			$max = (int)$activities->max('min_price');
-		} else {
-			$min = $max = 0;
-		}
+	   $minPrice = $maxPrice = 0;
 
 		
 		$voucherHotel = VoucherHotel::where('voucher_id',$vid)->get();
 		$voucherActivity = VoucherActivity::where('voucher_id',$vid)->orderBy('tour_date','ASC')->get();
-		$tags = Tag::select("name","id")->where('status', 1)->orderBy('name', 'ASC')->get();
 		
+		$tagsQ = $query->pluck('tags')->unique()->values()->all();
+
+		$tags = [];
+		foreach ($tagsQ as $record) {
+			$tagAll = explode(',', $record);
+			foreach ($tagAll as $tag) {
+			$tags[$tag] = $tag;
+			}
+		}
+		
+		$min_price = $query->get();
+		$minPrice = PHP_INT_MAX; // Initialize to a large value
+		$maxPrice = 0; // Initialize to a small value
+
+		foreach ($min_price as $minP) {
+			$minPrice = min($minPrice, $minP->min_price);
+			$maxPrice = max($maxPrice, $minP->min_price)+10;
+		}
+
+		//dd($maxPrice);
 		$voucherActivityCount = VoucherActivity::where('voucher_id',$vid)->count();
-        return view('agent-vouchers.activities-list', compact('records','typeActivities','vid','voucher','voucherActivityCount','voucherActivity','tags','min','max'));
+        return view('agent-vouchers.activities-list', compact('records','typeActivities','vid','voucher','voucherActivityCount','voucherActivity','tags','minPrice','maxPrice'));
     }
 	
 	public function searchActivityList(Request $request)
