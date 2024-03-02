@@ -435,7 +435,7 @@ class AgentVouchersController extends Controller
        $data = $request->all();
 		$typeActivities = config("constants.typeActivities"); 
         //$perPage = config("constants.ADMIN_PAGE_LIMIT");
-		$perPage = "5";
+		$perPage = "1";
 		$voucher = Voucher::find($vid);
 		$startDate = $voucher->travel_from_date;
 		$endDate = $voucher->travel_to_date;
@@ -467,7 +467,12 @@ class AgentVouchersController extends Controller
 		$voucherHotel = VoucherHotel::where('voucher_id',$vid)->get();
 		$voucherActivity = VoucherActivity::where('voucher_id',$vid)->orderBy('tour_date','ASC')->get();
 		
-		$tagsQ = $query->pluck('tags')->unique()->values()->all();
+		$query2 = Activity::has('activityVariants')->with('activityVariants.prices')->where('status',1);
+		$query2->whereHas('activityVariants.prices', function ($query) use($startDate,$endDate) {
+           $query->where('rate_valid_from', '<=', $startDate)->where('rate_valid_to', '>=', $endDate);
+		   $query->where('rate_valid_from', '<=', $startDate)->where('rate_valid_to', '>=', $endDate);
+       });
+		$tagsQ = $query2->pluck('tags')->unique()->values()->all();
 
 		$tags = [];
 		foreach ($tagsQ as $record) {
@@ -479,7 +484,7 @@ class AgentVouchersController extends Controller
 			}
 		}
 		
-		$price = $query->pluck('min_price')->unique()->values()->all();
+		$price = $query2->pluck('min_price')->unique()->values()->all();
 		$minPrice = PHP_INT_MAX; // Initialize to a large value
 		$maxPrice = 0; // Initialize to a small value
 
@@ -508,7 +513,7 @@ class AgentVouchersController extends Controller
 
 		$data = $request->all();
 		$typeActivities = config("constants.typeActivities"); 
-		$perPage = "5";
+		$perPage = "1";
 
 		// Find the voucher based on $vid
 		$voucher = Voucher::find($vid);
