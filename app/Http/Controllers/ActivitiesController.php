@@ -38,9 +38,9 @@ class ActivitiesController extends Controller
         }
 		
         if (isset($data['status']) && !empty($data['status'])) {
-            if ($data['status'] == 1)
+            if($data['status'] == 1)
                 $query->where('status', 1);
-            if ($data['status'] == 2)
+            if($data['status'] == 2)
                 $query->where('status', 0);
         }
 		

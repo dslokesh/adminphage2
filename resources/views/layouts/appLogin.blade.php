@@ -132,7 +132,7 @@
 				$currencyDD = SiteHelpers::getCurrencyAll();
 				$userCR =  auth()->user()->currency_id;
 				@endphp
-			   <li class="">
+			   <li class="" style="display:none">
 			   <form action="{{ route('currency.change') }}" method="post"  >
 			{{ csrf_field() }}
 				<select name="user_currency" id="user_currency" onchange="this.form.submit()" class="form-control">
@@ -275,10 +275,10 @@
     <!-- Marquee  JS -->
     <script src="{{asset('front/assets/js/jquery.marquee.min.js')}}"></script>
     <!-- Select2  JS -->
-    <!-- <script src="{{asset('front/assets/js/jquery.nice-select.min.js')}}"></script> -->
+     <script src="{{asset('front/assets/js/jquery.nice-select.min.js')}}"></script>
     <!-- Select2  JS -->
     <script src="{{asset('front/assets/js/select2.min.js')}}"></script>
-    <!--<script src="{{asset('front/assets/js/range-slider.js')}}"></script>-->
+    <script src="{{asset('front/assets/js/range-slider.js')}}"></script>
 
     <script src="{{asset('front/assets/js/jquery.fancybox.min.js')}}"></script>
     <!-- Custom JS -->
@@ -286,6 +286,8 @@
 
 
     <script>
+	 $(function () {
+  $("#loader-overlay").hide();
         $(".marquee_text").marquee({
             direction: "left",
             duration: 25000,
@@ -302,6 +304,7 @@
             duplicated: true,
             startVisible: true,
         });
+		});
     </script>
 
  @yield('scripts')

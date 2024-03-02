@@ -59,16 +59,12 @@
 					 <th></th>
 					 <th></th>
                     <th><input type="text" name="name" value="{{request('name')}}" class="form-control"  placeholder="Name" /></th>
-                    <th></th>
+					<th></th>
+                    <th><input type="text" name="email" value="{{request('email')}}" class="form-control"  placeholder="Email" /></th>
                    <th></th>
                     <th></th>
                   
-                 <th><select name="city_id" id="city_id" class="form-control">
-				<option value="">--select--</option>
-				@foreach($cities as $city)
-                    <option value="{{$city->id}}" @if(request('city_id') == $city->id) {{'selected="selected"'}} @endif>{{$city->name}}</option>
-				@endforeach
-                 </select></th>
+                 <th></th>
                  <th></th>
 					 <th><select name="status" id="status" class="form-control">
                     <option value="" @if(request('status') =='') {{'selected="selected"'}} @endif>Select</option>
@@ -76,7 +72,7 @@
 					          <option value="2" @if(request('status') ==2) {{'selected="selected"'}} @endif >Inactive</option>
                  </select></th>
 					<th></th>
-                    <th></th>
+                    
                    
                     <th><button class="btn btn-info btn-sm" type="submit">Filter</button>
                     <a class="btn btn-default btn-sm" href="{{route('suppliers.index')}}">Clear</a></th>

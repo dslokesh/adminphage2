@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\AgentAmount;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\VoucheredBookingEmailMailable;
+use App\Models\Tag;
 
 class AgentVouchersController extends Controller
 {
@@ -454,23 +455,101 @@ class AgentVouchersController extends Controller
         }
 		
        
-       $records = $query->whereHas('activityVariants.prices', function ($query) use($startDate,$endDate) {
+       $query->whereHas('activityVariants.prices', function ($query) use($startDate,$endDate) {
            $query->where('rate_valid_from', '<=', $startDate)->where('rate_valid_to', '>=', $endDate);
 		   $query->where('rate_valid_from', '<=', $startDate)->where('rate_valid_to', '>=', $endDate);
-       })->orderBy('created_at', 'DESC')->paginate($perPage); 
+       });
 	   
-	  // dd($records);
-		//$records = $query->orderBy('created_at', 'DESC')->paginate($perPage);
-	
+	   $records = $query->orderBy('created_at', 'DESC')->paginate($perPage); 
+	   
+	   $price = $query->selectRaw('MIN(min_price) as minPrice, MAX(min_price) as maxPrice')->first(); 
+	   $min = (int)$price->minPrice;
+	   $max = (int)$price->maxPrice;
+	   //dd($price);
+		
 		
 		$voucherHotel = VoucherHotel::where('voucher_id',$vid)->get();
 		$voucherActivity = VoucherActivity::where('voucher_id',$vid)->orderBy('tour_date','ASC')->get();
+		$tags = Tag::select("name","id")->where('status', 1)->orderBy('name', 'ASC')->get();
 		
 		$voucherActivityCount = VoucherActivity::where('voucher_id',$vid)->count();
-        return view('agent-vouchers.activities-list', compact('records','typeActivities','vid','voucher','voucherActivityCount','voucherActivity'));
+        return view('agent-vouchers.activities-list', compact('records','typeActivities','vid','voucher','voucherActivityCount','voucherActivity','tags','min','max'));
     }
 	
+	public function searchActivityList(Request $request)
+	{
+		// Define the variable $vid by getting it from the request
+		$vid = $request->input('vid');
+
+		// Uncomment the lines below if you need to check agent login
+		
+		$redirectResponse = $this->chekAgentLogin();
+		if ($redirectResponse) {
+			return response()->json(['error' => 'Please login.']);
+		}
+		
+
+		$data = $request->all();
+		$typeActivities = config("constants.typeActivities"); 
+		$perPage = "1000";
+
+		// Find the voucher based on $vid
+		$voucher = Voucher::find($vid);
+
+		$startDate = $voucher->travel_from_date;
+		$endDate = $voucher->travel_to_date;
+
+		if($voucher->status_main == '4') {
+			return response()->json(['error' => 'You can not add more activity. Your voucher already confirmed.']);
+		}
+
+		if($voucher->status_main == '5') {
+			return response()->json(['error' => 'You can not add more activity. Your voucher already vouchered.']);
+		}
+
+		$query = Activity::has('activityVariants')->with('activityVariants.prices')->where('status', 1);
 	
+		if (isset($data['name']) && !empty($data['name'])) {
+			$query->where('title', 'like', '%' . trim($data['name']) . '%');
+		}
+		
+		$selectedTags = $request->input('selectedTags');
+
+		if (isset($selectedTags) && !empty($selectedTags)) {
+			$tagsArray = is_array($selectedTags) ? $selectedTags : explode(',', $selectedTags);
+
+			$query->where(function ($query) use ($tagsArray) {
+				foreach ($tagsArray as $tag) {
+					$query->orWhere('tags', 'like', '%' . trim($tag) . '%');
+				}
+			});
+		}
+		
+		if (!empty($data['minPrice']) && !empty($data['maxPrice'])) {
+			$query->where('min_price', '>=' ,trim($data['minPrice']))->where('min_price', '<=' ,trim($data['maxPrice']));
+		}
+		
+		
+		
+		$records = $query->whereHas('activityVariants.prices', function ($query) use($startDate,$endDate) {
+			$query->where('rate_valid_from', '<=', $startDate)->where('rate_valid_to', '>=', $endDate);
+			$query->where('rate_valid_from', '<=', $startDate)->where('rate_valid_to', '>=', $endDate);
+		})->orderBy('created_at', 'DESC')->paginate($perPage); 
+
+		$voucherHotel = VoucherHotel::where('voucher_id', $vid)->get();
+		$voucherActivity = VoucherActivity::where('voucher_id', $vid)->orderBy('tour_date','ASC')->get();
+		$voucherActivityCount = VoucherActivity::where('voucher_id', $vid)->count();
+
+		// Initialize an empty array for $response
+		$response = [];
+
+		$response = [
+			'html' => view('agent-vouchers.activities-list-ajax', compact('records','typeActivities','vid','voucher','voucherActivityCount','voucherActivity'))->render(), // Include HTML content
+			'pagination' => $records->links()->toHtml(), // Include pagination links
+		];
+		
+		return response()->json($response);
+	}
 	
 	public function addActivityView($aid,$vid,$d="",$a="",$c="",$i="",$tt="")
     {
@@ -890,4 +969,7 @@ class AgentVouchersController extends Controller
 			return redirect()->route('login');
 		}
 	}
+	
+
+
 }

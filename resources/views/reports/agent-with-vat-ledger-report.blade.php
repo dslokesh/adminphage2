@@ -1,67 +1,78 @@
 
 @extends('layouts.appLogin')
 @section('content')
-<div class="dashboard__content mt-5">
-   <div class="dashboard__content_content">
 
-          <h1 class="text-30">Agent/Supplier Ledger</h1>
 
-          <div class="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 md:mb-20 mt-60">
-            <div class="tabs -underline-2 js-tabs">
-              <div class="card-body">
-			  <div class="row">
-            <form id="filterForm" class="form-inline" method="get" action="{{ route('agentLedgerReportWithVat') }}" style="width:100%" >
-              <div class="form-row" style="width:100%">
-			  @if(Auth::user()->role_id !='3')
-			   <div class="col-auto col-md-3">
-                <div class="input-group mb-2">
-                  <div class="input-group-prepend">
-                    <div class="input-group-text">Agency/Supplier</div>
-                  </div>
-                <input type="text" id="agent_id" name="agent_id" value="{{ request('agent_id') ?: $agetName }}" class="form-control"  placeholder="Agency/Supplier Name" />
+
+
+
+
+<div class="breadcrumb-section" style="background-image: linear-gradient(270deg, rgba(0, 0, 0, .3), rgba(0, 0, 0, 0.3) 101.02%), url(assets/img/innerpage/inner-banner-bg.png);">  
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 d-flex justify-content-center">
+                    <div class="banner-content">
+                        <h1>My Ledger</h1>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Start Checkout section -->
+    <div class="checkout-page pt-120 mb-120">
+        <div class="container">
+          <div class="row g-lg-4 gy-5 mb-30">
+            <div class="col-md-12">
+              <div class="inquiry-form ">
+              <form id="filterForm" class="form-inline" method="get" action="{{ route('agentLedgerReportWithVat') }}" style="width:100%" >
+              <div class="row">
+              
+                <input type="hidden" id="agent_id" name="agent_id" value="{{ request('agent_id') ?: $agetName }}" class="form-control"  placeholder="Agency/Supplier Name" />
 					<input type="hidden" id="agent_id_select" name="agent_id_select" value="{{ request('agent_id_select') ?: $agetid }}"  />
-                </div>
-              </div>
-			  @endif
-			  <div class="col-auto col-md-3">
-                  <div class="input-group mb-2">
-                    <div class="input-group-prepend"><div class="input-group-text">From Date</div></div>
-                    <input type="text" name="from_date" value="{{ request('from_date') }}" autocomplete ="off" class="form-control datepickerdmy"  required  placeholder="From Date" />
-                  </div>
-                </div>
-				<div class="col-auto col-md-3">
-                  <div class="input-group mb-2">
-                    <div class="input-group-prepend"><div class="input-group-text">To Date</div></div>
-                    <input type="text" name="to_date" required autocomplete ="off" value="{{ request('to_date') }}"  class="form-control datepickerdmy"  placeholder="To Date" />
-                  </div>
-                </div>
-               
+
+                <div class="col-md-3">
+                <div class="form-inner mb-30">
+                   
+
+                <input type="text" name="from_date" value="{{ request('from_date') }}" autocomplete ="off" class="form-control datepickerdmy"  required  placeholder="From Date" />
+                   
+
+                    </div>
+</div>
+                <div class="col-md-3">
+                <div class="form-inner mb-30">
+                <input type="text" name="to_date" required autocomplete ="off" value="{{ request('to_date') }}"  class="form-control datepickerdmy"  placeholder="To Date" />
+                    </div>
+                    </div>
                 
-               
-              <div class="col-auto col-md-3">
-                <button class="btn btn-info mb-2" type="submit">Filter</button>
-                <a class="btn btn-default mb-2  mx-sm-2" href="{{ route('agentLedgerReportWithVat') }}">Clear</a>
+                <div class="col-md-3">
+                <div class="form-inner mb-30">
+                <button class="secondary-btn2" type="submit">Filter</button>
+                <a class="btn btn-default mb-2  mx-sm-2" href="{{ route('agent-vouchers.index') }}">Clear</a>
+                </div>
+                </div>
               </div>
             </form>
+              </div>
+            </div>
           </div>
-        </div>
-		 </div>
-
-              <div class="tabs__content js-tabs-content">
-
-                <div class="tabs__pane -tab-item-1 is-tab-el-active">
-                  <div class="overflowAuto">
-                    <table class="tableTest mb-30">
-                      <thead class="bg-light-1 rounded-12">
+            <div class="row g-lg-4 gy-5">
+                <div class="col-lg-12">
+                    
+                <table class="table table-condensed table-striped">
+                <thead class="bg-light-1 rounded-12">
                       <tr>
                     <th>Agency/Supplier Name</th>
 					<th>Date</th>
 					<th>Receipt No/ Invoice No.</th>
 					<th>Transaction From</th>
+          <th>Guest Name</th>
+					<th>Remark</th>
 					<th>Payment</th>
 					<th>Receipt</th>
-					<th>Guest Name</th>
-					<th>Remark</th>
+				
                   </tr>
                       </thead>
 
@@ -90,7 +101,9 @@
 					{{($record->transaction_from == '5')?'Invoice Edit':''}}
 					{{($record->transaction_from == '6')?'Credit Given':''}}
 					</td>
-					<td>
+          <td>{{@$record->voucher->guest_name}}</td>
+					<td>{{$record->remark}}</td>
+					<td style="text-align: right">
 					@if($record->transaction_type == 'Payment')
 					{{$record->amount}}
 					@php
@@ -99,33 +112,32 @@
 					@endif
 					
 				</td>
-					<td>@if($record->transaction_type == 'Receipt')
+					<td style="text-align: right">@if($record->transaction_type == 'Receipt')
 						@php
 						$totalCredit += $record->amount;
 						@endphp
 					
 					{{$record->amount}}
 					@endif</td>
-					<td>{{@$record->voucher->guest_name}}</td>
-					<td>{{$record->remark}}</td>
+					
 					
 					</tr>
-                  </tbody>
+                 
                   @endforeach
+                  </tbody>
 				  <tr>
-                    <th colspan="2"></th>
-					<th >Total</th>
-					<th >
+                 
+					<th colspan="6"  style="text-right">Total</th>
+					<th style="text-align: right">
 					{{$totalDebit}}
 					
 				</th>
-					<th>{{$totalCredit}}</th>
-					<th colspan="3"></th>
+					<th style="text-align: right">{{$totalCredit}}</th>
+					
 					</tr>
 					<tr>
-                    <th colspan="3"></th>
-					<th>Closing</th>
-					<th colspan="4">
+                    <th colspan="6"  style="text-right">Closing</th>
+					<th colspan="2" style="text-align: right">
 					@php
 					$closing = $totalCredit - $totalDebit;
 					@endphp
@@ -136,9 +148,8 @@
            
 					</tr>
 					<tr>
-                    <th colspan="3"></th>
-					<th>Opening Balance</th>
-					<th colspan="4">
+          <th colspan="6"  style="text-right">Opening Balance</th>
+					<th colspan="2" style="text-align: right">
 					{{$openingBalance}}
 					
 				</th>
@@ -146,9 +157,8 @@
            
 					</tr>
 					<tr>
-                    <th colspan="3"></th>
-					<th>Closing Balance</th>
-					<th colspan="4">
+          <th colspan="6" style="text-right">Closing Balance</th>
+					<th colspan="2" style="text-align: right">
 					@php
 					$closing = (float)str_replace(',', '', $closing);
 					$openingBalance = (float)str_replace(',', '', $openingBalance);
@@ -161,26 +171,17 @@
 					</tr>
                       </tbody>
                     </table>
-                  </div>
+                   
 
 
-              
-
-
-                  
                 </div>
-
-              
-              </div>
+                
             </div>
-          </div>
-
-          <div class="text-center pt-30">
-            © Copyright Viatours 2023
-          </div>
-
         </div>
-  </div>    
+    </div>
+    <!-- End Checkout section -->
+ 
+
 @endsection
 @section('scripts')
  <!-- Script -->

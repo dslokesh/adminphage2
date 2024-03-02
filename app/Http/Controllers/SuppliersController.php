@@ -34,6 +34,9 @@ class SuppliersController extends Controller
         if (isset($data['name']) && !empty($data['name'])) {
             $query->where('name', 'like', '%' . $data['name'] . '%');
         }
+        if (isset($data['email']) && !empty($data['email'])) {
+            $query->where('email', 'like', '%' . $data['email'] . '%');
+        }
        
         if (isset($data['city_id']) && !empty($data['city_id'])) {
             $query->where('city_id', $data['city_id']);

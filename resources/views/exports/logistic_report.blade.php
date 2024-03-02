@@ -57,7 +57,7 @@
 					@php
 					$zone = SiteHelpers::getZoneName($record->transfer_zone);
 					@endphp
-						- <b>{{$zone->name}} </b>
+						- <b>{{@$zone->name}} </b>
 					
 					@endif
 					@if($record->transfer_option == 'Pvt Transfer')

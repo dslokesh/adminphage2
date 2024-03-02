@@ -197,7 +197,8 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
         Route::delete('agent-voucher-activity-delete/{id}', [AgentVouchersController::class, 'destroyActivityFromVoucher'])->name('agent.voucher.activity.delete');
 		Route::post('agent-voucher-activity-cancel/{id}', [AgentVouchersController::class, 'cancelActivityFromVoucher'])->name('agent-voucher.activity.cancel');
         Route::post('agent-voucher-status-change/{id}', [AgentVouchersController::class, 'statusChangeVoucher'])->name('agent.vouchers.status.change');
-		
+		Route::get('agent-add-activity-search', [AgentVouchersController::class, 'searchActivityList'])->name('agent-vouchers.add.activity.search');
+		 
         Route::get('auto-hotel', [AgentVouchersController::class, 'autocompleteHotel'])->name('auto.hotel');
 		Route::get('agent-voucher-view/{vid?}', [AgentVouchersController::class, 'agentVoucherView'])->name('agentVoucherView');
 

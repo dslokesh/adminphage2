@@ -13,31 +13,29 @@ class TransfersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
-    {
+	public function index(Request $request)
+	{
 		$this->checkPermissionMethod('list.transfer');
 		$perPage = config("constants.ADMIN_PAGE_LIMIT");
 		$data = $request->all();
-		$query = Transfer::where('id','!=',null);
-		if(isset($data['name']) && !empty($data['name']))
-        {
-            $query->where('name','like', '%'.$data['name'].'%');
-        }
-		if(isset($data['status']) && !empty($data['status']))
-        {
-            if($data['status']==1)
-            $query->where('status',1);
-            if($data['status']==2)
-            $query->where('status',0);
-        }
-		
-        $records = $query->orderBy('created_at', 'DESC')->paginate($perPage);
-		
-        $records = Transfer::orderBy('created_at', 'DESC')->paginate($perPage);
-		
-        return view('transfers.index', compact('records'));
+		$query = Transfer::where('id', '!=', null);
 
-    }
+		if (isset($data['name']) && !empty($data['name'])) {
+			$query->where('name', 'like', '%' . $data['name'] . '%');
+		}
+
+		if (isset($data['status']) && !empty($data['status'])) {
+			if ($data['status'] == 1) {
+				$query->where('status', 1);
+			} elseif ($data['status'] == 2) {
+				$query->where('status', '!=', 1);
+			}
+		}
+
+		$records = $query->orderBy('created_at', 'DESC')->paginate($perPage);
+
+		return view('transfers.index', compact('records'));
+	}
 
     
     /**

@@ -22,72 +22,25 @@
         <div class="container">
             <div class="row g-lg-4 gy-5">
                 <div class="col-xl-4 order-lg-1 order-2">
+				<form id="filterForm" class="form-inline"  >
                     <div class="sidebar-area">
                         <div class="single-widget mb-30">
                             <h5 class="widget-title">Search Here</h5>
-                            <form id="filterForm" class="form-inline" method="get" action="{{ route('agent-vouchers.add.activity',$vid) }}" >
-                                <div class="search-box">
-                                <input type="text" name="name" value="{{ request('name') }}" class="form-control" style="border-radius: 5px 0px 0px 5px;"  placeholder="Filter with Name" />
-                                    
-                                    <button type="submit"><i class="bx bx-search"></i></button>
-                                </div>
-                            </form>
+							
+							<div class="search-box">
+							<input type="text" name="name" value="{{ request('name') }}" class="form-control tagsinput" style="border-radius: 5px 0px 0px 5px;" placeholder="Filter with Name" />
+							
+							</div>
+							
                         </div>
-                        <!-- <div class="single-widget mb-30">
-                            <h5 class="widget-title">Tags</h5>
-                            <div class="checkbox-container">
-                                <ul>
-                                    <li>
-                                        <label class="containerss">
-                                            <input type="checkbox">
-                                            <span class="checkmark"></span>
-                                            <span class="text">Book without credit card</span>
-                                            <span class="qty">250</span>
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label class="containerss">
-                                            <input type="checkbox">
-                                            <span class="checkmark"></span>
-                                            <span class="text">Free cancellation</span>
-                                            <span class="qty">90</span>
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label class="containerss">
-                                            <input type="checkbox">
-                                            <span class="checkmark"></span>
-                                            <span class="text">Breakfast Included</span>
-                                            <span class="qty">35</span>
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label class="containerss">
-                                            <input type="checkbox">
-                                            <span class="checkmark"></span>
-                                            <span class="text">No prepayment</span>
-                                            <span class="qty">28</span>
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label class="containerss">
-                                            <input type="checkbox">
-                                            <span class="checkmark"></span>
-                                            <span class="text">Romantic</span>
-                                            <span class="qty">12</span>
-                                        </label>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div> -->
-                        <!-- <div class="single-widget mb-30">
-                            <h5 class="shop-widget-title">Price Filter</h5>
+						 <div class="single-widget mb-30">
+                            <h5 class="shop-widget-title">Price </h5>
                                 <div class="range-wrap">
                                     <div class="row">
                                         <div class="col-sm-12">
                                         <form>
-                                            <input type="hidden" name="min-value" value="">
-                                            <input type="hidden" name="max-value" value="">
+                                            <input type="hidden" name="min-value" id="min-value"  value="">
+                                            <input type="hidden" name="max-value" id="max-value" value="">
                                         </form>
                                         </div>
                                     </div>
@@ -100,138 +53,41 @@
                                         <div class="caption">
                                             <span id="slider-range-value1"></span>
                                         </div>
-                                        <a href="#">Apply</a>
+                                        <!--<a href="javascript:;" onclick="searchActivity()">Apply</a>-->
                                         <div class="caption">
                                             <span id="slider-range-value2"></span>
                                         </div>
                                     </div>
                                 </div>
-                        </div> -->
+                        </div> 
                         
-                        
-                    </div>
-                </div>
-                <div class="col-xl-8 order-lg-2 order-1">
-                @foreach ($records as $record)
-                @php
-                  $minPrice = $record->min_price;
-                  $cutoffTime = SiteHelpers::getActivityVarByCutoffCancellation($record->id);
-                @endphp
-
-                    <div class="room-suits-card mb-30">
-                        <div class="row g-0">
-                            <div class="col-md-4">
-                            <div class="room-img">
-                                    <a href="{{route('agent-vouchers.activity.view',[$record->id,$vid])}}"><img src="{{asset('uploads/activities/'.$record->image)}}" alt=""></a>
-                                </div>
-                               
-                            </div>
-                            <div class="col-md-8">
-                                <div class="room-content">
-                                    <div class="content-top">
-                                        <h5>
-                                            <a class="" href="{{route('agent-vouchers.activity.view',[$record->id,$vid])}}" target="_blank">
-                                              {{$record->title}}
-                                            </a>
-                                        </h5>
-                                       
-                                        <ul class="facilisis">
-                                            @if($record->entry_type == 'Tour')
-                                              <li>
-                                                  <i class="icon-price-tag mr-10"></i>
-                                                  Instant Confirmation
-                                              </li>
-                                            @endif
-                                            <li> {!!$cutoffTime!!}</li>
-                                           
-                                        </ul>
-                                    </div>
-                                    <div class="content-bottom">
-                                        <div class="room-type">
-                                            <div class="deals">
-                                                <!-- <span><strong>Free cancellation</strong> <br> before 48 hours</span> -->
-                                            </div>
-                                        </div>
-                                       <div class="price-and-book">
-                                            <div class="price-area">
-											@php
-											$currency = SiteHelpers::getCurrencyPrice();
-											@endphp
-                                                <span>{{$currency['code']}} {{$minPrice*$currency['value']}}</span>
-                                                
-                                            </div>
-                                            <div class="book-btn">
-
-                                            <a class="primary-btn2 loadvari" data-act="{{ $record->id }}" style="cursor:pointer;"  data-vid="{{ $vid }}" data-card-widget="collapse" title="Collapse">
-                                            Select <i class="bi bi-arrow-right"></i>
-                    </a>
-                                               
-                                            </div>
-                                       </div>
-                                    </div>
-                                    
-                                </div>
-                                
-                            </div>
-                        </div>
-
-                        <div style="padding: 0px 20px;">
-                                <div class="col-md-12">
-			                              <div class="pdivvarc tourCard -type-2" id="pdivvar{{ $record->id }}" style="display: none;">
-                                       <div class="col-md-12 var_data_div_cc" id="var_data_div{{ $record->id }}">
-
-                                        </div>
-                                    </div>
-
-                                </div>
-              
-          
-                         </div>
-                       
-                    </div>
-
-                    @endforeach 
-          <div class="pagination pull-right mt-3"> 
-            
-<!--           
-          <div class="row mt-70">
-                        <div class="col-lg-12">
-                            <nav class="inner-pagination-area">
-                                <ul class="pagination-list">
+                        <div class="single-widget mb-30">
+                            <h5 class="widget-title">Tags</h5>
+                            <div class="checkbox-container">
+                                <ul>
+								@foreach($tags as $tag)
                                     <li>
-                                        <a href="#" class="shop-pagi-btn"><i class="bi bi-chevron-left"></i></a>
+                                        <label class="containerss">
+                                            <input type="checkbox" class="tagsinput" name="tags[]" value="{{$tag->id}}">
+                                            <span class="checkmark"></span>
+                                            <span class="text">{{$tag->name}}</span>
+                                        </label>
                                     </li>
-                                    <li>
-                                        <a href="#">1</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="active">2</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">3</a>
-                                    </li>
-                                    <li>
-                                        <a href="#"><i class="bi bi-three-dots"></i></a>
-                                    </li>
-                                    <li>
-                                        <a href="#">6</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="shop-pagi-btn"><i class="bi bi-chevron-right"></i></a>
-                                    </li>
+                                  @endforeach
+                                   
                                 </ul>
-                            </nav>
-                        </div>
-                    </div> -->
-          
-          {!! $records->appends(request()->query())->links() !!} </div>  
-          </div>
-		  @php
-					$total = 0;
-					
-					@endphp
-                    
-                    
+                            </div>
+                        </div> 
+						
+                      
+                    </div>
+					</form>
+                        
+                </div>
+				 <div class="col-xl-8 order-lg-2 order-1" id="listdata_ajax">
+                    @include('agent-vouchers.activities-list-ajax')
+                   </div>  
+				   <div id="pagination_ajax"></div>
                 </div>
             </div>
         </div>
@@ -572,6 +428,92 @@ $(document).on('keypress', '.onlynumbrf', function(evt) {
  
  });
 
+$(document).on('change', '.tagsinput', function(evt) {
+  searchActivity()
+ });
+ 
+$(document).ready(function() {
+	var min = "{{$min}}";
+	var max = "{{$max}}";
+    $('.noUi-handle').on('click', function() {
+      $(this).width(50);
+    });
+    var rangeSlider = document.getElementById('slider-range');
+	
+    var moneyFormat = wNumb({
+      decimals: 0,
+      thousand: ',',
+      prefix: ''
+    });
+    noUiSlider.create(rangeSlider, {
+      start: [min, max],
+      step: 1,
+      range: {
+        'min': [parseFloat(min)],
+        'max': [parseFloat(max)]
+      },
+      format: moneyFormat,
+      connect: true
+    });
+    
+    // Set visual min and max values and also update value hidden form inputs
+    rangeSlider.noUiSlider.on('update', function(values, handle) {
+      document.getElementById('slider-range-value1').innerHTML = values[0];
+      document.getElementById('slider-range-value2').innerHTML = values[1];
+      document.getElementById('min-value').value = moneyFormat.from(
+        values[0]);
+      document.getElementById('max-value').value = moneyFormat.from(
+        values[1]);
+		
+		searchActivity()
+    });
+  });
+function searchActivity(page = 1) {
+	$("body #loader-overlay").show();
+    var vid = "{{$vid}}"; 
+    var name = $("input[name='name']").val(); 
+	var minPrice = document.getElementById('min-value').value;
+	var maxPrice = document.getElementById('max-value').value;
+	 var selectedTags = $('input[name="tags[]"]:checked').map(function () {
+        return this.value;
+    }).get();
+	//console.log(selectedTags);
+    $("body #loader-overlay").show();
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
 
+    $.ajax({
+        url: "{{ route('agent-vouchers.add.activity.search') }}",
+        type: 'GET',
+        dataType: "json",
+        data: {
+            name: name,
+            vid: vid,
+			selectedTags: selectedTags,
+			minPrice: minPrice,
+			maxPrice: maxPrice,
+			page: page
+        },
+        success: function(data) {
+            $("#listdata_ajax").html(data.html); // Replace the content of the div
+            $("#pagination_ajax").html(data.pagination);
+			$("body #loader-overlay").hide();
+        },
+        error: function(error) {
+            //console.error('Error:', error);
+        },
+        complete: function() {
+            $("body #loader-overlay").hide();
+        }
+    });
+}
+$(document).on('click', '#pagination_ajax a', function(e) {
+    e.preventDefault();
+    var page = $(this).attr('href').split('page=')[1];
+    searchActivity(page);
+});
  </script> 
 @endsection
