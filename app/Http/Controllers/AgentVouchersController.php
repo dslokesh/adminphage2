@@ -435,7 +435,7 @@ class AgentVouchersController extends Controller
        $data = $request->all();
 		$typeActivities = config("constants.typeActivities"); 
         //$perPage = config("constants.ADMIN_PAGE_LIMIT");
-		$perPage = "1";
+		$perPage = "5";
 		$voucher = Voucher::find($vid);
 		$startDate = $voucher->travel_from_date;
 		$endDate = $voucher->travel_to_date;
@@ -513,7 +513,7 @@ class AgentVouchersController extends Controller
 
 		$data = $request->all();
 		$typeActivities = config("constants.typeActivities"); 
-		$perPage = "1";
+		$perPage = "5";
 
 		// Find the voucher based on $vid
 		$voucher = Voucher::find($vid);
