@@ -461,12 +461,13 @@ class AgentVouchersController extends Controller
        });
 	   
 	   $records = $query->orderBy('created_at', 'DESC')->paginate($perPage); 
-	   $min = 0;
-	   $max = 0;
-		$price = Activity::selectRaw('MIN(min_price) as minPrice, MAX(min_price) as maxPrice')->where('status', 1)->first();
-		if (!empty($price)) {
-			$min = (int)$price->minPrice;
-			$max = (int)$price->maxPrice;
+	   $activities = Activity::where('status', 1)->get();
+
+		if (!$activities->isEmpty()) {
+			$min = (int)$activities->min('min_price');
+			$max = (int)$activities->max('min_price');
+		} else {
+			$min = $max = 0;
 		}
 
 		
