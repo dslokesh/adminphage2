@@ -463,19 +463,27 @@ class AgentVouchersController extends Controller
 	   $records = $query->orderBy('created_at', 'DESC')->paginate($perPage); 
 	   $min = 0;
 	   $max = 0;
-		$priceQuery = Activity::has('activityVariants')->with('activityVariants.prices')->whereHas('activityVariants.prices', function ($query) use($startDate, $endDate) {
-		$query->where('rate_valid_from', '<=', $startDate)
-		->where('rate_valid_to', '>=', $endDate);
-		})->where('status', 1)->selectRaw('MIN(min_price) as minPrice, MAX(min_price) as maxPrice');
+		$priceQuery = Activity::has('activityVariants')->with('activityVariants.prices')->whereHas('activityVariants.prices', function ($query) use ($startDate, $endDate) {
+    $query->where('rate_valid_from', '<=', $startDate)
+        ->where('rate_valid_to', '>=', $endDate);
+})->where('status', 1)->selectRaw('MIN(min_price) as minPrice, MAX(min_price) as maxPrice');
 
-		$price = $priceQuery->first();
+// Log the generated SQL query
+\Log::info($priceQuery->toSql());
 
-		if (!empty($price)) {
-		$min = (int)$price->minPrice;
-		$max = (int)$price->maxPrice;
-		}
+$price = $priceQuery->first();
+
+// Log intermediate values for debugging
+\Log::info($price);
+
+if (!empty($price)) {
+    $min = (int)$price->minPrice;
+    $max = (int)$price->maxPrice;
+}
+
+dd($min, $max);
 	   
-	  dd($price);
+	  
 		
 		
 		$voucherHotel = VoucherHotel::where('voucher_id',$vid)->get();
