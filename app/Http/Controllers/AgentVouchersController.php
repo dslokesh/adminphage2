@@ -477,13 +477,13 @@ class AgentVouchersController extends Controller
 			}
 		}
 		
-		$min_price = $query->get();
+		$price = $query->pluck('min_price')->unique()->values()->all();
 		$minPrice = PHP_INT_MAX; // Initialize to a large value
 		$maxPrice = 0; // Initialize to a small value
 
-		foreach ($min_price as $minP) {
-			$minPrice = min($minPrice, $minP->min_price);
-			$maxPrice = max($maxPrice, $minP->min_price)+10;
+		foreach ($price as $minP) {
+			$minPrice = min($minPrice, $minP);
+			$maxPrice = max($maxPrice, $minP)+10;
 		}
 
 		//dd($maxPrice);
