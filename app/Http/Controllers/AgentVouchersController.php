@@ -472,7 +472,7 @@ class AgentVouchersController extends Controller
 	   $max = (int)$price->maxPrice;
 	   }
 	   
-	   //dd($price);
+	  dd($price);
 		
 		
 		$voucherHotel = VoucherHotel::where('voucher_id',$vid)->get();
