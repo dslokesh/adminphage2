@@ -461,12 +461,15 @@ class AgentVouchersController extends Controller
        });
 	   
 	   $records = $query->orderBy('created_at', 'DESC')->paginate($perPage); 
-	   dd($records);
-	   $price = $query->selectRaw('MIN(min_price) as minPrice, MAX(min_price) as maxPrice')->first(); 
+	  
+	   $price = Activity::has('activityVariants')->with('activityVariants.prices')->whereHas('activityVariants.prices', function ($query) use($startDate,$endDate) {
+           $query->where('rate_valid_from', '<=', $startDate)->where('rate_valid_to', '>=', $endDate);
+		   $query->where('rate_valid_from', '<=', $startDate)->where('rate_valid_to', '>=', $endDate);
+       })->where('status',1)->selectRaw('MIN(min_price) as minPrice, MAX(min_price) as maxPrice')->first(); 
 	   $min = (int)$price->minPrice;
 	   $max = (int)$price->maxPrice;
 	   
-	   dd($records);
+	   dd($price);
 		
 		
 		$voucherHotel = VoucherHotel::where('voucher_id',$vid)->get();
