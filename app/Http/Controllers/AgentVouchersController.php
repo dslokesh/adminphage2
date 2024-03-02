@@ -466,7 +466,7 @@ class AgentVouchersController extends Controller
 	   $min = (int)$price->minPrice;
 	   $max = (int)$price->maxPrice;
 	   
-	   dd($price);
+	   dd($records);
 		
 		
 		$voucherHotel = VoucherHotel::where('voucher_id',$vid)->get();
