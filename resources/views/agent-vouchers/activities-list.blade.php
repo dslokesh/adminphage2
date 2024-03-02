@@ -465,9 +465,24 @@ $(document).ready(function() {
       document.getElementById('max-value').value = moneyFormat.from(
         values[1]);
 		
-		searchActivity()
+		debounceSearchActivity();
     });
+	
+	
   });
+  const debounceSearchActivity = debounce(searchActivity, 500);
+  function debounce(func, delay) {
+        let timeout;
+        return function() {
+            const context = this;
+            const args = arguments;
+            clearTimeout(timeout);
+            timeout = setTimeout(function() {
+                func.apply(context, args);
+            }, delay);
+        };
+    }
+	
 function searchActivity(page = 1) {
 	$("body #loader-overlay").show();
     var vid = "{{$vid}}"; 
