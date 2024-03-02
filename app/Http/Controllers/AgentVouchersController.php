@@ -461,7 +461,7 @@ class AgentVouchersController extends Controller
        });
 	   
 	   $records = $query->orderBy('created_at', 'DESC')->paginate($perPage); 
-	   
+	   dd($records);
 	   $price = $query->selectRaw('MIN(min_price) as minPrice, MAX(min_price) as maxPrice')->first(); 
 	   $min = (int)$price->minPrice;
 	   $max = (int)$price->maxPrice;
