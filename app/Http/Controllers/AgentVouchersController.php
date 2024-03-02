@@ -473,7 +473,9 @@ class AgentVouchersController extends Controller
 		foreach ($tagsQ as $record) {
 			$tagAll = explode(',', $record);
 			foreach ($tagAll as $tag) {
-			$tags[$tag] = $tag;
+				if(!empty($tag)){
+				$tags[$tag] = $tag;
+				}
 			}
 		}
 		
