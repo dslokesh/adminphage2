@@ -477,8 +477,8 @@ $price = $priceQuery->first();
 \Log::info($price);
 
 if (!empty($price)) {
-    $min = (int)$price->minPrice;
-    $max = (int)$price->maxPrice;
+    $min = $price->minPrice;
+    $max = $price->maxPrice;
 }
 
 dd($min, $max);
