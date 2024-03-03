@@ -12,6 +12,10 @@ class VoucherHotel extends Model
         return $this->belongsTo(Hotel::class);
     }
    
+   public function voucher()
+    {
+        return $this->belongsTo(Voucher::class,'voucher_id','id');
+    }
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by', 'id');

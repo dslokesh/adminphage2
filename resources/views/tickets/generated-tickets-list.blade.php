@@ -50,10 +50,11 @@
 					<th>Valid From</th>
 					<th>Valid Till</th>
 					<th>Activity</th>
-          <th>Variant</th>
+					<th>Variant</th>
 					<th>Ticket For</th>
 					<th>Type Of Ticket</th>
-					
+					<th>Net Rate</th>
+					<th>TKT Supplier</th>
 				
                    
                   </tr>
@@ -84,10 +85,11 @@
 				<option value="Child" @if(request('ticket_for') == 'Child') {{'selected="selected"'}} @endif>Child</option>
 				<option value="Both" @if(request('ticket_for') == 'Both') {{'selected="selected"'}} @endif>Both</option>
 				</select></th>
-                   
+                  
                     <th width="10%"><button class="btn btn-info btn-sm" type="submit">Filter</button>
                     <a class="btn btn-default btn-sm" href="{{route('tickets.generated.tickets')}}">Clear</a></th>
-                  
+                   <th> </th>
+				<th> </th>
                   </form>
                   </tr>
                   </thead>
@@ -110,7 +112,8 @@
 					<td>{{ $record->ticket_for}}</td>
                     <td>{{ $record->type_of_ticket}}</td>
 				
-                  
+                  <td>{{ $record->net_cost}}</td>
+                    <td>{{ @$record->supplier->name}}</td>
                   
                    
                     

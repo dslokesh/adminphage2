@@ -505,6 +505,24 @@ $controller = preg_replace('/.*\\\/', '', $controller);
 				
               </li>
 			@endpermission  
+			
+			@permission('list.voucherHotelReport') 
+		   @php
+          $class=''; $active='';
+          if($controller == 'ReporsController' and in_array($action,array('voucherHotelReport'))){
+            $class = 'menu-open';
+            $active = 'active';
+          }
+          @endphp     
+			  <li class="nav-item ">
+                <a href="{{ route('voucherHotelReport') }}" class="nav-link {{$active}}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Hotel Report</p>
+                </a>
+				
+              </li>
+			@endpermission  
+			
 		  <li class="nav-item has-treeview">
             <a href="#" class="nav-link ">
               <i class="nav-icon fas fa-user"></i>

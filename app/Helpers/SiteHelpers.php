@@ -703,6 +703,16 @@ class SiteHelpers
 		return $days;
 	}
 	
+	public static function numberOfNight($date1, $date2) 
+{
+    $diff = strtotime($date2) - strtotime($date1);
+    
+    $nights =  (abs(round($diff / 86400)));
+    return $nights;
+}
+	
+	
+	
 	
 	public static function voucherActivityLog($vid,$vaid,$discount,$priceTotal,$voucherstatus)
     {

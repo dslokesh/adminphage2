@@ -207,6 +207,8 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
         Route::get('agent-ledger-report', [ReporsController::class, 'agentLedgerReport'])->name('agentLedgerReport');
 		Route::get('agent-ledger-with-vat-report', [ReporsController::class, 'agentLedgerReportWithVat'])->name('agentLedgerReportWithVat');
         Route::get('agent-ledger-report-export', [ReporsController::class, 'agentLedgerReportWithVatExportExcel'])->name('agentLedgerReportWithVatExportExcel');
+		
+		 Route::get('voucher-hotel-report', [ReporsController::class, 'voucherHotelReport'])->name('voucherHotelReport');
 		 
         Route::resource('users', UsersController::class);
 		Route::get('profile-edit/{id}', [UsersController::class, 'editProfileForm'])->name('profile-edit');

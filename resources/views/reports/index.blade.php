@@ -95,14 +95,16 @@
                 <table id="example3" class="table rounded-corners">
                   <thead>
                   <tr>
+				  <th>Booking Date</th>
 					<th>Booking #</th>
                     <th width="7%">Service Date</th>
 					<th>Guest Name</th>
 					<th>Guest Contact No</th>
-					<th>Pickup</th>
+					<th>Entry Type</th>
+					<th>Pickup/Flight</th>
 					<th>Service</th>
 					  <th>Varaint</th>
-					  <th>Dropoff</th>
+					  <th>Dropoff/Flight</th>
 					  <th>A</th>
                     <th>C</th>
                     <th>I</th>
@@ -118,6 +120,8 @@
 					<th>TFR Supplier</th>
 					<th>TFR SP</th>
 					<th>TFR Net Cost</th>
+					<th>TFR Supplier 2</th>
+					<th>TFR Net Cost 2</th>
 					
 					<th>Status</th>
                   </tr>
@@ -129,6 +133,7 @@
 				  $class = SiteHelpers::voucherActivityStatus($record->status);
 				  @endphp
                   <tr class="{{$class}}">
+				  <td>{{($record->voucher)?$record->voucher->booking_date:''}}</td>
 					<td>{{($record->voucher)?$record->voucher->code:''}}</td>
                     <td>
 					<input type="text" readonly class="form-control inputsave datepicker" id="tour_date{{$record->id}}" data-name="tour_date"  data-id="{{$record->id}}" value="{{$record->tour_date}}" />
@@ -136,6 +141,7 @@
 					<td>{{($record->voucher)?$record->voucher->guest_name:''}}</td>
 					<td>
 					<input type="text"  class="form-control inputsaveV" id="guest_phone{{$record->id}}" data-name="guest_phone"  data-id="{{$record->voucher_id}}" value="{{($record->voucher)?$record->voucher->guest_phone:''}}" /></td>
+					<td>{{$record->activity_entry_type}}</td>
 					<td><input type="hidden" class="form-control inputsave" id="pickup_location{{$record->id}}" data-name="pickup_location" data-id="{{$record->id}}" value="{{$record->pickup_location}}"  />{{$record->pickup_location}}</td>
 					<td>{{$record->activity_title}}</td>
 					<td>{{($record->variant_name)?$record->variant_name:''}}</td>
@@ -209,8 +215,13 @@
 					
 					<td><input type="text" class="form-control inputsave" id="actual_transfer_cost{{$record->id}}" data-name="actual_transfer_cost"  data-id="{{$record->id}}" value="{{$record->actual_transfer_cost}}" /></td>
 					
-					
-					
+					<td><select name="supplier_transfer2{{$record->id}}" id="supplier_transfer2{{$record->id}}" class="form-control inputsaveSp">
+						<option data-name="supplier_transfer2"  data-id="{{$record->id}}" value="">All</option>
+						@foreach($supplier_transfer as  $stt)
+						<option data-name="supplier_transfer2"  data-id="{{$record->id}}" value = "{{$stt->id}}" @if($record->supplier_transfer==$stt->id) selected="selected" @endif >{{$stt->company_name}}</option>
+						@endforeach
+                 </select></td>
+					<td><input type="text" class="form-control inputsave" id="actual_transfer_cost2{{$record->id}}" data-name="actual_transfer_cost2"  data-id="{{$record->id}}" value="{{$record->actual_transfer_cost2}}" /></td>
 					<td>
 					@php
 					$actStatus = config('constants.voucherActivityStatus');

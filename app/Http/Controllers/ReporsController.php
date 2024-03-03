@@ -17,6 +17,7 @@ use App\Models\Country;
 use App\Models\State;
 use App\Models\City;
 use App\Models\ReportLog;
+use App\Models\VoucherHotel;
 use DB;
 use Illuminate\Support\Facades\Auth;
 use SiteHelpers;
@@ -1026,6 +1027,27 @@ public function voucherActivtyRefundedReport(Request $request)
 		}
 		$records = $query->orderBy('created_at', 'DESC')->get();
 		return Excel::download(new InvoiceReportExport($records), 'invoice_report'.date('d-M-Y s').'.csv');
+
+    }
+	
+	
+	public function voucherHotelReport(Request $request)
+    {
+		$this->checkPermissionMethod('list.voucherHotelReport');
+		$data = $request->all();
+		$perPage = config("constants.ADMIN_PAGE_LIMIT");
+		$twoDaysAgo = date("Y-m-d", strtotime(date("Y-m-d") . " -2 days"));
+		$supplier_ticket = User::where("service_type",'Ticket')->orWhere('service_type','=','Both')->get();
+		
+		$query = VoucherHotel::where('id','!=', null);
+		
+		$query->whereHas('voucher', function($q)  use($data,$twoDaysAgo){
+				$q->whereIn('status_main',[4,5]);
+				$q->orderBy('booking_date', 'DESC');
+			});
+		$query->whereDate('check_in_date', '>=', $twoDaysAgo);
+		$records = $query->get();
+        return view('reports.voucher_hotel_report', compact('records'));
 
     }
 }
