@@ -491,7 +491,7 @@ class AgentVouchersController extends Controller
 		$maxPrice = (int)$priceMax->min_price; 
 		}
 		if(!empty($priceMin)){
-		$maxPrice = (int)$priceMin->min_price; 
+		$minPrice = (int)$priceMin->min_price; 
 		}
 
 		
