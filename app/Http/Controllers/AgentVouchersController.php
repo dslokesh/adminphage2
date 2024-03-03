@@ -461,8 +461,7 @@ class AgentVouchersController extends Controller
        });
 	   
 	   $records = $query->orderBy('created_at', 'DESC')->paginate($perPage); 
-	   $minPrice = $maxPrice = 0;
-
+	   
 		
 		$voucherHotel = VoucherHotel::where('voucher_id',$vid)->get();
 		$voucherActivity = VoucherActivity::where('voucher_id',$vid)->orderBy('tour_date','ASC')->get();
@@ -488,11 +487,11 @@ class AgentVouchersController extends Controller
 		$minPrice = 1;
 		$maxPrice = 0 ;
 		if(!empty($price)){
-		$maxPrice = $price->min_price; 
+		$maxPrice = (int)$price->min_price; 
 		}
 
 		
-		//dd($maxPrice);
+		dd($maxPrice);
 		$voucherActivityCount = VoucherActivity::where('voucher_id',$vid)->count();
         return view('agent-vouchers.activities-list', compact('records','typeActivities','vid','voucher','voucherActivityCount','voucherActivity','tags','minPrice','maxPrice'));
     }
