@@ -460,8 +460,12 @@ class AgentVouchersController extends Controller
 		   $query->where('rate_valid_from', '<=', $startDate)->where('rate_valid_to', '>=', $endDate);
        });
 	   
-	   $records = $query->orderBy('created_at', 'DESC')->paginate($perPage); 
 	   
+		if (!empty($data['porder']) && !empty($data['porder'])) {
+			$records = $query->orderByRaw('CAST(min_price AS DECIMAL) '.$data['porder'])->paginate($perPage);
+		} else { 
+			$records = $query->orderBy('created_at', 'DESC')->paginate($perPage);
+		}
 		
 		$voucherHotel = VoucherHotel::where('voucher_id',$vid)->get();
 		$voucherActivity = VoucherActivity::where('voucher_id',$vid)->orderBy('tour_date','ASC')->get();
@@ -483,7 +487,7 @@ class AgentVouchersController extends Controller
 			}
 		}
 		
-		$priceMax = Activity::has('activityVariants')->where('status',1) ->orderByRaw('CAST(min_price AS DECIMAL) DESC')->first();
+		$priceMax = Activity::has('activityVariants')->where('status',1)->orderByRaw('CAST(min_price AS DECIMAL) DESC')->first();
 		//$priceMin = Activity::has('activityVariants')->where('status',1) ->orderByRaw('CAST(min_price AS DECIMAL) ASC')->first();
 		$minPrice = 1;
 		$maxPrice = 0 ;
@@ -553,10 +557,16 @@ class AgentVouchersController extends Controller
 		
 		
 		
-		$records = $query->whereHas('activityVariants.prices', function ($query) use($startDate,$endDate) {
+		$query->whereHas('activityVariants.prices', function ($query) use($startDate,$endDate) {
 			$query->where('rate_valid_from', '<=', $startDate)->where('rate_valid_to', '>=', $endDate);
 			$query->where('rate_valid_from', '<=', $startDate)->where('rate_valid_to', '>=', $endDate);
-		})->orderBy('created_at', 'DESC')->paginate($perPage); 
+		});
+		
+		if (!empty($data['porder']) && !empty($data['porder'])) {
+			$records = $query->orderByRaw('CAST(min_price AS DECIMAL) '.$data['porder'])->paginate($perPage);
+		} else { 
+			$records = $query->orderBy('created_at', 'DESC')->paginate($perPage);
+		}		
 
 		$voucherHotel = VoucherHotel::where('voucher_id', $vid)->get();
 		$voucherActivity = VoucherActivity::where('voucher_id', $vid)->orderBy('tour_date','ASC')->get();

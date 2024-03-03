@@ -20,7 +20,20 @@
     <!-- Start Room Details section -->
     <div class="room-suits-page pt-120 mb-120">
         <div class="container">
+		
             <div class="row g-lg-4 gy-5">
+			 <div class="package-inner-title-section mb-40">
+                    <p></p>
+                    <div class="selector-and-grid">
+                        <div class="selector">
+                            <select  class="tagsinput" id="porder" >
+                                <option value="">Sorting</option>
+                                <option value="ASC">Price Low to High</option>
+                                <option value="DESC">Price High to Low</option>
+                              </select>
+                        </div>
+                   </div>
+                </div>
                 <div class="col-xl-4 order-lg-1 order-2">
 				<form id="filterForm" class="form-inline"  >
                     <div class="sidebar-area">
@@ -84,7 +97,9 @@
 					</form>
                         
                 </div>
+				
 				 <div class="col-xl-8 order-lg-2 order-1" id="listdata_ajax">
+				 
                     @include('agent-vouchers.activities-list-ajax')
                    </div>  
 				   <div id="pagination_ajax"></div>
@@ -487,6 +502,8 @@ function searchActivity(page = 1) {
 	$("body #loader-overlay").show();
     var vid = "{{$vid}}"; 
     var name = $("input[name='name']").val(); 
+	var porder = $("#porder").val();
+	
 	var minPrice = document.getElementById('min-value').value;
 	var maxPrice = document.getElementById('max-value').value;
 	 var selectedTags = $('input[name="tags[]"]:checked').map(function () {
@@ -510,6 +527,7 @@ function searchActivity(page = 1) {
 			selectedTags: selectedTags,
 			minPrice: minPrice,
 			maxPrice: maxPrice,
+			porder:porder,
 			page: page
         },
         success: function(data) {
