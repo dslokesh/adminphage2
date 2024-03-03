@@ -483,15 +483,19 @@ class AgentVouchersController extends Controller
 			}
 		}
 		
-		$price = Activity::has('activityVariants')->where('status',1) ->orderByRaw('CAST(min_price AS DECIMAL) DESC')->first();
+		$priceMax = Activity::has('activityVariants')->where('status',1) ->orderByRaw('CAST(min_price AS DECIMAL) DESC')->first();
+		$priceMin = Activity::has('activityVariants')->where('status',1) ->orderByRaw('CAST(min_price AS DECIMAL) ASC')->first();
 		$minPrice = 1;
 		$maxPrice = 0 ;
-		if(!empty($price)){
-		$maxPrice = (int)$price->min_price; 
+		if(!empty($priceMax)){
+		$maxPrice = (int)$priceMax->min_price; 
+		}
+		if(!empty($priceMin)){
+		$maxPrice = (int)$priceMin->min_price; 
 		}
 
 		
-		dd($maxPrice);
+		//dd($maxPrice);
 		$voucherActivityCount = VoucherActivity::where('voucher_id',$vid)->count();
         return view('agent-vouchers.activities-list', compact('records','typeActivities','vid','voucher','voucherActivityCount','voucherActivity','tags','minPrice','maxPrice'));
     }
