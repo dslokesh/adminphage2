@@ -483,7 +483,7 @@ class AgentVouchersController extends Controller
 			}
 		}
 		
-		$price = Activity::has('activityVariants')->where('status',1)->orderBy('min_price','DESC')->first();
+		$price = Activity::has('activityVariants')->where('status',1) ->orderByRaw('CAST(min_price AS DECIMAL) DESC')->first();
 		$minPrice = 1;
 		$maxPrice = 0 ;
 		if(!empty($price)){
