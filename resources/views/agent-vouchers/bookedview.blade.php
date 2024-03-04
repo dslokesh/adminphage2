@@ -1,6 +1,8 @@
 @extends('layouts.appLogin')
 @section('content')
-
+@php
+$currency = SiteHelpers::getCurrencyPrice();
+@endphp
    
 
 
@@ -192,7 +194,7 @@
                     @endif
                                             <div class="price-area">
                                                
-                                                <span>AED {{$ap->totalprice}}</span>
+                                                <span>{{$currency['code']}} {{$ap->totalprice*$currency['value']}}</span>
                                                 
                                             </div>
                                             <div class="book-btn">
@@ -279,7 +281,7 @@
                        
 
                   <div class="col-md-12" style="text-align: right">
-                    <h3>Total Amount : AED {{$totalGrand}}</h3>
+                    <h3>Total Amount : {{$currency['code']}} {{$totalGrand*$currency['value']}}</h3>
                   </div>
                           </div>
                           </div>

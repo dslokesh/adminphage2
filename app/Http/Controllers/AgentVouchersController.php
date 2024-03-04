@@ -713,7 +713,9 @@ class AgentVouchersController extends Controller
 				if(!in_array($tour_dt,$getAvailableDateList)){
 				return redirect()->back()->with('error', $variant->title.' Tour is not available for Selected Date.');
 				}
-			
+			if(empty($transfer_zone)){
+				$transfer_zone = [];
+			}
 			
 			
 			$data[] = [

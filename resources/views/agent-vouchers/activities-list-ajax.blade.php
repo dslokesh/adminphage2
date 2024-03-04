@@ -44,7 +44,7 @@
 											@php
 											$currency = SiteHelpers::getCurrencyPrice();
 											@endphp
-                                                <span>{{$currency['code']}} {{$minPrice}}</span>
+                                                <span>{{$currency['code']}} {{$minPrice*$currency['value']}}</span>
                                                 
                                             </div>
                                             <div class="book-btn">

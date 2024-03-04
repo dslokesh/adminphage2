@@ -1,7 +1,9 @@
 @extends('layouts.appLogin')
 @section('content')
 
-
+@php
+$currency = SiteHelpers::getCurrencyPrice();
+@endphp
 
 <div class="breadcrumb-section" style="background-image: linear-gradient(270deg, rgba(0, 0, 0, .3), rgba(0, 0, 0, 0.3) 101.02%), url(assets/img/innerpage/inner-banner-bg.png);">  
         <div class="container">
@@ -411,7 +413,7 @@
                                                             @endif
                                                             <li><strong>Pax(s): </strong>Adult(s) : {{$ap->adult}} @if($ap->child > 0) Child(s) : {{$ap->child}} @endif</li>
                                                           
-                                                            <li><strong>Amount: </strong>AED {{$ap->totalprice}}</li>
+                                                            <li><strong>Amount: </strong>{{$currency['code']}} {{$ap->totalprice*$currency['value']}}</li>
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -430,7 +432,7 @@
                                     <div class="pricing-area">
                                         
                                         <ul class="total">
-                                            <li><h4>Grand Total: AED {{$totalGrand}}</h4></li>
+                                            <li><h4>Grand Total: {{$currency['code']}} {{$totalGrand*$currency['value']}}</h4></li>
                                         </ul>
                                     </div>
                                     

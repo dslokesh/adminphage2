@@ -132,7 +132,7 @@
 				$currencyDD = SiteHelpers::getCurrencyAll();
 				$userCR =  auth()->user()->currency_id;
 				@endphp
-			   <li class="" style="display:none">
+			   <li class="">
 			   <form action="{{ route('currency.change') }}" method="post"  >
 			{{ csrf_field() }}
 				<select name="user_currency" id="user_currency" onchange="this.form.submit()" class="form-control">

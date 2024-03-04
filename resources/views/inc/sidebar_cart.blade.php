@@ -12,6 +12,7 @@
 
                 @php
 					$total = 0;
+					$currency = SiteHelpers::getCurrencyPrice();
 					@endphp
 				
 			  
@@ -71,7 +72,7 @@
                  @if($ap->child > 0)
                  <i class="fas fa-child color-grey" title="Child"></i>  <span class="color-black">{{$ap->child}}</span>
                 @endif
-                  <span class="float-right " ><p class="" style="text-align: right;"><strong>AED {{$ap->totalprice}}</strong></p></span>
+                  <span class="float-right " ><p class="" style="text-align: right;"><strong>AED {{$ap->totalprice*$currency['value']}}</strong></p></span>
                 </li>
                 
               </ul>
@@ -98,7 +99,7 @@
                 </div>
                 <div class="col-md-12">
                 @if($voucherActivityCount > 0)
-                               <h5 class="col-md-12" style="width:100%; text-align: right;">Total Amount : AED {{$total}}</h5>
+                               <h5 class="col-md-12" style="width:100%; text-align: right;">Total Amount : AED {{$total*$currency['value']}}</h5>
                             @endif
                 </div>
                 
