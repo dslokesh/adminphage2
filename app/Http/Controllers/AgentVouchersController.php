@@ -487,7 +487,7 @@ class AgentVouchersController extends Controller
 			}
 		}
 		
-		$priceMax = Activity::has('activityVariants')->with('activityVariants.prices')->where('status',1)->whereHas('activityVariants.prices', function ($query) use($startDate,$endDate) {
+		$priceMax = Activity::has('activityVariants')->where('status',1)->whereHas('activityVariants.prices', function ($query) use($startDate,$endDate) {
            $query->where('rate_valid_from', '<=', $startDate)->where('rate_valid_to', '>=', $endDate);
 		   $query->where('rate_valid_from', '<=', $startDate)->where('rate_valid_to', '>=', $endDate);
        })->orderByRaw('CAST(min_price AS DECIMAL) DESC')->first();
