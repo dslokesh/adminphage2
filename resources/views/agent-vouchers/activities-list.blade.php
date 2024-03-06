@@ -34,7 +34,7 @@
                         </div>
                    </div>
                 </div>
-                <div class="col-xl-4 order-lg-1 order-2">
+                <div class="col-xl-3 order-lg-1 order-2">
 				<form id="filterForm" class="form-inline"  >
                     <div class="sidebar-area">
                         <div class="single-widget mb-30">
@@ -98,7 +98,7 @@
                         
                 </div>
 				
-				 <div class="col-xl-8 order-lg-2 order-1" id="listdata_ajax">
+				 <div class="col-xl-9 order-lg-2 order-1" id="listdata_ajax">
 				 
                     @include('agent-vouchers.activities-list-ajax')
                    </div>  
@@ -443,7 +443,7 @@ $(document).on('keypress', '.onlynumbrf', function(evt) {
  
  });
 
-$(document).on('change', '.tagsinput', function(evt) {
+$(document).on('keypress', '.tagsinput', function(evt) {
   searchActivity()
  });
  

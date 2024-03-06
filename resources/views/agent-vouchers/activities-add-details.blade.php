@@ -180,7 +180,7 @@
         </div>
     </div>
     <!-- End Room Details section -->
-
+    </div>
 
 
 

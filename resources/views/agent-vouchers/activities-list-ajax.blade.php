@@ -8,8 +8,8 @@
                     <div class="room-suits-card mb-30">
                         <div class="row g-0">
                             <div class="col-md-4">
-                            <div class="room-img">
-                                    <a href="{{route('agent-vouchers.activity.view',[$record->id,$vid])}}"><img src="{{asset('uploads/activities/'.$record->image)}}" alt=""></a>
+                                <div class="room-img">
+                                    <a href="{{route('agent-vouchers.activity.view',[$record->id,$vid])}}"><img src="{{asset('uploads/activities/'.$record->image)}}" class="img-fluid" alt=""></a>
                                 </div>
                                
                             </div>

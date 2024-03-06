@@ -107,7 +107,7 @@ class AuthController extends Controller
      */
     public function postRegistration(Request $request)
     {  
-       
+      $sameEmailPhone = $request->input('same_email_phone');
         $options['allow_img_size'] = 10;
         $request->validate([
 			'company_name' => 'required|max:255|sanitizeScripts',
@@ -115,6 +115,9 @@ class AuthController extends Controller
             'last_name' => 'required|max:255|sanitizeScripts|alpha',
             'mobile' => 'required',
             'address' => 'required',
+			/* 'same_email_phone' => 'nullable',
+			'agency_mobile' => 'required_if:same_email_phone,null',
+			'agency_email' => 'required_if:same_email_phone,null', */
 			'email' => 'required|max:255|sanitizeScripts|email|unique:users|regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix',
 			//'password' => 'required|min:8|max:255|sanitizeScripts',
 			//'image' => 'nullable|mimes:jpeg,jpg,png|max:' . ($options['allow_img_size'] * 1024),  
@@ -122,11 +125,13 @@ class AuthController extends Controller
             'state_id' => 'required',
             'country_id' => 'required',
             'postcode' => 'required',
+			'agent_currency_id' => 'required',
 			
         ], [
             'name.sanitize_scripts' => 'Invalid value entered for Name field.',
             'country_id.required' => 'The country field is required.',
             'state_id.required' => 'The state field is required.',
+			'agent_currency_id.required' => 'The preferred currency field is required.',
         ]);
 
 
@@ -134,45 +139,56 @@ class AuthController extends Controller
 		
         $record = new User();
 		
-		/* $destinationPath = public_path('/uploads/users/');
-		if ($request->hasFile('image')) {
+		$destinationPath = public_path('/uploads/users/');
+		if ($request->hasFile('pan_no_file')) {
 
            
-			$fileName = $input['image']->getClientOriginalName();
-			$file = request()->file('image');
+			$fileName = $input['pan_no_file']->getClientOriginalName();
+			$file = request()->file('pan_no_file');
 			$fileNameArr = explode('.', $fileName);
 			$fileNameExt = end($fileNameArr);
 			$newName = date('His').rand() . time() . '.' . $fileNameExt;
-			
 			$file->move($destinationPath, $newName);
-			
-			//$user_config = json_decode($options['user'],true);
-			
-			$img = Image::make(public_path('/uploads/users/'.$newName));
-						
-            $img->resize(250, 250, function($constraint) {
-				$constraint->aspectRatio();
-			});
-			
-			$img->save(public_path('/uploads/users/thumb/'.$newName));
+            $record->pan_no_file = $newName;
+		} 
+		if ($request->hasFile('trade_license_no_file')) {
 
-            $record->image = $newName;
-		} */
+           
+			$fileName2 = $input['trade_license_no_file']->getClientOriginalName();
+			$file = request()->file('trade_license_no_file');
+			$fileNameArr2 = explode('.', $fileName2);
+			$fileNameExt2 = end($fileNameArr2);
+			$newName2 = date('His').rand() . time() . '.' . $fileNameExt2;
+			$file->move($destinationPath, $newName2);
+            $record->trade_license_no_file = $newName2;
+		} 
+		
+		
 		
         $record->name = $request->input('first_name');
         $record->lname = $request->input('last_name');
-		
+		if($sameEmailPhone == 1){
+			$record->agency_mobile = $request->input('mobile');
+			$record->agency_email = $request->input('email');
+		} else {
+			$record->agency_mobile = $request->input('agency_mobile');
+			$record->agency_email = $request->input('agency_email');
+		}
         $record->mobile = $request->input('mobile');
 		$record->email = $request->input('email');
 		$record->company_name = $request->input('company_name');
 		$record->department = '';
 		$record->phone = '';
         $record->address = $request->input('address');
+		$record->address_two = $request->input('address_two');
         $record->postcode = $request->input('postcode');
         $record->country_id = $request->input('country_id');
         $record->state_id = $request->input('state_id');
         $record->city_id = $request->input('city_id');
-        $record->sales_person = $request->input('sales_person');
+		$record->currency_id = $request->input('agent_currency_id');
+		$record->pan_no = $request->input('pan_no');
+		$record->trade_license_no = $request->input('trade_license_no');
+		$record->trn_no = $request->input('trn_no');
         $record->is_active = '0';
 		$record->agent_credit_limit = 0;
 		$record->agent_amount_balance = 0;
@@ -184,6 +200,7 @@ class AuthController extends Controller
 		$record->pvt_transfer = 0;
 		$record->vat = 0;
         $record->save();
+		
         $record->attachRole('3');
 		
 		$userCount = User::where("role_id",3)->count();

@@ -3,26 +3,19 @@
 @section('content')
 <div class="container">
             <div class="row g-lg-4 gy-5">
-   <div class="col-lg-6 offset-md-3 text-center">
-                    <div class="contact-form-area mb-5  mt-5">
-                        <h3>Register</h3>
+   <div class="col-lg-8 offset-md-2 ">
+                    <div class="login-form-area mb-5  mt-5">
+                        <h3 class="col-md-12 text-center" >Register</h3>
 						
 						@include('inc.errors-and-messages')
                         <form action="{{ route('register.post') }}" method="post" class="form" enctype="multipart/form-data">
 			{{ csrf_field() }}
                             <div class="row">
-                                <div class="col-lg-12 mb-20">
-                                    <div class="form-inner">
-                                        <label>Agency Name*</label>
-										<input type="text" id="company_name" name="company_name" value="{{ old('company_name')}}" class=""  placeholder="Agency Name"  />
-										@if ($errors->has('company_name'))
-										<span class="text-danger">{{ $errors->first('company_name') }}</span>
-										@endif
-                                    </div>
-                                </div>
-                             
+							<div class="col-lg-12 mb-10 text-left">
+								<h4 class="text-left" >Admin Details</h4>
+							</div>
                               
-							   <div class="col-lg-12 mb-20">
+							   <div class="col-lg-6 mb-20">
                                     <div class="form-inner">
                                         <label>First Name*</label>
 										<input type="text" id="first_name" name="first_name" value="{{ old('first_name')}}" class=""  placeholder="First Name"  />
@@ -31,7 +24,7 @@
 										@endif
                                     </div>
                                 </div>
-								 <div class="col-lg-12 mb-20">
+								 <div class="col-lg-6 mb-20">
                                     <div class="form-inner">
                                         <label>Last Name*</label>
 										<input type="text" id="last_name" name="last_name" value="{{ old('last_name')}}" class=""  placeholder="Last Name"  />
@@ -40,7 +33,7 @@
 										@endif
                                     </div>
                                 </div>
-								 <div class="col-lg-12 mb-20">
+								 <div class="col-lg-6 mb-20">
                                     <div class="form-inner">
                                         <label>Mobile No with Country Code*</label>
 										<input type="text" id="mobile" name="mobile" value="{{ old('mobile')}}" class=""  placeholder="Mobile No with Country Code"  />
@@ -49,7 +42,7 @@
 										@endif
                                     </div>
                                 </div>
-								 <div class="col-lg-12 mb-20">
+								 <div class="col-lg-6 mb-20">
                                     <div class="form-inner">
                                         <label>Email ID*</label>
 										<input type="text" id="email" name="email" value="{{ old('email')}}" class=""  placeholder="Email ID"  />
@@ -58,7 +51,60 @@
 										@endif
                                     </div>
                                 </div>
-								 <div class="col-lg-12 mb-20">
+								<div class="col-lg-12 mb-10 text-left">
+								<h4 class="text-left" >Agency Details</h4>
+								<p><input type="checkbox" @if(old('same_email_phone') == '1') checked="checked" @endif value="1" name="same_email_phone"> Phone number and Email ID same as Admin Details</p>
+							</div>
+								<div class="col-lg-6 mb-20">
+                                    <div class="form-inner">
+                                        <label>Agency Name*</label>
+										<input type="text" id="company_name" name="company_name" value="{{ old('company_name')}}" class=""  placeholder="Agency Name"  />
+										@if ($errors->has('company_name'))
+										<span class="text-danger">{{ $errors->first('company_name') }}</span>
+										@endif
+                                    </div>
+                                </div>
+								<div class="col-lg-6 mb-20">
+                                    <div class="form-inner">
+                                        <label>Agency Mobile No with Country Code*</label>
+										<input type="text" id="agency_mobile" name="agency_mobile" value="{{ old('agency_mobile')}}" class=""  placeholder="Mobile No with Country Code"  />
+										@if ($errors->has('agency_mobile'))
+										<span class="text-danger">{{ $errors->first('agency_mobile') }}</span>
+										@endif
+                                    </div>
+                                </div>
+								 <div class="col-lg-6 mb-20">
+                                    <div class="form-inner">
+                                        <label>Agency Email ID*</label>
+										<input type="text" id="agency_email" name="agency_email" value="{{ old('agency_email')}}" class=""  placeholder="Agency Email ID"  />
+										@if ($errors->has('agency_email'))
+										<span class="text-danger">{{ $errors->first('agency_email') }}</span>
+										@endif
+                                    </div>
+                                </div>
+								<div class="col-lg-6 mb-20">
+                                    <div class="form-inner">
+                                        <label>Preferred Currency.</label>
+										@php
+										$currencyDD2 = SiteHelpers::getCurrencyAll();
+										@endphp
+										<select name="agent_currency_id" id="agent_currency_id" class="form-control">
+										<option value="">Currency</option>
+										@foreach($currencyDD2 as $currencyD)
+										<option value="{{$currencyD->id}}" @if(old('agent_currency_id') == $currencyD->id) {{'selected="selected"'}} @endif>{{$currencyD->name}}</option>
+										@endforeach
+										</select>
+										@if ($errors->has('agent_currency_id'))
+										<span class="text-danger">{{ $errors->first('agent_currency_id') }}</span>
+										@endif
+                                    </div>
+                                </div>
+							
+								<div class="col-lg-12 mb-10 text-left">
+								<h4 class="text-left" >Agency Address</h4>
+								
+							</div>
+								 <div class="col-lg-6 mb-20">
                                     <div class="form-inner">
                                         <label>Address</label>
 										<input type="text" id="address" name="address" value="{{ old('address')}}" class=""  placeholder="Address"  />
@@ -67,11 +113,20 @@
 										@endif
                                     </div>
                                 </div>
+								<div class="col-lg-6 mb-20">
+                                    <div class="form-inner">
+                                        <label>Address Line Two</label>
+										<input type="text" id="address_two" name="address_two" value="{{ old('address_two')}}" class=""  placeholder="Address"  />
+										@if ($errors->has('address_two'))
+										<span class="text-danger">{{ $errors->first('address_two') }}</span>
+										@endif
+                                    </div>
+                                </div>
 								
-								<div class="col-lg-12 mb-20">
+								<div class="col-lg-6 mb-20">
                                     <div class="form-inner">
                                         <label>Country</label>
-									<select name="country_id" id="country_id" class="form-control">
+									<select name="country_id" id="country_id_signup" class="form-control">
 									<option value="">Country</option>
 									@foreach($countries as $country)
 									<option value="{{$country->id}}" @if(old('country_id') == $country->id) {{'selected="selected"'}} @endif>{{$country->name}}</option>
@@ -84,7 +139,7 @@
 									<span class="text-danger">{{ $errors->first('country_id') }}</span>
 									@endif
                                 </div>
-								<div class="col-lg-12 mb-20">
+								<div class="col-lg-6 mb-20">
                                     <div class="form-inner">
                                         <label>State</label>
 									<select name="state_id" id="state_id" class="form-control">
@@ -96,7 +151,7 @@
 									<span class="text-danger">{{ $errors->first('state_id') }}</span>
 									@endif
                                 </div>
-								<div class="col-lg-12 mb-20">
+								<div class="col-lg-6 mb-20">
                                     <div class="form-inner">
                                         <label>City</label>
 										<select name="city_id" id="city_id" class="form-control">
@@ -108,7 +163,7 @@
 									<span class="text-danger">{{ $errors->first('city_id') }}</span>
 									@endif
                                 </div>
-								<div class="col-lg-12 mb-20">
+								<div class="col-lg-6 mb-20">
                                     <div class="form-inner">
                                         <label>Zip Code</label>
 										 <input type="text" id="postcode" name="postcode" value="{{ old('postcode') }}" class=""  placeholder="Zip Code"  />
@@ -117,6 +172,55 @@
 										@endif
                                     </div>
                                 </div>
+								<div class="col-lg-12 mb-10 text-left">
+								<h4 class="text-left" >Agency Documents</h4>
+								
+							</div>
+							
+								 <div class="col-lg-6 mb-20 india">
+                                    <div class="form-inner">
+                                        <label>Pan Card No</label>
+										<input type="text" id="pan_no" name="pan_no" value="{{ old('pan_no')}}" class=""  placeholder="Pan Card No"  />
+										@if ($errors->has('pan_no'))
+										<span class="text-danger">{{ $errors->first('pan_no') }}</span>
+										@endif
+                                    </div>
+                                </div>
+								<div class="col-lg-6 mb-20 india">
+                                    <div class="form-inner">
+                                        <label>Pan Card </label>
+										<input type="file" id="pan_no_file" name="pan_no_file" value="{{ old('pan_no_file')}}" class=""  placeholder=""  />
+										
+                                    </div>
+                                </div>
+						
+						
+								<div class="col-lg-6 mb-20 uae">
+                                    <div class="form-inner">
+                                        <label>Trade License No.</label>
+										<input type="text" id="trade_license_no" name="trade_license_no" value="{{ old('trade_license_no')}}" class=""  placeholder="Trade License No."  />
+										@if ($errors->has('trade_license_no'))
+										<span class="text-danger">{{ $errors->first('trade_license_no') }}</span>
+										@endif
+                                    </div>
+                                </div>
+								<div class="col-lg-6 mb-20 uae">
+                                    <div class="form-inner">
+                                        <label>Trade License </label>
+										<input type="file" id="trade_license_no_file" name="trade_license_no_file" value="{{ old('trade_license_no_file')}}" class=""  placeholder=""  />
+										
+                                    </div>
+                                </div>
+								<div class="col-lg-6 mb-20 uae">
+                                    <div class="form-inner">
+                                        <label>TRN No.</label>
+										<input type="text" id="trn_no" name="trn_no" value="{{ old('trn_no')}}" class=""  placeholder="TRN No."  />
+										@if ($errors->has('trn_no'))
+										<span class="text-danger">{{ $errors->first('trn_no') }}</span>
+										@endif
+                                    </div>
+                                </div>
+								
 								
                                 <div class="col-lg-12">
                                     <div class="form-inner">

@@ -87,7 +87,7 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
         Route::get('dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
         Route::get('change-password', [AuthController::class, 'changepassword'])->name('change-password');
         Route::post('profile/save/{id?}', [AuthController::class, 'saveProfile'])->name('profile.save');
-		Route::post('currency-change', [AgentsController::class, 'CurrencyChange'])->name('currency.change');
+		Route::get('currency-change/{user_currency}', [AgentsController::class, 'CurrencyChange'])->name('currency.change');
 		
         Route::resource('pages', PagesController::class);
 		Route::resource('tags', TagsController::class);
