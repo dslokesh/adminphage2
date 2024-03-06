@@ -35,13 +35,13 @@
 		$("body #country_id_signup").on("change", function () {
             var country_id = $(this).val();
 				if (country_id == 1) {
-				$("#india").css("display", "none");
-				$("#uae").css("display", "block");
+				$(".india").css("display", "none");
+				$(".uae").css("display", "block");
 				$("#pan_no, #pan_no_file").attr("required", false);
 				$("#trade_license_no, #trade_license_no_file , #trn_no").attr("required", true);
 				} else if (country_id == 94) {
-				$("#india").css("display", "block");
-				$("#uae").css("display", "none");
+				$(".india").css("display", "block");
+				$(".uae").css("display", "none");
 				$("#pan_no, #pan_no_file").attr("required", true);
 				$("#trade_license_no, #trade_license_no_file , #trn_no").attr("required", false);
 				}
