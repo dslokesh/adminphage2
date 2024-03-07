@@ -78,7 +78,7 @@ class ReporsController extends Controller
 			}
 			}
 			else{
-			 //$query->whereDate('tour_date', '>=', $twoDaysAgo);
+			 $query->whereDate('tour_date', '>=', $twoDaysAgo);
 		}
         if(isset($data['vouchercode']) && !empty($data['vouchercode'])) {
 			$query->whereHas('voucher', function($q)  use($data){
