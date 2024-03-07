@@ -841,7 +841,7 @@ class AgentVouchersController extends Controller
 	   }
 	   
 		$paymentDate = date('Y-m-d', strtotime('-2 days', strtotime($record->travel_from_date)));
-		
+		$currency = SiteHelpers::getCurrencyPrice();
 		$record->guest_name = $data['fname'].' '.$data['lname'];
 		$record->guest_email = $data['customer_email'];
 		$record->guest_phone = $data['customer_mobile'];
@@ -849,6 +849,8 @@ class AgentVouchersController extends Controller
 		$record->remark = $data['remark'];
 		$record->updated_by = Auth::user()->id;
 		$record->payment_date = $paymentDate;
+		$record->currency_code = $currency['code'];
+		$record->currency_value = $currency['value'];
 		
 		if ($request->has('btn_paynow')) {
 		$agent = User::find($record->agent_id);

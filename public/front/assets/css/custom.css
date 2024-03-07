@@ -66,9 +66,11 @@
 .room-suits-card .room-img a img {
   border-radius: 5px 0 0 5px;
   /* height: 100%; */
-  -o-object-fit: cover;
-  object-fit: cover;
+  -o-object-fit: contain;
+  object-fit: contain;
   max-width: 100%;
+  width: auto;
+    max-height: 200px;
   height: auto;
   }
   
@@ -126,13 +128,18 @@
 @media (max-width: 1399px)
 {
 	.login-form-area {
-    padding: 60px 30px;
+    padding: 30px 30px;
 }
 }
 .login-form-area {
-    background: #fff;
-    border-radius: 10px;
-    padding: 60px 70px;
+	
+	
+
+    
+background: #fff;
+   border-radius: 20px;
+   	  padding: 30px 35px;
+
 	
     box-shadow: 0px 0px 30px -2px rgba(0, 0, 0, 0.08);
 }
@@ -144,5 +151,118 @@
     position: absolute;
     /* top: -40%; */
     /* right: 0; */
-    /* z-index: -1; */
+    z-index: -1; 
+}
+.login-form-area .form-inner input {
+    border: 1px solid var(--title-color);
+    border-radius: 200px;
+    background-color: transparent;
+    width: 100%;
+    height: 46px;
+    color: var(--title-color);
+    font-family: var(--font-rubik);
+    font-size: 13px;
+    padding: 15px 20px;
+}
+
+.login-form-area .login-btn {
+    border-radius: 35px;
+    background-color: var(--title-color);
+    font-family: var(--font-rubik);
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--white-color);
+    letter-spacing: 0.48px;
+    text-transform: capitalize;
+    line-height: 1;
+    padding: 15px 26px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.5s;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    white-space: nowrap;
+    width: 100%;
+}
+
+.login-form-area .sign-up-btn {
+    border-radius: 35px;
+    background-color: var(--white-color);
+    border: 1px solid var(--title-color);
+    font-family: var(--font-rubik);
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--title-color);
+    letter-spacing: 0.48px;
+    text-transform: capitalize;
+    line-height: 1;
+    padding: 10px 26px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: 0.5s;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    white-space: nowrap;
+    width: 100%;
+}
+
+.login-form-area .divider {
+    position: relative;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.login-form-area .divider::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    background-color: #DBDBDB;
+    width: 100%;
+    height: 1px;
+}
+.package-inner-title-section {
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 25px 0px rgba(16, 16, 16, 0.05);
+}
+
+.package-inner-title-section .nice-select {
+    border: none;
+    background-color: #F3F3F3;
+}
+
+.room-suits-card .room-img {
+     height: 100%; 
+     display: block;
+     width: auto;
+	max-width: 100%;
+    height: auto;
+	 max-height: 100%;
+     position: inherit;
+    border-radius: 5px 0 0 5px; 
+}
+.room-suits-card .room-img::after {
+   
+    position: inherit;
+    top: 0;
+    left: 0;
+    width: auto;
+	max-width: 100%;
+    height: auto;
+	 max-height: 100%;
+    background: none;
+    border-radius: 5px 5px 0 0;
+    z-index: 1;
+}
+.right-sidebar-menu {
+	background: none;
+	background-color: #fff;
+	
 }

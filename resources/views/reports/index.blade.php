@@ -92,7 +92,7 @@
             </form>
           </div>
         </div><div class="col-md-12" style="overflow-x:auto">
-                <table id="example3" class="table rounded-corners">
+                <table id="example3q" class="table rounded-corners">
                   <thead>
                   <tr>
 				  <th>Booking Date</th>
@@ -211,6 +211,9 @@
 					@if($record->transfer_option == 'Pvt Transfer')
 					{{$record->pvt_traf_val_with_markup}}
 					@endif
+					
+					
+					
 					</td>
 					
 					<td><input type="text" class="form-control inputsave" id="actual_transfer_cost{{$record->id}}" data-name="actual_transfer_cost"  data-id="{{$record->id}}" value="{{$record->actual_transfer_cost}}" /></td>

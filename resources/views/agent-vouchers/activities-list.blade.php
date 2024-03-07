@@ -18,21 +18,23 @@
 
 
     <!-- Start Room Details section -->
-    <div class="room-suits-page pt-120 mb-120">
+    <div class="room-suits-page pt-50 mb-120">
         <div class="container">
 		
             <div class="row g-lg-4 gy-5">
-			 <div class="package-inner-title-section mb-40">
-                    <p></p>
-                    <div class="selector-and-grid">
-                        <div class="selector">
-                            <select  class="tagsinput" id="porder" >
-                                <option value="">Sorting</option>
-                                <option value="ASC">Price Low to High</option>
-                                <option value="DESC">Price High to Low</option>
-                              </select>
-                        </div>
-                   </div>
+              <div class="col-md-12">
+			           <div class="package-inner-title-section">
+                    <p>166 Things to do in UAE</p>
+                      <div class="selector-and-grid">
+                          <div class="selector">
+                              <select  class="tagsinput" onchange="searchActivity()" id="porder" >
+                                  <option value="">Sorting</option>
+                                  <option value="ASC">Price Low to High</option>
+                                  <option value="DESC">Price High to Low</option>
+                                </select>
+                          </div>
+                    </div>
+                  </div>
                 </div>
                 <div class="col-xl-3 order-lg-1 order-2">
 				<form id="filterForm" class="form-inline"  >
@@ -75,7 +77,7 @@
                         </div> 
                         
                         <div class="single-widget mb-30">
-                            <h5 class="widget-title">Tags</h5>
+                            <h5 class="widget-title">Category</h5>
                             <div class="checkbox-container">
                                 <ul>
 								@foreach($tags as $tag)

@@ -5,7 +5,7 @@
                   $cutoffTime = SiteHelpers::getActivityVarByCutoffCancellation($record->id);
                 @endphp
 
-                    <div class="room-suits-card mb-30">
+                    <div class="room-suits-card mb-30" >
                         <div class="row g-0">
                             <div class="col-md-4">
                                 <div class="room-img">
@@ -25,11 +25,15 @@
                                         <ul class="facilisis">
                                             @if($record->entry_type == 'Tour')
                                               <li>
+                                              <span style="color: green;"> 
                                                   <i class="icon-price-tag mr-10"></i>
                                                   Instant Confirmation
+                                                  </span>
                                               </li>
                                             @endif
-                                            <li> {!!$cutoffTime!!}</li>
+                                            <li>
+                                                
+                                            <span style="color: red;"> {!!$cutoffTime!!}</span></li>
                                            
                                         </ul>
                                     </div>
