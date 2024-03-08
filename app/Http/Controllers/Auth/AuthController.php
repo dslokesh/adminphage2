@@ -157,11 +157,11 @@ class AuthController extends Controller
 
            $destinationPath2 = public_path('/uploads/users/');
 			$fileName2 = $input['trade_license_no_file']->getClientOriginalName();
-			$file = request()->file('trade_license_no_file');
+			$file2 = request()->file('trade_license_no_file');
 			$fileNameArr2 = explode('.', $fileName2);
 			$fileNameExt2 = end($fileNameArr2);
 			$newName2 = date('His').rand() . time() . '.' . $fileNameExt2;
-			$file->move($destinationPath2, $newName2);
+			$file2->move($destinationPath2, $newName2);
             $record->trade_license_no_file = $newName2;
 		} 
 		
