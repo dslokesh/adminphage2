@@ -24,8 +24,19 @@ use Illuminate\Support\Str;
 use App\Models\Currency;
 use App\Models\ActivityVariant;
 use Illuminate\Support\Facades\Storage;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+use App\Services\FlyremitService;
+
 class AgentsController extends Controller
 {
+	/* protected $flyremitService;
+
+    public function __construct(FlyremitService $flyremitService)
+    {
+        $this->flyremitService = $flyremitService;
+    } */
+	
     /**
      * Display a listing of the resource.
      *
@@ -741,22 +752,22 @@ class AgentsController extends Controller
     }
 	
 	
-public function downloadDoc($filename)
-{
-    $destinationPath = public_path('uploads/users/'); // Absolute server path to the public directory
-    $path = $destinationPath . '/' . $filename;
 
-    if (!file_exists($path)) {
-        return redirect()->back()->with('error', 'Document not found.');
-    }
+/* public function sendApiRequest()
+    {
+        $response = $this->flyremitService->registerAgent(
+            31146,
+            'abetera3344',
+            'ANxxx7440F',
+            'robert',
+            '888xxxx366',
+            'test@gmail.com',
+            21
+        );
 
-    // Determine the content type based on the file extension
-    $contentType = mime_content_type($path);
+        // Handle the response as needed
+        dd($response);
+    } */
 
-    return response()->file($path, [
-        'Content-Type' => $contentType,
-        'Content-Disposition' => 'inline', // Change to 'attachment' if you want to force download
-    ]);
-}
 	
 }

@@ -24,6 +24,7 @@ use Hash;
 use DB;
 use Carbon\Carbon;
 
+
 class AuthController extends Controller
 {
     /**
