@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Models\Currency;
 use App\Models\ActivityVariant;
-
+use Illuminate\Support\Facades\Storage;
 class AgentsController extends Controller
 {
     /**
@@ -87,7 +87,8 @@ class AgentsController extends Controller
     {
 		$this->checkPermissionMethod('list.agent');
         $countries = Country::where('status', 1)->orderBy('name', 'ASC')->get();
-        return view('agents.create', compact('countries'));
+		$currencies = Currency::where('status', 1)->orderBy('name', 'ASC')->get();
+        return view('agents.create', compact('countries','currencies'));
     }
 
     /**
@@ -111,15 +112,17 @@ class AgentsController extends Controller
             'city_id' => 'required',
             'state_id' => 'required',
             'country_id' => 'required',
+			'currency_id' => 'required',
             'postcode' => 'required',
-			
+			'trade_license_no_file' => 'nullable|mimes:jpeg,jpg,png,pdf|max:' . ($options['allow_img_size'] * 1024), 
+			'pan_no_file' => 'nullable|mimes:jpeg,jpg,png,pdf|max:' . ($options['allow_img_size'] * 1024), 
         ], [
             'name.sanitize_scripts' => 'Invalid value entered for Name field.',
             'country_id.required' => 'The country field is required.',
             'state_id.required' => 'The state field is required.',
+			'currency_id.required' => 'The currency field is required.',
         ]);
-
-
+		
 		$input = $request->all();
 		
         $record = new User();
@@ -149,6 +152,29 @@ class AgentsController extends Controller
             $record->image = $newName;
 		}
 		
+		if ($request->hasFile('pan_no_file')) {
+
+			$destinationPath3 = public_path('/uploads/users/');
+			$fileName3 = $input['pan_no_file']->getClientOriginalName();
+			$file3 = request()->file('pan_no_file');
+			$fileNameArr3 = explode('.', $fileName3);
+			$fileNameExt3 = end($fileNameArr3);
+			$newName3 = date('His').rand() . time() . '.' . $fileNameExt3;
+			$file3->move($destinationPath3, $newName3);
+            $record->pan_no_file = $newName3;
+		} 
+		if ($request->hasFile('trade_license_no_file')) {
+
+			$destinationPath2 = public_path('/uploads/users/');
+			$fileName2 = $input['trade_license_no_file']->getClientOriginalName();
+			$file2 = request()->file('trade_license_no_file');
+			$fileNameArr2 = explode('.', $fileName2);
+			$fileNameExt2 = end($fileNameArr2);
+			$newName2 = date('His').rand() . time() . '.' . $fileNameExt2;
+			$file2->move($destinationPath2, $newName2);
+            $record->trade_license_no_file = $newName2;
+		} 
+		
         $record->name = $request->input('first_name');
         $record->lname = $request->input('last_name');
 		
@@ -162,6 +188,7 @@ class AgentsController extends Controller
         $record->country_id = $request->input('country_id');
         $record->state_id = $request->input('state_id');
         $record->city_id = $request->input('city_id');
+		$record->currency_id = $request->input('currency_id');
         $record->is_active = $request->input('status');
 		$record->agent_category = $request->input('agent_category');
 		$record->agent_credit_limit = (!empty($request->input('agent_credit_limit')))?$request->input('agent_credit_limit'):0;
@@ -174,6 +201,13 @@ class AgentsController extends Controller
 		$record->sic_transfer = (!empty($request->input('sic_transfer')))?$request->input('sic_transfer'):0;
 		$record->pvt_transfer = (!empty($request->input('pvt_transfer')))?$request->input('pvt_transfer'):0;
 		$record->vat = $request->input('vat');
+		$record->agency_mobile = $request->input('agency_mobile');
+		$record->agency_email = $request->input('agency_email');
+		$record->address_two = $request->input('address_two');
+		$record->pan_no = $request->input('pan_no');
+		$record->trade_license_no = $request->input('trade_license_no');
+		$record->trn_no = $request->input('trn_no');
+		
         $record->save();
         $record->attachRole('3');
 		
@@ -309,6 +343,9 @@ class AgentsController extends Controller
 			'currency_id' => 'required',
 			
 			'image' => 'nullable|mimes:jpeg,jpg,png|max:' . ($options['allow_img_size'] * 1024), 
+			
+			'trade_license_no_file' => 'nullable|mimes:jpeg,jpg,png,pdf|max:' . ($options['allow_img_size'] * 1024), 
+			'pan_no_file' => 'nullable|mimes:jpeg,jpg,png,pdf|max:' . ($options['allow_img_size'] * 1024), 
         ], [
             'name.sanitize_scripts' => 'Invalid value entered for Name field.',
             'country_id.required' => 'The country field is required.',
@@ -356,6 +393,29 @@ class AgentsController extends Controller
             $record->image = $newName;
 		}
 		
+		if ($request->hasFile('pan_no_file')) {
+
+			$destinationPath3 = public_path('/uploads/users/');
+			$fileName3 = $input['pan_no_file']->getClientOriginalName();
+			$file3 = request()->file('pan_no_file');
+			$fileNameArr3 = explode('.', $fileName3);
+			$fileNameExt3 = end($fileNameArr3);
+			$newName3 = date('His').rand() . time() . '.' . $fileNameExt3;
+			$file3->move($destinationPath3, $newName3);
+            $record->pan_no_file = $newName3;
+		} 
+		if ($request->hasFile('trade_license_no_file')) {
+
+			$destinationPath2 = public_path('/uploads/users/');
+			$fileName2 = $input['trade_license_no_file']->getClientOriginalName();
+			$file2 = request()->file('trade_license_no_file');
+			$fileNameArr2 = explode('.', $fileName2);
+			$fileNameExt2 = end($fileNameArr2);
+			$newName2 = date('His').rand() . time() . '.' . $fileNameExt2;
+			$file2->move($destinationPath2, $newName2);
+            $record->trade_license_no_file = $newName2;
+		} 
+		
 		 if(!empty($request->input('password'))){
             request()->validate([
                 'password' => 'required|confirmed',
@@ -386,6 +446,12 @@ class AgentsController extends Controller
 		$record->sic_transfer = (!empty($request->input('sic_transfer')))?$request->input('sic_transfer'):0;
 		$record->pvt_transfer = (!empty($request->input('pvt_transfer')))?$request->input('pvt_transfer'):0;
 		$record->vat = $request->input('vat');
+		$record->agency_mobile = $request->input('agency_mobile');
+		$record->agency_email = $request->input('agency_email');
+		$record->address_two = $request->input('address_two');
+		$record->pan_no = $request->input('pan_no');
+		$record->trade_license_no = $request->input('trade_license_no');
+		$record->trn_no = $request->input('trn_no');
 		$record->updated_by = Auth::user()->id;
 		
 		if(($request->input('credit_limit_type') == 1) && ($request->input('credit_amount') > 0))
@@ -673,5 +739,24 @@ class AgentsController extends Controller
 		}
 		return redirect()->back();
     }
+	
+	
+public function downloadDoc($filename)
+{
+    $destinationPath = public_path('uploads/users/'); // Absolute server path to the public directory
+    $path = $destinationPath . '/' . $filename;
+
+    if (!file_exists($path)) {
+        return redirect()->back()->with('error', 'Document not found.');
+    }
+
+    // Determine the content type based on the file extension
+    $contentType = mime_content_type($path);
+
+    return response()->file($path, [
+        'Content-Type' => $contentType,
+        'Content-Disposition' => 'inline', // Change to 'attachment' if you want to force download
+    ]);
+}
 	
 }

@@ -67,7 +67,20 @@
                     <span class="text-danger">{{ $errors->first('email') }}</span>
                 @endif
               </div>
-			 
+			  <div class="form-group col-md-6">
+                <label for="inputName">Agency Mobile No with Country Code: <span class="red">*</span></label>
+                <input type="text" id="agency_mobile" name="agency_mobile" value="{{ old('agency_mobile') ?: $record->agency_mobile }}" class="form-control"  placeholder="Agency Mobile No with Country Code" />
+                @if ($errors->has('agency_mobile'))
+                    <span class="text-danger">{{ $errors->first('agency_mobile') }}</span>
+                @endif
+              </div>
+			   <div class="form-group col-md-6">
+                <label for="inputName">Agency Email ID:</label>
+                <input type="email" id="agency_email" name="agency_email" value="{{ old('agency_email') ?: $record->agency_email }}" class="form-control"  placeholder="Agency Email ID" />
+                @if ($errors->has('agency_email'))
+                    <span class="text-danger">{{ $errors->first('agency_email') }}</span>
+                @endif
+              </div>
 				  
 			  @if($record->image)
 			  <div class="form-group col-md-4">
@@ -107,10 +120,16 @@
                     <span class="text-danger">{{ $errors->first('address') }}</span>
                 @endif
               </div>
-             
+               <div class="form-group col-md-6">
+                <label for="inputName">Address Line Two:</label>
+                <input type="text" id="address_two" name="address_two" value="{{ old('address_two') ?: $record->address_two }}" class="form-control"  placeholder="Address" />
+                @if ($errors->has('address_two'))
+                    <span class="text-danger">{{ $errors->first('address_two') }}</span>
+                @endif
+              </div>
 			<div class="form-group col-md-6">
 			  <label for="inputName">Country: <span class="red">*</span></label>
-                <select name="country_id" id="country_id" class="form-control">
+                <select name="country_id" id="country_id_signup" class="form-control">
 				<option value="">--select--</option>
 				@foreach($countries as $country)
                     <option value="{{$country->id}}" @if($record->country_id == $country->id) {{'selected="selected"'}} @endif>{{$country->name}}</option>
@@ -148,8 +167,49 @@
                     <span class="text-danger">{{ $errors->first('postcode') }}</span>
                 @endif
               </div>
+			  <div class="form-group col-md-6 india">
+                <label for="inputName">Pan Card No:<span class="red">*</span></label>
+                <input type="text" id="pan_no" name="pan_no" value="{{ old('pan_no')?: $record->pan_no }}" class="form-control"   />
+                @if ($errors->has('pan_no'))
+                    <span class="text-danger">{{ $errors->first('pan_no') }}</span>
+                @endif
+              </div>
+			  
+			
+			  
+			   <div class="form-group col-md-6 india">
+                <label for="inputName">Pan Card File <span class="red">*</span></label>
+                <input type="file" id="pan_no_file" name="pan_no_file" value="{{ old('pan_no_file')}}" class="form-control"  placeholder=""  />
+                @if ($errors->has('pan_no_file'))
+                    <span class="text-danger">{{ $errors->first('pan_no_file') }}</span>
+                @endif
+              </div>
+			  
+			  <div class="form-group col-md-6 uae">
+                <label for="inputName">Trade License No:<span class="red">*</span></label>
+                <input type="text" id="trade_license_no" name="trade_license_no" value="{{ old('trade_license_no')?: $record->trade_license_no }}" class="form-control"   />
+                @if ($errors->has('trade_license_no'))
+                    <span class="text-danger">{{ $errors->first('trade_license_no') }}</span>
+                @endif
+              </div>
+			  
+			   <div class="form-group col-md-6 uae">
+                <label for="inputName">Trade License File<span class="red">*</span></label>
+                <input type="file" id="trade_license_no_file" name="trade_license_no_file" value="{{ old('trade_license_no_file')}}" class="form-control"  placeholder=""  />
+                @if ($errors->has('trade_license_no_file'))
+                    <span class="text-danger">{{ $errors->first('trade_license_no_file') }}</span>
+                @endif
+              </div>
+			   <div class="form-group col-md-6 uae">
+                <label for="inputName">TRN No.:<span class="red">*</span></label>
+                <input type="text" id="trn_no" name="trn_no" value="{{ old('trn_no')?: $record->trn_no }}" class="form-control"   />
+                @if ($errors->has('trn_no'))
+                    <span class="text-danger">{{ $errors->first('trn_no') }}</span>
+                @endif
+              </div>
+			  
 			   <div class="form-group col-md-6">
-                <label for="inputName">TRN No.:</label>
+                <label for="inputName">Vat.:</label>
                 <input type="text" id="vat" name="vat"  value="{{ old('vat') ?: $record->vat }}" class="form-control"   />
                 @if ($errors->has('vat'))
                     <span class="text-danger">{{ $errors->first('vat') }}</span>
@@ -294,10 +354,10 @@
 @endsection
 
 @section('scripts')
- @include('inc.citystatecountryjs')
   @permission('list.credit.limit') 
  <script>
  $(document).ready(function() {
+	 
 	 $("#c_limit_btn").click(function() {
 		 if ($('#credit_limit_div').hasClass('hide'))
 		 {
@@ -351,5 +411,84 @@
   });
 });
 </script>
-
+<script type="text/javascript">
+	$(document).ready(function(){
+	var country = "{{$record->country_id}}";
+	var oldstate = "{{$record->state_id}}";
+	var oldcity = "{{$record->city_id}}";
+	var pan_no_file = "{{$record->pan_no_file}}";
+	var trade_license_no_file = "{{$record->trade_license_no_file}}";
+	$(".india").css("display", "none");
+	$(".uae").css("display", "none");
+	
+		
+		$("body #country_id_signup").on("change", function () {
+            var country_id = $(this).val();
+				if (country_id == 1) {
+				$(".india").css("display", "none");
+				$(".uae").css("display", "block");
+				$("#pan_no, #pan_no_file").attr("required", false);
+				$("#trade_license_no, #trn_no").attr("required", true);
+				if(trade_license_no_file == ''){
+					$("#trade_license_no_file").attr("required", true);
+				}
+				
+				} else if (country_id == 94) {
+				$(".india").css("display", "block");
+				$(".uae").css("display", "none");
+				$("#pan_no").attr("required", true);
+				if(pan_no_file == ''){
+					$("#pan_no_file").attr("required", true);
+				}
+				$("#trade_license_no, #trade_license_no_file , #trn_no").attr("required", false);
+				}
+			$("#state_id").prop("disabled",true);
+			$("#city_id").prop("disabled",true);
+            $.ajax({
+                type: "POST",
+                url: '{{ route("state.list") }}',
+                data: {'country_id': country_id, '_token': '{{ csrf_token() }}'},
+                success: function (data) {
+					 $('#state_id').html('<option value="">--select--</option>');
+					$.each(data, function (key, value) {
+                            $("#state_id").append('<option value="' + value
+                                .id + '">' + value.name + '</option>');
+                        });
+					$('#state_id').val(oldstate).prop('selected', true);
+					$("#state_id").prop("disabled",false);
+					$('#city_id').html('<option value="">--select--</option>');
+					$("#city_id").prop("disabled",false);
+					if(oldstate){
+					$("body #state_id").trigger("change");
+					}
+                }
+            });
+        });
+		
+		$("body #state_id").on("change", function () {
+            var state_id = $(this).val();
+			$("#city_id").prop("disabled",true)
+            $.ajax({
+                type: "POST",
+                url: '{{ route("city.list") }}',
+                data: {'state_id': state_id, '_token': '{{ csrf_token() }}'},
+                success: function (data) {
+					 $('#city_id').html('<option value="">--select--</option>');
+					$.each(data, function (key, value) {
+                            $("#city_id").append('<option value="' + value
+                                .id + '">' + value.name + '</option>');
+                        });
+					$("#city_id").prop("disabled",false);
+					$('#city_id').val(oldcity).prop('selected', true);
+                }
+            });
+        });
+		
+	if(country){
+		$("body #country_id_signup").trigger("change");
+	}
+	
+	
+	});
+	</script>
 @endsection

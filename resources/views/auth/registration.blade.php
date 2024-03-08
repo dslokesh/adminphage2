@@ -188,7 +188,7 @@
                                 </div>
 								<div class="col-lg-6 mb-20 india">
                                     <div class="form-inner">
-                                        <label>Pan Card </label>
+                                        <label>Pan Card File</label>
 										<input type="file" id="pan_no_file" name="pan_no_file" value="{{ old('pan_no_file')}}" class=""  placeholder=""  />
 										
                                     </div>

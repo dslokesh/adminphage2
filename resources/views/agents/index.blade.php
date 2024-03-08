@@ -49,14 +49,20 @@
                     <th>City</th>
                     <th>Status</th>
 					<th>Ledger Balance</th>
+					
 					<th>Password</th>
                     <th>Created</th>
-                    <th>Updated</th>
+                    
+					<th>Updated</th>
 					<th>Currency</th>
-					<th width="17%"></th>
-          <th>Name</th>
+					
+					
+					<th>Name</th>
                     <th>Mobile</th>
                     <th>Email</th>
+					<th width="17%">Doc Name</th>
+					<th>Doc</th>
+					<th width="17%"></th>
                   </tr>
 				  <!-- <tr style="display:none">
                     <form id="filterForm" method="get" action="{{route('agents.index')}}" >
@@ -100,7 +106,9 @@
                     
                     <td>{{ ($record->city)?$record->city->name:''}}</td>
                      <td>{!! SiteHelpers::statusColor($record->is_active) !!}</td>
-					  <td>AED {{ number_format($record->agent_amount_balance,2)}}</td>
+					  <td>AED {{ number_format($record->agent_amount_balance,2)}}</td> 
+					  
+					  
 					  <td>
 					  
                           <form id="resetpsw-form-{{$record->id}}" method="post" action="{{route('passwordResetAdmin',$record->id)}}" style="display:none;">
@@ -123,7 +131,40 @@
                     <td>{{ $record->created_at ? date(config('app.date_format'),strtotime($record->created_at)) : null }}</td>
                     <td>{{ $record->updated_at ? date(config('app.date_format'),strtotime($record->updated_at)) : null }}</td>
 					<td>{{ ($record->currency)?$record->currency->name:''}}</td>
-                     <td  style="padding:0px">
+                     
+ 
+<td>{{ $record->name}}</td>
+                    <td>{{ $record->mobile}}</td>
+					<td>{{ $record->email}}</td>
+					<td>
+					  
+					   @if($record->country_id == 1)
+						   Trade License No : {{$record->trade_license_no}}</br> TRN No: {{$record->trn_no}}
+					   @elseif($record->country_id == 94)
+						   Pan Card No : {{$record->pan_no}}
+					   @endif
+					  
+						  </td>
+						  
+					<td>
+					   @php
+					   $filename = '';
+					   if($record->country_id == 1){
+						   $filename =$record->trade_license_no_file;
+						 $path = asset('uploads/users/'.$filename);  
+					   } else if($record->country_id == 94){
+						   $filename =$record->pan_no_file;
+						 $path = asset('uploads/users/'.$filename);   
+					   }
+					   @endphp
+					   @if(!empty($filename))
+						<a class="btn btn-info btn-sm" href="{{ $path }}">
+						<i class="fas fa-eye"></i>
+						</a>
+						@endif
+						
+						  </td>
+					<td  style="padding:0px">
 					  <a class="btn btn-info btn-sm"  href="{{route('agents.markup.activity',$record->id)}}">
             <i class="fas fa-file-alt">
             </i>
@@ -151,10 +192,6 @@
                                 }
                             
                             "><i class="fas fa-trash"></i></a></td>
-
-<td>{{ $record->name}}</td>
-                    <td>{{ $record->mobile}}</td>
-					<td>{{ $record->email}}</td>
                   </tr>
 				 
                   @endforeach

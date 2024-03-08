@@ -66,6 +66,20 @@
                     <span class="text-danger">{{ $errors->first('email') }}</span>
                 @endif
               </div>
+			   <div class="form-group col-md-6">
+                <label for="inputName">Agency Mobile No with Country Code: <span class="red">*</span></label>
+                <input type="text" id="agency_mobile" name="agency_mobile" value="{{ old('agency_mobile') }}" class="form-control"  placeholder="Agency Mobile No with Country Code" />
+                @if ($errors->has('agency_mobile'))
+                    <span class="text-danger">{{ $errors->first('agency_mobile') }}</span>
+                @endif
+              </div>
+			   <div class="form-group col-md-6">
+                <label for="inputName">Agency Email ID:</label>
+                <input type="email" id="agency_email" name="agency_email" value="{{ old('agency_email') }}" class="form-control"  placeholder="Agency Email ID" />
+                @if ($errors->has('agency_email'))
+                    <span class="text-danger">{{ $errors->first('agency_email') }}</span>
+                @endif
+              </div>
 			  <div class="form-group col-md-6">
                 <label for="inputName">Password: <span class="red">*</span></label>
                 <input type="button" class="generate-pass button" value="Generate" onClick="randomPassword(10);" />
@@ -97,6 +111,8 @@
                     <span class="text-danger">{{ $errors->first('phone_number') }}</span>
                 @endif
               </div>
+			  
+			  
                 <div class="form-group col-md-6">
                 <label for="inputName">Address: <span class="red">*</span></label>
                 <input type="text" id="address" name="address" value="{{ old('address') }}" class="form-control"  placeholder="Address" />
@@ -104,10 +120,16 @@
                     <span class="text-danger">{{ $errors->first('address') }}</span>
                 @endif
               </div>
-               
+                <div class="form-group col-md-6">
+                <label for="inputName">Address Line Two:</label>
+                <input type="text" id="address_two" name="address_two" value="{{ old('address_two') }}" class="form-control"  placeholder="Address" />
+                @if ($errors->has('address_two'))
+                    <span class="text-danger">{{ $errors->first('address_two') }}</span>
+                @endif
+              </div>
 			  <div class="form-group col-md-6">
                 <label for="inputName">Country: <span class="red">*</span></label>
-                <select name="country_id" id="country_id" class="form-control">
+                <select name="country_id" id="country_id_signup" class="form-control">
 				<option value="">--select--</option>
 				@foreach($countries as $country)
                     <option value="{{$country->id}}" @if(old('country_id') == $country->id) {{'selected="selected"'}} @endif>{{$country->name}}</option>
@@ -129,6 +151,47 @@
 				<option value="">--select--</option>
 				</select>
               </div>
+			  <div class="form-group col-md-6 india">
+                <label for="inputName">Pan Card No:<span class="red">*</span></label>
+                <input type="text" id="pan_no" name="pan_no" value="{{ old('pan_no') }}" class="form-control"   />
+                @if ($errors->has('pan_no'))
+                    <span class="text-danger">{{ $errors->first('pan_no') }}</span>
+                @endif
+              </div>
+			  
+			
+			  
+			   <div class="form-group col-md-6 india">
+                <label for="inputName">Pan Card File <span class="red">*</span></label>
+                <input type="file" id="pan_no_file" name="pan_no_file" value="{{ old('pan_no_file')}}" class="form-control"  placeholder=""  />
+                @if ($errors->has('pan_no_file'))
+                    <span class="text-danger">{{ $errors->first('pan_no_file') }}</span>
+                @endif
+              </div>
+			  
+			  <div class="form-group col-md-6 uae">
+                <label for="inputName">Trade License No<span class="red">*</span>:<span class="red">*</span></label>
+                <input type="text" id="trade_license_no" name="trade_license_no" value="{{ old('trade_license_no') }}" class="form-control"   />
+                @if ($errors->has('trade_license_no'))
+                    <span class="text-danger">{{ $errors->first('trade_license_no') }}</span>
+                @endif
+              </div>
+			  
+			   <div class="form-group col-md-6 uae">
+                <label for="inputName">Trade License File<span class="red">*</span></label>
+                <input type="file" id="trade_license_no_file" name="trade_license_no_file" value="{{ old('trade_license_no_file')}}" class="form-control"  placeholder=""  />
+                @if ($errors->has('trade_license_no_file'))
+                    <span class="text-danger">{{ $errors->first('trade_license_no_file') }}</span>
+                @endif
+              </div>
+			   <div class="form-group col-md-6 uae">
+                <label for="inputName">TRN No.:<span class="red">*</span></label>
+                <input type="text" id="trn_no" name="trn_no" value="{{ old('trn_no') }}" class="form-control"   />
+                @if ($errors->has('trn_no'))
+                    <span class="text-danger">{{ $errors->first('trn_no') }}</span>
+                @endif
+              </div>
+			  
                <div class="form-group col-md-6">
                 <label for="inputName">Zip Code: <span class="red">*</span></label>
                 <input type="text" id="postcode" name="postcode" value="{{ old('postcode') }}" class="form-control"   />
@@ -137,7 +200,7 @@
                 @endif
               </div>
 			   <div class="form-group col-md-6">
-                <label for="inputName">TRN No:</label>
+                <label for="inputName">Vat:</label>
                 <input type="text" id="vat" name="vat" value="{{ old('vat') }}" class="form-control"   />
                 @if ($errors->has('vat'))
                     <span class="text-danger">{{ $errors->first('vat') }}</span>
@@ -183,6 +246,18 @@
                 <input type="text" id="sales_person" name="sales_person"  value="{{ old('sales_person')}}" class="form-control"   />
                 @if ($errors->has('sales_person'))
                     <span class="text-danger">{{ $errors->first('sales_person') }}</span>
+                @endif
+              </div>
+			   <div class="form-group col-md-6">
+                <label for="inputName">Currency: <span class="red">*</span></label>
+                <select name="currency_id" id="currency_id" class="form-control">
+				<option value="">--select--</option>
+				@foreach($currencies as $currency)
+                    <option value="{{$currency->id}}" @if(old('currency_id') == $currency->id) {{'selected="selected"'}} @endif>{{$currency->name}} ({{$currency->code}})</option>
+				@endforeach
+                 </select>
+				 @if ($errors->has('currency_id'))
+                    <span class="text-danger">{{ $errors->first('currency_id') }}</span>
                 @endif
               </div>
 			  

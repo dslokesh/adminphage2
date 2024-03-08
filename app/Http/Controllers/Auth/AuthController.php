@@ -126,6 +126,8 @@ class AuthController extends Controller
             'country_id' => 'required',
             'postcode' => 'required',
 			'agent_currency_id' => 'required',
+			'trade_license_no_file' => 'nullable|mimes:jpeg,jpg,png,pdf|max:' . ($options['allow_img_size'] * 1024), 
+			'pan_no_file' => 'nullable|mimes:jpeg,jpg,png,pdf|max:' . ($options['allow_img_size'] * 1024), 
 			
         ], [
             'name.sanitize_scripts' => 'Invalid value entered for Name field.',
@@ -142,7 +144,7 @@ class AuthController extends Controller
 		$destinationPath = public_path('/uploads/users/');
 		if ($request->hasFile('pan_no_file')) {
 
-           
+           $destinationPath = public_path('/uploads/users/');
 			$fileName = $input['pan_no_file']->getClientOriginalName();
 			$file = request()->file('pan_no_file');
 			$fileNameArr = explode('.', $fileName);
@@ -153,13 +155,13 @@ class AuthController extends Controller
 		} 
 		if ($request->hasFile('trade_license_no_file')) {
 
-           
+           $destinationPath2 = public_path('/uploads/users/');
 			$fileName2 = $input['trade_license_no_file']->getClientOriginalName();
 			$file = request()->file('trade_license_no_file');
 			$fileNameArr2 = explode('.', $fileName2);
 			$fileNameExt2 = end($fileNameArr2);
 			$newName2 = date('His').rand() . time() . '.' . $fileNameExt2;
-			$file->move($destinationPath, $newName2);
+			$file->move($destinationPath2, $newName2);
             $record->trade_license_no_file = $newName2;
 		} 
 		
