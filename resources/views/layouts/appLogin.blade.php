@@ -66,14 +66,16 @@
 
    
     <!-- Start header section -->
-    <header class="header-area style-1">
+    <header class="header-area style-3">
         <div class="header-logo d-lg-none d-flex">
             <a href="/"><img alt="image" class="img-fluid" style="max-width:167; height:80px" src="{{asset('Abatera_logo.jpg')}}"></a>
         </div>
         <div class="company-logo d-lg-flex d-none">
             <a href="/"><img src="{{asset('Abatera_logo.jpg')}}" style="max-width:167; height:80px; margin: 10px 0px;" alt=""></a>
         </div>
-        <div class="main-menu">
+        <div class="" style="width: 300px;">
+        </div>
+        <div class="main-menu nav-right  jsutify-content-end">
             <div class="mobile-logo-area d-lg-none d-flex justify-content-between align-items-center">
                 <div class="mobile-logo-wrap">
                     <a href="/"><img alt="image" style="max-width:167; height:80px" src="{{asset('Abatera_logo.jpg')}}"></a>
@@ -91,18 +93,46 @@
                     <a href="{{ route('agent-vouchers.create') }}" class="drop-down">Book Now</a>
                     
                 </li>
-               @endpermission
-			  
-				
-		 
+
                 
-				
-                <li><a href="javascript:void(0);"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"><path fill="currentColor" d="M16 12h2v4h-2z"/><path fill="currentColor" d="M20 7V5c0-1.103-.897-2-2-2H5C3.346 3 2 4.346 2 6v12c0 2.201 1.794 3 3 3h15c1.103 0 2-.897 2-2V9c0-1.103-.897-2-2-2M5 5h13v2H5a1.001 1.001 0 0 1 0-2m15 14H5.012C4.55 18.988 4 18.805 4 18V8.815c.314.113.647.185 1 .185h15z"/></svg> AED {{\Auth::user()->agent_amount_balance}}</a></li>
+				 @php
+                $voucherActivityCount = 0;
+				$currencyDD = SiteHelpers::getCurrencyAll();
+				$userCR =  auth()->user()->currency_id;
+				$currencyGet = SiteHelpers::getCurrencyPrice();
+				@endphp
+                <li class="">
+                   
+                  
+                <img alt="image"  src="{{asset('front/assets/img/exchange.png')}}">
+                        
+                   <ul class="sub-menu">
+                   @foreach($currencyDD as $currency)
+                    @if($currencyGet['code'] == $currency->code)
+                            <li><a href="{{ route('currency.change',['user_currency'=>$currency->code]) }}" style="font-weight:bold;">{{$currency->code}}</a></li>
+                    @else
+                    <li><a href="{{ route('currency.change',['user_currency'=>$currency->code]) }}">{{$currency->code}}</a></li>
+                    @endif
+                            @endforeach     
+                        </ul>
+                 
+                   </li>
+		
+
+           
+			    <li><a href="javascript:void(0);"><img alt="image"  src="{{asset('front/assets/img/wallet.png')}}"> </a>
+                <ul class="sub-menu">
+                    <li><a href="#">AED {{\Auth::user()->agent_amount_balance}}</a></li>
+</ul>
+            </li>
+
+                
 				
 				 <li class="menu-item-has-children">
                     <a href="{{ route('profile-edit',Auth::user()->id) }}" class="drop-down">{{\Auth::user()->company_name}}
               </a><i class="bi bi-plus chevron-icon"></i>
                     <ul class="sub-menu">
+                    <li><a href="{{ route('profile-edit',Auth::user()->id) }}">Profile</a></li>
 					 @permission('list.agent.ledger') 
                             <li>
                             <a href="{{ route('agentLedgerReportWithVat') }}" class="drop-down">Ledger</a>
@@ -113,7 +143,7 @@
                     <a href="{{ route('agent-vouchers.index') }}" class="drop-down">My Booking</a>
                     
                 </li>
-                        <li><a href="{{ route('profile-edit',Auth::user()->id) }}">Profile</a></li>
+                        
                         <li>
                             <a href="{{ route('change-password') }}">Change Password</a>
                         </li>
@@ -124,28 +154,13 @@
                     </ul>
                 </li>
                 
-				 <li>
-                    <a href="{{ route('logout') }}" class="drop-down"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h7v2H5v14h7v2zm11-4l-1.375-1.45l2.55-2.55H9v-2h8.175l-2.55-2.55L16 7l5 5z"/></svg></a>
+                @endpermission
+                @else
+                <li class="">
+                <a href="{{route('register')}}" class="sign-up-btn" style="text-align:left">Sign Up!</a>
+                    
                 </li>
-				 @php
-                $voucherActivityCount = 0;
-				$currencyDD = SiteHelpers::getCurrencyAll();
-				$userCR =  auth()->user()->currency_id;
-				$currencyGet = SiteHelpers::getCurrencyPrice();
-				@endphp
-			   <li class="">
-                   
-						{{$currencyGet['name']}}({{$currencyGet['code']}})
-					
-               <ul class="sub-menu">
-               @foreach($currencyDD as $currency)
-                        <li><a href="{{ route('currency.change',['user_currency'=>$currency->code]) }}">{{$currency->name}}({{$currency->code}})</a></li>
-                        @endforeach     
-                    </ul>
-			 
-			   </li>
-			@endif
-			
+				@endif
             </ul>
 			
             
@@ -356,7 +371,7 @@ PO BOX 117900
     <!-- Select2  JS -->
      <script src="{{asset('front/assets/js/jquery.nice-select.min.js')}}"></script>
     <!-- Select2  JS -->
-    <script src="{{asset('front/assets/js/select2.min.js')}}"></script>
+    <!-- <script src="{{asset('front/assets/js/select2.min.js')}}"></script> -->
     <script src="{{asset('front/assets/js/range-slider.js')}}"></script>
 
     <script src="{{asset('front/assets/js/jquery.fancybox.min.js')}}"></script>

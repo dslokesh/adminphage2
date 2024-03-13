@@ -84,20 +84,20 @@ class PriceHelper
 		$price = PriceHelper::getActivityVariantPrice($activity_variant_id,$tourDate);
 		
 		
-		if($vat_invoice == 1){
+		/* if($vat_invoice == 1){
 			if(!empty($price)){
 			$adultPrice = $price->adult_rate_without_vat;
 			$childPrice = $price->child_rate_without_vat;
 			$infPrice = $price->infant_rate_without_vat;
 			}
-		} else {
+		} else { */
 	
 			if(!empty($price)){
 			$adultPrice = $price->adult_rate_with_vat ;
 			$childPrice = $price->child_rate_with_vat;
 			$infPrice = $price->infant_rate_with_vat;
 			}
-		}
+		//}
 	
 	$adultPriceTotal  = $adultPrice * $adult;
 	$childPriceTotal  = $childPrice * $child;
@@ -136,27 +136,28 @@ class PriceHelper
 					}
 			}
 			
-			
+			$totalTransferPrice = 0;
 			$ticketPrice = $adultPriceTotal + $childPriceTotal  + $infentPriceTotal;
 			if($transfer_option == 'Ticket Only'){
 				$totalPrice = $ticketPrice;
 			} else {
 			if($transfer_option == 'Shared Transfer'){
 				$totalPrice =  $ticketPrice + $zonePrice;
+				$totalTransferPrice = $zonePrice;
 			}elseif($transfer_option == 'Pvt Transfer'){
-
 				  $totalPrice = $ticketPrice + $transferPrice;
+				  $totalTransferPrice = $transferPrice;
 			}
 			}
 			
 		
 		$grandTotal = $totalPrice + $markupTotal;
 		if($vat_invoice == 1){
-		$vatPrice = (($avat/100) * $grandTotal);
+		//$vatPrice = (($avat/100) * $grandTotal);
 		}
 		
 		//$total = round(($grandTotal+$vatPrice - $discount),2);
-		$total = round(($grandTotal+$vatPrice),2);
+		$total = round(($grandTotal),2);
 		$data = [
 		'adultPrice' =>$adultPrice,
 		'childPrice' =>$childPrice,
@@ -167,6 +168,9 @@ class PriceHelper
 		'markup_p_ticket_only' =>$markup['ticket_only'],
 		'markup_p_sic_transfer' =>$markup['sic_transfer'],
 		'markup_p_pvt_transfer' =>$markup['pvt_transfer'],
+		'ticketPrice' =>$ticketPrice,
+		'transferPrice' =>$totalTransferPrice,
+		'vat_per' =>$avat,
 		'totalprice' =>$total,
 		];
 		//dd($data);
@@ -230,7 +234,7 @@ class PriceHelper
 		
 		if(!empty($price)){
 		
-				if($vat_invoice == 1){
+				/* if($vat_invoice == 1){
 					if(!empty($price)){
 					$adultPrice = $price->adult_rate_without_vat;
 					$childPrice = $price->child_rate_without_vat;
@@ -238,12 +242,12 @@ class PriceHelper
 					}
 				} else {
 			
-					if(!empty($price)){
+					if(!empty($price)){ */
 					$adultPrice = $price->adult_rate_with_vat ;
 					$childPrice = $price->child_rate_with_vat;
 					$infPrice = $price->infant_rate_with_vat;
-					}
-				}
+					/* }
+				} */
 			
 				$adultPriceTotal  = $adultPrice * $adult;
 				$childPriceTotal  = $childPrice * $child;
@@ -288,7 +292,8 @@ class PriceHelper
 				}
 				
 				//$total = round(($grandTotal+$vatPrice - $discount),2);
-				$subTotal = $grandTotal+round($vatPrice,2);
+				$subTotal = $grandTotal;
+				//$subTotal = $grandTotal+round($vatPrice,2);
 				$priceConvert = $subTotal * round(($currency['value']),2);
 				$total = round(($priceConvert),2);
 		}

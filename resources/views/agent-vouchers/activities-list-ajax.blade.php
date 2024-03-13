@@ -8,8 +8,8 @@
                     <div class="room-suits-card mb-30" >
                         <div class="row g-0">
                             <div class="col-md-4">
-                                <div class="room-img">
-                                    <a href="{{route('agent-vouchers.activity.view',[$record->id,$vid])}}"><img src="{{asset('uploads/activities/'.$record->image)}}" class="img-fluid" alt=""></a>
+                            <div class="room-img" style=" background-image:url('{{asset('uploads/activities/'.$record->image)}}');">
+                                
                                 </div>
                                
                             </div>
@@ -33,7 +33,7 @@
                                             @endif
                                             <li>
                                                 
-                                            <span style="color: red;"> {!!$cutoffTime!!}</span></li>
+                                           {!!$cutoffTime!!}</li>
                                            
                                         </ul>
                                     </div>

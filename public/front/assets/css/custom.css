@@ -187,7 +187,7 @@ background: #fff;
     width: 100%;
 }
 
-.login-form-area .sign-up-btn {
+.sign-up-btn {
     border-radius: 35px;
     background-color: var(--white-color);
     border: 1px solid var(--title-color);
@@ -198,7 +198,7 @@ background: #fff;
     letter-spacing: 0.48px;
     text-transform: capitalize;
     line-height: 1;
-    padding: 10px 26px;
+    padding: 10px 26px!important;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -265,4 +265,186 @@ background: #fff;
 	background: none;
 	background-color: #fff;
 	
+}
+.room-img{
+    min-height: 250px;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+
+}
+
+table.rounded-corners {
+    border-spacing: 0;
+    border-collapse: separate;
+    border-radius: 10px !important;
+    font-size:10pt;
+  }
+  
+   table.rounded-corners th, table.rounded-corners td {
+    /* border: 1px solid #dee2e6; */
+    padding: 5px;
+    vertical-align: middle;
+  }
+   table.rounded-corners {
+    border-spacing: 0;
+    border-collapse: separate;
+    border-radius: 10px;
+    border: 1px solid #f5f5f5;
+  }
+  
+   table.rounded-corners {
+   border-spacing: 0;
+   border-collapse: separate;
+   border-radius: 5px;
+   border: 1px solid #f5f5f5;
+  }
+  
+  /* Apply a border to the right of all but the last column */
+  table.rounded-corners th:not(:last-child),
+  table.rounded-corners td:not(:last-child) {
+   /* border-right: 1px solid #dee2e6; */
+  }
+  
+  /* Apply a border to the bottom of all but the last row */
+  table.rounded-corners>thead>tr:not(:last-child)>th,
+  table.rounded-corners>thead>tr:not(:last-child)>td,
+  table.rounded-corners>tbody>tr:not(:last-child)>th,
+  table.rounded-corners>tbody>tr:not(:last-child)>td,
+  table.rounded-corners>tfoot>tr:not(:last-child)>th,
+  table.rounded-corners>tfoot>tr:not(:last-child)>td,
+  table.rounded-corners>tr:not(:last-child)>td,
+  table.rounded-corners>tr:not(:last-child)>th,
+  table.rounded-corners>thead:not(:last-child),
+  table.rounded-corners>tbody:not(:last-child),
+  table.rounded-corners>tfoot:not(:last-child) {
+   border-bottom: 1px solid #f5f5f5;
+  }
+  #activities-list-blade .table thead th {
+    vertical-align: middle;
+     border-bottom: none;
+  }
+  
+  table.rounded-corners th {
+    background-color: #f5f5f5;
+    color: #3b444f;
+  }
+  
+  table.rounded-corners {
+   /* Change these properties */
+   --border: 1px solid #f5f5f5;
+   border-radius: 5px;
+   
+  margin-top: 20px;
+   /* Don't change these properties */
+   border-spacing: 0;
+   border-collapse: separate;
+   border: var(--border);
+   overflow: hidden;
+   font-size: 9pt;
+  }
+
+
+  table.rounded-corners input, table.rounded-corners select {
+  
+    font-size: 9pt;
+   }
+
+   table.rounded-corners .primary-btn1-sm {
+    border-radius: 5px;
+    background-color: var(--primary-color1);
+    font-family: var(--font-rubik);
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--white-color);
+    letter-spacing: 0.48px;
+    text-transform: capitalize;
+    line-height: 1;
+    padding: 5px 5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: 0.5s;
+    position: relative;
+    /* overflow: hidden; */
+    /* z-index: 1; */
+    white-space: nowrap;
+}
+  
+  /* Apply a border to the right of all but the last column */
+  table.rounded-corners th:not(:last-child),
+  table.rounded-corners td:not(:last-child) {
+   /* border-right: var(--border); */
+  }
+  
+  /* Apply a border to the bottom of all but the last row */
+  table.rounded-corners>thead>tr:not(:last-child)>th,
+  table.rounded-corners>thead>tr:not(:last-child)>td,
+  table.rounded-corners>tbody>tr:not(:last-child)>th,
+  table.rounded-corners>tbody>tr:not(:last-child)>td,
+  table.rounded-corners>tfoot>tr:not(:last-child)>th,
+  table.rounded-corners>tfoot>tr:not(:last-child)>td,
+  table.rounded-corners>tr:not(:last-child)>td,
+  table.rounded-corners>tr:not(:last-child)>th,
+  table.rounded-corners>thead:not(:last-child),
+  table.rounded-corners>tbody:not(:last-child),
+  table.rounded-corners>tfoot:not(:last-child) {
+   border-bottom: var(--border);
+  }
+  table.rounded-corners tbody tr:hover {
+    background-color: #efefef;
+  }
+  .checkout-page .inquiry-form {
+    border-radius: 10px;
+    background: linear-gradient(125deg, rgba(99, 171, 69, 0.1) 0%, rgba(251, 176, 59, 0.1) 100%);
+    padding: 15px;
+}
+
+.right-sidebar-menu .sidebar-content-wrap {
+    padding: 0 30px;
+    height: 350px;
+    overflow: auto;
+}
+
+.right-sidebar-menu .sidebar-content-wrap ul li {
+    font-size: 9pt;
+}
+
+.right-sidebar-menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 400px;
+    z-index: 99999;
+    height: 100%;
+    overflow: auto;
+    background-image: url(../img/sidebar-bg.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-color: var(--white-color);
+    border-right: 1px solid #eee;
+    transform: translateX(120%);
+    transform-origin: right;
+    transition: transform 0.5s ease-in;
+    box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.03);
+}
+
+.right-sidebar-menu .sidebar-bottom {
+    padding: 10px;
+    border-top: 1px solid rgba(16, 12, 8, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.login-outter{
+  min-height: 550px;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+
 }

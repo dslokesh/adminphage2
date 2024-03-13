@@ -282,7 +282,7 @@ return Excel::download(new LogisticReportExport($records), 'logistic_records'.da
 			$record->actual_total_cost = $totalprice;
        		
 			$response[] = array("status"=>2,'cost'=>$totalprice);
-			}else if (($data['inputname'] == 'discountPrice') ) {
+		} else if (($data['inputname'] == 'discountPrice') ) {
 				$discount = $data['val'];
 				$totalPrice = $record->totalprice;
 				if(($totalPrice > $discount)){
@@ -295,12 +295,19 @@ return Excel::download(new LogisticReportExport($records), 'logistic_records'.da
 				$record->totalprice = $totalPrice;
 				}
 				$response[] = array("status" => 2, 'cost' => $record->totalprice);
+		} else if(($data['inputname'] == 'discount_tkt') && !empty($data['val'])) {
+			$record->discount_tkt = $data['val'];
+			$response[] = array("status" => 2, 'cost' => $record->totalprice);
+		} else if(($data['inputname'] == 'discount_sic_pvt_price') && !empty($data['val'])) {
+			$record->discount_sic_pvt_price = $data['val'];
+			$response[] = array("status" => 2, 'cost' => $record->totalprice);
 		}
 		else
 		{
 			$record->{$data['inputname']} = $data['val'];
 			$response[] = array("status"=>1,'cost'=>"0");
 		}
+		
 		$record->save();
 		if(isset($data['type']) && $data['type'] == 'Report'){
 			ReportLog::create([

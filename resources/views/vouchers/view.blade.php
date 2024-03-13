@@ -200,8 +200,8 @@
 			  @endif
 			  
 			  <div class="form-group col-md-6 ">
-              <label>Discount</label>
-                 <input type="text" id="discountPrice{{$ap->id}}" value="{{$ap->discountPrice}}"   class="form-control inputsaveDis"  placeholder="Discount"  data-id="{{$ap->id}}" data-name="discountPrice" />
+              <label>Total Discount</label>
+                 <input type="text" readonly id="discountPrice{{$ap->id}}" value="{{$ap->discountPrice}}"   class="form-control inputsaveDis"  placeholder="Discount"  data-id="{{$ap->id}}" data-name="discountPrice" />
 				
               </div>
 			  
@@ -299,12 +299,29 @@
 				 
               </div>
                     @endif
-					<div class="form-group col-md-6">
+					
+			  
+			 
+					<div class="form-group col-md-12">
 					
 					<input type="text" class="form-control inputsave" id="remark{{$ap->id}}" data-name="remark"  data-id="{{$ap->id}}" value="{{$ap->remark}}"  placeholder="Remark" />
                     </div>
 					
 					@endif
+					@if($ap->original_tkt_rate > 0)
+					<div class="form-group col-md-6 ">
+              <label>Ticket Discount ({{$ap->original_tkt_rate}})</label>
+                 <input type="text" id="discount_tkt{{$ap->id}}" value="{{$ap->discount_tkt}}"   class="form-control inputsaveDisTktTrans"  placeholder="Ticket Discount"  data-id="{{$ap->id}}" data-maxdis="{{$ap->original_tkt_rate}}" data-name="discount_tkt" />
+				
+              </div>
+			  @endif
+			  @if($ap->original_trans_rate > 0)
+			  <div class="form-group col-md-6 ">
+              <label>Transfer Discount ({{$ap->original_trans_rate}})</label>
+                 <input type="text" id="discount_sic_pvt_price{{$ap->id}}" value="{{$ap->discount_sic_pvt_price}}"   class="form-control inputsaveDisTktTrans"  placeholder="Transfer Discount" data-maxdis="{{$ap->original_trans_rate}}"  data-id="{{$ap->id}}" data-name="discount_sic_pvt_price" />
+				
+              </div>
+			  @endif
                   </div>
 				   @endif
 				  @endforeach
@@ -967,6 +984,48 @@ $('#cusDetails').validate({});
                id: id,
 			   inputname: inputname,
 			   val: $(this).val(),
+            },
+            success: function( data ) {
+			   if(inputname == 'supplier_ticket'){
+          
+				   $("#actual_total_cost"+id).val(data[0].cost);
+			   }
+			  $("#loader-overlay").hide();
+            }
+          });
+	 });
+	 
+	 
+
+	
+	
+	$(document).on('change', '.inputsaveDisTktTrans', function(evt) {
+		$("#loader-overlay").show();
+		var id = $(this).data('id');
+		var inputname = $(this).data('name');
+		var maxdis = $(this).data('maxdis');
+		var val = $(this).val();
+		if(val > maxdis){
+			alert("Invalid discounts: Discount should not be greater than the original price.");
+			$("#loader-overlay").hide();
+			$(this).val(0)
+			return false;
+		}
+		//alert(id);
+		$.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+			
+		$.ajax({
+            url: "{{route('voucherReportSave')}}",
+            type: 'POST',
+            dataType: "json",
+            data: {
+               id: id,
+			   inputname: inputname,
+			   val: val,
             },
             success: function( data ) {
 			   if(inputname == 'supplier_ticket'){

@@ -43,7 +43,7 @@
                             <h5 class="widget-title">Search Here</h5>
 							
 							<div class="search-box">
-							<input type="text" name="name" value="{{ request('name') }}" class="form-control tagsinput" style="border-radius: 5px 0px 0px 5px;" placeholder="Filter with Name" />
+							<input type="text" name="name" value="{{ request('name') }}" class="form-control tagsinput" style="border-radius: 5px 0px 0px 5px;" placeholder="Search by Tour Name" />
 							
 							</div>
 							
@@ -77,7 +77,7 @@
                         </div> 
                         
                         <div class="single-widget mb-30">
-                            <h5 class="widget-title">Category</h5>
+                            <h5 class="widget-title">Fliter By Category</h5>
                             <div class="checkbox-container">
                                 <ul>
 								@foreach($tags as $tag)
@@ -446,6 +446,11 @@ $(document).on('keypress', '.onlynumbrf', function(evt) {
  });
 
 $(document).on('keypress', '.tagsinput', function(evt) {
+  searchActivity()
+ });
+
+ 
+$(document).on('change', '.tagsinput', function(evt) {
   searchActivity()
  });
  

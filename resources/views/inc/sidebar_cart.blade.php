@@ -5,11 +5,10 @@
             <div class="right-sidebar-close-btn">
                 <i class="bi bi-x"></i>
             </div>
+            <h4>My Cart</h4>
         </div>
         <div class="sidebar-content-wrap">
             <div class="category-wrapper">
-                <h4>My Cart</h4>
-
                 @php
 					$total = 0;
 					$currency = SiteHelpers::getCurrencyPrice();
@@ -72,7 +71,7 @@
                  @if($ap->child > 0)
                  <i class="fas fa-child color-grey" title="Child"></i>  <span class="color-black">{{$ap->child}}</span>
                 @endif
-                  <span class="float-right " ><p class="" style="text-align: right;"><strong>AED {{$ap->totalprice*$currency['value']}}</strong></p></span>
+                  <span class="float-right " ><p class="" style="text-align: right;"><strong>{{$currency['code']}} {{$ap->totalprice*$currency['value']}}</strong></p></span>
                 </li>
                 
               </ul>
@@ -99,7 +98,7 @@
                 </div>
                 <div class="col-md-12">
                 @if($voucherActivityCount > 0)
-                               <h5 class="col-md-12" style="width:100%; text-align: right;">Total Amount : AED {{$total*$currency['value']}}</h5>
+                               <h5 class="col-md-12" style="width:100%; text-align: right;">Total Amount : {{$currency['code']}} {{$total*$currency['value']}}</h5>
                             @endif
                 </div>
                 

@@ -1,10 +1,11 @@
 @extends('layouts.appLogin')
   
 @section('content')
+
 <div class="container">
             <div class="row g-lg-4 gy-5">
    <div class="col-lg-8 offset-md-2 ">
-                    <div class="login-form-area mb-5  mt-5">
+   <div class="login-form-area mb-5  mt-5">
                         <h3 class="col-md-12 text-center" >Register</h3>
 						
 						@include('inc.errors-and-messages')
@@ -224,23 +225,26 @@
 								
                                 <div class="col-lg-12">
                                     <div class="form-inner">
-									<button type="submit" class="primary-btn1 btn-hover">Register <i class="icon-arrow-top-right ml-10"></i></button>
+									<button type="submit" class="login-btn mb-10">Register <i class="icon-arrow-top-right ml-10"></i></button>
 									
                                       
                                     </div>
-									<div class="row">
-									<div class="col-lg-6 text-start">
-                <a href="{{route('login')}}" class="text-accent-1">Login</a>
+</div>	
+<div class="divider">
+                                <span>or</span>
+                            </div>
+									<div class="col-lg-12">
+                <a href="{{route('login')}}" class="sign-up-btn" style="text-align:left">Sign In!</a>
               </div>
+								
 									
-				 </div>
-                                </div>
+                               
                             </div>
                         </form>
                     </div>
                 </div> 
 				  </div>
-                </div> 
+				  </div>
 @endsection
 @section('scripts')
  @include('inc.citystatecountryjs')

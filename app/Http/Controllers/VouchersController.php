@@ -981,7 +981,9 @@ class VouchersController extends Controller
 				return redirect()->back()->with('error', $variant->title.' Tour is not available for Selected Date.');
 				}
 			
-			
+			if(empty($transfer_zone)){
+				$transfer_zone = [];
+			}
 			
 			$data[] = [
 			'voucher_id' => $voucher_id,
@@ -1010,6 +1012,9 @@ class VouchersController extends Controller
 			'adultPrice' => $priceCal['adultPrice'],
 			'childPrice' => $priceCal['childPrice'],
 			'infPrice' => $priceCal['infPrice'],
+			'original_tkt_rate' => $priceCal['ticketPrice'],
+			'original_trans_rate' => $priceCal['transferPrice'],
+			'vat_percentage' => $priceCal['vat_per'],
 			'discountPrice' => $discount[$k],
 			'time_slot' => $timeslot,
 			'totalprice' => number_format($priceCal['totalprice'], 2, '.', ''),
