@@ -109,7 +109,7 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
         Route::get('suppliers-markup-price/{id?}', [SuppliersController::class, 'markupPriceList'])->name('suppliers.markup.price');
         Route::post('suppliers-markup-price-save', [SuppliersController::class, 'markupPriceSave'])->name('suppliers.markup.price.save');
         Route::resource('agents', AgentsController::class);
-		Route::get('httpRequest', [AgentsController::class, 'sendApiRequest']);
+		//Route::get('httpRequest', [AgentsController::class, 'sendApiRequest']);
 		Route::post('passwordResetAdmin/{id?}', [AgentsController::class, 'passwordResetAdmin'])->name('passwordResetAdmin');
         Route::get('agents-markup-activity/{id?}', [AgentsController::class, 'priceMarkupActivityList'])->name('agents.markup.activity');
         Route::post('agents-markup-activity-save', [AgentsController::class, 'priceMarkupActivitySave'])->name('agents.markup.activity.save');
@@ -170,7 +170,7 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
 		Route::post('activity-get-variant-price', [VouchersController::class, 'getActivityVariantPrice'])->name('get-activity.variant.price');
         Route::get('voucher-activity-itinerary-Pdf/{vid?}', [VouchersController::class, 'voucherActivityItineraryPdf'])->name('voucherActivityItineraryPdf');
         Route::get('voucher-invoice-Pdf/{vid?}', [VouchersController::class, 'voucherInvoicePdf'])->name('voucherInvoicePdf');
-
+		Route::get('voucher-add-discount/{vid?}', [VouchersController::class, 'voucherAddDiscount'])->name('voucher.add.discount');
         Route::get('voucher-report', [ReporsController::class, 'voucherReport'])->name('voucherReport');
         Route::get('voucher-report-export', [ReporsController::class, 'voucherReportExport'])->name('voucherReportExport');
         Route::post('voucher-report-save', [ReporsController::class, 'voucherReportSave'])->name('voucherReportSave');

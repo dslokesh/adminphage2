@@ -270,6 +270,34 @@ class VouchersController extends Controller
 		$supplier_ticket = User::where("service_type",'Ticket')->orWhere('service_type','=','Both')->get();
         return view('vouchers.view', compact('voucher','voucherHotel','voucherActivity','voucherStatus','fname','lname','supplier_ticket'));
     }
+	
+	public function voucherAddDiscount($vid)
+    {
+		
+		$this->checkPermissionMethod('list.voucher');
+		$voucher = Voucher::find($vid);
+		//dd($voucher);
+		$voucherHotel = VoucherHotel::where('voucher_id',$voucher->id)->get();
+		$voucherActivity = VoucherActivity::where('voucher_id',$voucher->id)->orderBy("tour_date","ASC")->orderBy("serial_no","ASC")->get();
+		if($voucher->status_main  > 4)
+		{
+			return redirect()->route('voucherView',$voucher->id);
+		}
+		$voucherStatus = config("constants.voucherStatus");
+	
+		$name = explode(' ',$voucher->guest_name);
+		
+		$fname = '';
+		$lname = '';
+		if(!empty($name)){
+			$fname = trim($name[0]);
+			unset($name[0]);
+			$lname = trim(implode(' ', $name));
+		}
+		
+		$supplier_ticket = User::where("service_type",'Ticket')->orWhere('service_type','=','Both')->get();
+        return view('vouchers.add-discount', compact('voucher','voucherHotel','voucherActivity','voucherStatus','fname','lname','supplier_ticket'));
+    }
 
 	public function voucherView($vid)
     {

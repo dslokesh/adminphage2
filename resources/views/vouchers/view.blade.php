@@ -41,10 +41,13 @@
 		 <div class="col-md-3">
 		  @if($voucher->is_activity == 1)
 								 @if($voucher->status_main < 5)
-					 <a class="btn btn-info btn-sm float-left" style=" margin-top: 20px;margin-left: 120px;" href="{{route('voucher.add.activity',$voucher->id)}}" >Add More</a>
+					 <a class="btn btn-info btn-sm float-left" style=" margin-top: 20px;margin-left: 50px;" href="{{route('voucher.add.activity',$voucher->id)}}" >Add More</a>
 					
 					@endif
 								  @endif
+								  
+					<a class="btn btn-info btn-sm float-left" style=" margin-top: 20px;margin-left: 10px;" href="{{ route('voucher.add.discount',$voucher->id) }}" >Add/Edit Discount</a>
+					
 				</div>
         
         
@@ -199,11 +202,7 @@
 			  
 			  @endif
 			  
-			  <div class="form-group col-md-6 ">
-              <label>Total Discount</label>
-                 <input type="text" readonly id="discountPrice{{$ap->id}}" value="{{$ap->discountPrice}}"   class="form-control inputsaveDis"  placeholder="Discount"  data-id="{{$ap->id}}" data-name="discountPrice" />
-				
-              </div>
+			  
 			  
 					@if($ap->activity_entry_type=='Arrival')
 						<div class="form-group col-md-6">
@@ -308,20 +307,7 @@
                     </div>
 					
 					@endif
-					@if($ap->original_tkt_rate > 0)
-					<div class="form-group col-md-6 ">
-              <label>Ticket Discount ({{$ap->original_tkt_rate}})</label>
-                 <input type="text" id="discount_tkt{{$ap->id}}" value="{{$ap->discount_tkt}}"   class="form-control inputsaveDisTktTrans"  placeholder="Ticket Discount"  data-id="{{$ap->id}}" data-maxdis="{{$ap->original_tkt_rate}}" data-name="discount_tkt" />
-				
-              </div>
-			  @endif
-			  @if($ap->original_trans_rate > 0)
-			  <div class="form-group col-md-6 ">
-              <label>Transfer Discount ({{$ap->original_trans_rate}})</label>
-                 <input type="text" id="discount_sic_pvt_price{{$ap->id}}" value="{{$ap->discount_sic_pvt_price}}"   class="form-control inputsaveDisTktTrans"  placeholder="Transfer Discount" data-maxdis="{{$ap->original_trans_rate}}"  data-id="{{$ap->id}}" data-name="discount_sic_pvt_price" />
-				
-              </div>
-			  @endif
+					
                   </div>
 				   @endif
 				  @endforeach
@@ -446,6 +432,7 @@
             <!-- Form Element sizes -->
 			@php
 				$totalGrand =0; 
+				$totalGrandDiscount =0; 
 			  @endphp
 			  @if(!empty($voucherActivity) && $voucher->is_activity == 1)
 					@if(!empty($voucherActivity))
@@ -544,7 +531,7 @@
                 </div>
                 <div class="row" style="margin-bottom: 5px;">
                   <div class="col-md-5 text-left">
-                    <strong>Amount Incl. VAT</strong>
+                    <strong>Amount</strong>
                   </div>
                   <div class="col-md-7 text-right">
                    AED {{$ap->totalprice}}
@@ -552,10 +539,30 @@
                 </div>
                 <div class="row" style="margin-bottom: 5px;">
                   <div class="col-md-5 text-left">
-                    <strong>Total</strong>
+                    <strong>Ticket Discount</strong>
                   </div>
                   <div class="col-md-7 text-right">
-                   AED {{$ap->totalprice}}
+				  
+                   AED {{($ap->discount_tkt>0)?$ap->discount_tkt:0}}
+                  </div>
+                </div>
+				<div class="row" style="margin-bottom: 5px;">
+                  <div class="col-md-5 text-left">
+                    <strong>Transfer Discount</strong>
+                  </div>
+                  <div class="col-md-7 text-right">
+                   AED {{($ap->discount_sic_pvt_price>0)?$ap->discount_sic_pvt_price:0}}
+                  </div>
+                </div>
+				<div class="row" style="margin-bottom: 5px;">
+                  <div class="col-md-5 text-left">
+                    <strong>Net Total</strong>
+                  </div>
+                  <div class="col-md-7 text-right">
+				  @php
+				  $totalDiscount = $ap->discount_tkt+ $ap->discount_sic_pvt_price;
+				  @endphp
+                   AED {{$ap->totalprice - $totalDiscount}}
                   </div>
                 </div>
 				</div>
@@ -566,6 +573,7 @@
             <!-- /.card -->
 @php
 					$totalGrand += $ap->totalprice; 
+					$totalGrandDiscount += $totalDiscount; 
 				  @endphp
 				 @endforeach
                  @endif
@@ -703,7 +711,15 @@
                     <strong>Amount Incl. VAT</strong>
                   </div>
                   <div class="col-md-6 text-right">
-                   AED {{$totalGrand}}
+                   AED {{$totalGrand - $totalGrandDiscount}}
+                  </div>
+                </div>
+				 <div class="row" style="margin-bottom: 5px;">
+                  <div class="col-md-6 text-left">
+                    <strong>Discount</strong>
+                  </div>
+                  <div class="col-md-6 text-right">
+                   AED {{$totalGrandDiscount}}
                   </div>
                 </div>
                <!-- <div class="row" style="margin-bottom: 15px;">
@@ -719,7 +735,7 @@
                     <h5>Final Amount</h5>
                   </div>
                   <div class="col-md-6 text-right">
-                   <h5>AED {{$totalGrand}}</h5>
+                   <h5>AED {{$totalGrand - $totalGrandDiscount}}</h5>
                   </div>
                 </div>
               </div>
@@ -965,7 +981,7 @@ $('#cusDetails').validate({});
           });
 	 });
 	 
-	 $(document).on('change', '.inputsaveDis', function(evt) {
+	/*  $(document).on('change', '.inputsaveDis', function(evt) {
 		$("#loader-overlay").show();
 		var id = $(this).data('id');
 		var inputname = $(this).data('name');
@@ -993,51 +1009,9 @@ $('#cusDetails').validate({});
 			  $("#loader-overlay").hide();
             }
           });
-	 });
+	 }); */
 	 
-	 
-
 	
-	
-	$(document).on('change', '.inputsaveDisTktTrans', function(evt) {
-		$("#loader-overlay").show();
-		var id = $(this).data('id');
-		var inputname = $(this).data('name');
-		var maxdis = $(this).data('maxdis');
-		var val = $(this).val();
-		if(val > maxdis){
-			alert("Invalid discounts: Discount should not be greater than the original price.");
-			$("#loader-overlay").hide();
-			$(this).val(0)
-			return false;
-		}
-		//alert(id);
-		$.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-			
-		$.ajax({
-            url: "{{route('voucherReportSave')}}",
-            type: 'POST',
-            dataType: "json",
-            data: {
-               id: id,
-			   inputname: inputname,
-			   val: val,
-            },
-            success: function( data ) {
-			   if(inputname == 'supplier_ticket'){
-          
-				   $("#actual_total_cost"+id).val(data[0].cost);
-			   }
-			  $("#loader-overlay").hide();
-            }
-          });
-	 });
-	 
-	 
 
 	});
 	

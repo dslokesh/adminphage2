@@ -234,7 +234,7 @@
 						
                  <div class="input-group  text-right float-right">
                             @if($voucherActivityCount > 0)
-                                  <a href="{{ route('vouchers.show',$voucher->id) }}" class="btn btn-lg btn-primary pull-right" style="width:100%">
+                                  <a href="{{ route('voucher.add.discount',$voucher->id) }}" class="btn btn-lg btn-primary pull-right" style="width:100%">
                                 <i class="fas fa-shopping-cart"></i>
                                 Checkout({{$voucherActivityCount}})
                             </a>
