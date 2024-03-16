@@ -30,12 +30,7 @@ use App\Services\FlyremitService;
 
 class AgentsController extends Controller
 {
-	/* protected $flyremitService;
-
-    public function __construct(FlyremitService $flyremitService)
-    {
-        $this->flyremitService = $flyremitService;
-    } */
+	
 	
     /**
      * Display a listing of the resource.
@@ -476,6 +471,26 @@ class AgentsController extends Controller
 				$record->agent_credit_limit -= $request->input('credit_amount');
 				$record->agent_amount_balance -= $request->input('credit_amount');
 			}
+		}
+		
+		
+		if($request->input('country_id') == 94 && $record->flyremit_reg == 0 && $request->input('status') == 1){
+		$dataAgent = [
+            'dmcid' => $record->id,
+            'agentID' => $record->id,
+            'panNumber' => $request->input('pan_no'),
+            'name' => $request->input('first_name').' '.$request->input('last_name'),
+            'mobile' =>$request->input('mobile'),
+            'email' => $request->input('email'),
+            'cityId' => (int)$request->input('city_id'),
+        ];
+		
+		$flyremitService = new FlyremitService();
+		$response = $flyremitService->registerAgent($dataAgent);
+		if($response['status'] == 1){
+			$record->flyremit_reg = 1;
+		}
+		
 		}
 		
         $record->save();

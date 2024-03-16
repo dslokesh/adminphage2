@@ -8,47 +8,66 @@ use GuzzleHttp\Client;
 class FlyremitService
 {
     protected $client;
-    protected $apiKey;
-    protected $baseUri;
+    protected $token;
 
-    public function __construct($apiKey, $baseUri)
+    public function __construct()
     {
         $this->client = new Client([
-            'base_uri' => $baseUri,
+            'base_uri' => "https://apitest.flyremit.com/api/",
         ]);
-        $this->apiKey = $apiKey;
+       
+        $this->token = $this->getToken();
+		return $this->token;
     }
-
-    public function registerAgent($dmcId, $agentId, $panNumber, $name, $mobile, $email, $cityId)
+    
+    protected function getToken()
     {
-        $endpoint = 'https://apitest.flyremit.com/api/JWTLoginAuthentication';
-
-        $response = $this->makeRequest('POST', $endpoint, [
-            'dmcid' => $dmcId,
-            'agnetID' => $agentId,
-            'panNumber' => $panNumber,
-            'name' => $name,
-            'mobile' => $mobile,
-            'email' => $email,
-            'cityId' => $cityId,
-        ]);
-
-        return json_decode($response->getBody(), true);
-    }
-
-    protected function makeRequest($method, $endpoint, $data = [])
-    {
+        $endpoint = 'JWTLoginAuthentication';
+        
         $headers = [
-            'Authorization' => 'Bearer ' . $this->apiKey,
             'Content-Type' => 'application/json',
         ];
-
+        
+        $data = [
+            'username' => "abatera",
+            'password' => "95qruh2pur4acrm13hn3"
+        ];
+        
         $options = [
             'headers' => $headers,
             'json' => $data,
         ];
+        
+        $response = $this->client->request("POST", $endpoint, $options);
 
-        return $this->client->request($method, $endpoint, $options);
+        $responseData = json_decode($response->getBody(), true);
+
+        return $responseData['token'] ?? null;
+    }
+
+    public function registerAgent($data)
+    {
+		
+		$client = new Client();
+		$response = $client->request('POST', 'https://apitest.flyremit.com/api/abatera/CreateAgent', [
+		'headers' => [
+		'Authorization' => 'Bearer ' . $this->token,
+			'Accept' => '*/*',
+			'Content-Type' => 'application/json',
+		],
+		'json' => [
+			'dmcid' => $data['dmcid'],
+			'agnetID' => $data['agentID'],
+			'panNumber' => $data['panNumber'],
+			'name' => $data['name'],
+			'mobile' => $data['mobile'],
+			'email' => $data['email'],
+			'cityId' => $data['cityId'],
+		],
+	]);
+
+
+        return json_decode($response->getBody(), true);
     }
 }
-
+?>
