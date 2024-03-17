@@ -154,14 +154,14 @@
               </div>
 			   <div class="form-group col-md-4">
                 <label for="inputName">Start Time (In 24 hrs): <span class="red">*</span></label>
-                <input type="text" id="start_time" name="start_time" value="{{ old('start_time') }}" class="form-control"  placeholder="Start Time" />
+                <input type="text" id="start_time" name="start_time" value="{{ old('start_time') }}" class="form-control timepicker24"  placeholder="Start Time" />
                 @if ($errors->has('start_time'))
                     <span class="text-danger">{{ $errors->first('start_time') }}</span>
                 @endif
               </div>
 			   <div class="form-group col-md-4">
                 <label for="inputName">End Time (In 24 hrs): <span class="red">*</span></label>
-                <input type="text" id="end_time" name="end_time" value="{{ old('end_time') }}" class="form-control"  placeholder=End Time" />
+                <input type="text" id="end_time" name="end_time" value="{{ old('end_time') }}" class="form-control timepicker24"  placeholder=End Time" />
                 @if ($errors->has('end_time'))
                     <span class="text-danger">{{ $errors->first('end_time') }}</span>
                 @endif

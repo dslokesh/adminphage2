@@ -122,7 +122,14 @@ $('.datepicker').datepicker({
 $('.timepicker').datetimepicker({
             format: 'hh:mm a'
         });
+		
+		$('.timepicker24').datetimepicker({
+            format: 'hh:mm'
+        });
+		
   });
+  
+  
   
   $('.datepickerdiscurdate').datepicker({
         weekStart: 1,
