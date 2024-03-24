@@ -53,7 +53,7 @@ class CommonController extends BaseController
 		try{
         $agent = User::where("code",$request['agent_code'])->first();
 		$voucher = Voucher::where("code",$request['voucher_code'])->where("status_main",'<',5)->first();
-		dd($voucher);
+		
 		if (empty($voucher)) {
            return $this->sendError([], "Voucher not found.");
         }
@@ -62,8 +62,6 @@ class CommonController extends BaseController
 		$voucher->payment_date = $paymentDate;
 		if(!empty($agent))
 		{
-			
-			
 			$voucher->invoice_number = $code;
 			$voucher->status_main = 5;
 			$voucher->save();
