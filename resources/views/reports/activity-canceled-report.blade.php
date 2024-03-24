@@ -112,7 +112,7 @@
                     <td>{{$record->infant}}</td>
 					<td>{{$record->tour_date}}</td>
 					<td>{{$record->canceled_date}}</td>
-					<td>{{$record->totalprice}}</td>
+					<td>{{ PriceHelper::getTotalTicketCostAllType($record->voucher_id) }}</td>
 					<td>
 					@if($record->status == 1)
 					<input type="text" class="form-control inputsave onlynumbrf" id="refund_amount{{$record->id}}"  data-id="{{$record->id}}" value="{{$record->refund_amount}}" placeholder="Refund Amount" />

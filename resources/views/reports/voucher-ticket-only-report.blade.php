@@ -160,7 +160,7 @@
                  </select>
 					</td>
 					<td><input type="text" class="form-control inputsave" id="ticket_supp_ref_no{{$record->id}}" data-name="ticket_supp_ref_no"  data-id="{{$record->id}}" value="{{$record->ticket_supp_ref_no}}" /></td>
-					<td>{{$record->totalprice}}</td>
+					<td>{{ PriceHelper::getTotalCostTicketOnly($record->voucher_id) }}</td>
 					<td><input type="text" class="form-control inputsave" id="actual_total_cost{{$record->id}}" data-name="actual_total_cost"  data-id="{{$record->id}}" value="{{$record->actual_total_cost}}" /></td>
 					
 					

@@ -77,15 +77,7 @@
 				<td>{{($record->suppliertransfer)?$record->suppliertransfer->company_name:''}}</td>
 				
 					<td>
-					@if($record->transfer_option == "Shared Transfer")
-					@php
-					$markup_sic_transfer =  (($record->zonevalprice_without_markup) * ($record->markup_p_sic_transfer/100));
-					@endphp
-					{{$record->zonevalprice_without_markup + $markup_sic_transfer}}
-					@endif
-					@if($record->transfer_option == 'Pvt Transfer')
-					{{$record->pvt_traf_val_with_markup}}
-					@endif
+					{{$record->original_trans_rate}}
 					</td>
 					<td>{{$record->actual_transfer_cost}}</td>
 					

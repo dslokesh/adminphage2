@@ -37,7 +37,7 @@
                     <td>{{$record->infant}}</td>
 					<td>{{$record->tour_date}}</td>
 					<td>{{$record->canceled_date}}</td>
-					<td>{{$record->totalprice}}</td>
+					<td>{{ PriceHelper::getTotalTicketCostAllType($record->voucher_id) }}</td>
                   </tr>
                   @endforeach
                   </tbody>

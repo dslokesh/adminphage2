@@ -317,4 +317,31 @@ class PriceHelper
     }
 	
 	
+	public static function getTotalTicketCostAllType($vid) 
+	{
+		$voucherActivity = VoucherActivity::where('voucher_id',$vid)->first();
+		$returnTotalPrice = 0;
+		if(!empty($voucherActivity)){
+			$totalPrice = $voucherActivity->totalprice;
+			$discounTkt = $voucherActivity->discount_tkt;
+			$discountTrns = $voucherActivity->discount_sic_pvt_price;
+			$totalDiscount = $discounTkt + $discountTrns;
+			$returnTotalPrice = $totalPrice - $totalDiscount;
+		}
+		
+		return $returnTotalPrice;
+	}
+	
+	public static function getTotalCostTicketOnly($vid) 
+	{
+		$voucherActivity = VoucherActivity::where('voucher_id',$vid)->first();
+		$returnTotalPrice = 0;
+		if(!empty($voucherActivity)){
+			$totalPrice = $voucherActivity->totalprice;
+			$discounTkt = $voucherActivity->discount_tkt;
+			$returnTotalPrice = $totalPrice - $discounTkt;
+		}
+		
+		return $returnTotalPrice;
+	}
 }

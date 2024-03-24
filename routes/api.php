@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersController;
-use App\Http\Controllers\API\RegisterController;
+use App\Http\Controllers\API\CommonController;
 
 
 /*
@@ -19,7 +19,7 @@ use App\Http\Controllers\API\RegisterController;
 
 
 //Route::post('change_password', [RegisterController::class, 'changepassword']);     
-
+Route::post('voucher-price-update', [CommonController::class, "voucherPriceUpdate"])->name('voucherPriceUpdate');
 Route::middleware(['auth:api'])->group(function () {
 });
 

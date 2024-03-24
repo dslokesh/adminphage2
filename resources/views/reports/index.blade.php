@@ -202,15 +202,7 @@
 				
 				
 					<td>
-					@if($record->transfer_option == "Shared Transfer")
-					@php
-					$markup_sic_transfer =  (($record->zonevalprice_without_markup) * ($record->markup_p_sic_transfer/100));
-					@endphp
-					{{$record->zonevalprice_without_markup + $markup_sic_transfer}}
-					@endif
-					@if($record->transfer_option == 'Pvt Transfer')
-					{{$record->pvt_traf_val_with_markup}}
-					@endif
+					{{$record->original_trans_rate}}
 					</td>
 					
 					<td><input type="text" class="form-control inputsave" id="actual_transfer_cost{{$record->id}}" data-name="actual_transfer_cost"  data-id="{{$record->id}}" value="{{$record->actual_transfer_cost}}" /></td>

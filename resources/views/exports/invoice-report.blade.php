@@ -54,7 +54,7 @@
 					@endif
 				</td>
 					<td>{{$record->variant_name}}</td>
-					<td>{{$record->totalprice}}</td>
+					<td>{{ PriceHelper::getTotalTicketCostAllType($record->voucher_id) }}</td>
 					<td>
 					{!! SiteHelpers::voucherStatus($record->status) !!}
 					</td>
