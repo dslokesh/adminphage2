@@ -1334,7 +1334,10 @@ class VouchersController extends Controller
 			$agentAmountBalance = $agent->agent_amount_balance;
 			$total_activity_amount = $record->voucheractivity->sum('totalprice');
 			$total_discountPrice = $record->voucheractivity->sum('discountPrice');
-			$grandTotal = $total_activity_amount;
+			$discount_tkt = $record->voucheractivity->sum('discount_tkt');
+			$discount_sic_pvt_price = $record->voucheractivity->sum('discount_sic_pvt_price');
+			$total_discount = $discount_tkt + $discount_sic_pvt_price;
+			$grandTotal = $total_activity_amount - $total_discount;
 			if($agentAmountBalance >= $grandTotal)
 			{
 			$record->status_main = 7;
@@ -1469,6 +1472,8 @@ class VouchersController extends Controller
 		
 		$hotelPriceTotal = 0;
 		$grandTotal = 0;
+		$grandTotalNet = 0;
+		$grandDis = 0;
 		$record = Voucher::where('id',$id)->first();
 		
 		if (empty($record)) {
@@ -1491,38 +1496,44 @@ class VouchersController extends Controller
 				if($dis > $tPrice){
 					 return redirect()->back()->with('error', 'Discount not greater than total amount.');
 				}
-				$tP= $tPrice - $dis;
+				$tP= $tPrice;
 				$aData[] =[
 				"id" => $var->id,
 				"totalprice" => $tP,
-				"discountPrice" => $dis,
+				"discount_tkt" => $dis,
 				];
 				
 				
 				$grandTotal +=$tP;
+				$grandDis +=$dis;
 			}
 			//dd($aData);
 			$agentAmountBalance = $agent->agent_amount_balance;
-			
-			if($agentAmountBalance >= $grandTotal)
+			$grandTotalNet = $grandTotal-$grandDis;
+			if($agentAmountBalance >= $grandTotalNet)
 			{
 			foreach($aData as $var1){
 				$vA = VoucherActivity::find($var1['id']);
+				$discount_tkt = $vA->discount_tkt+$var1['discount_tkt'];
 				$vA->totalprice = $var1['totalprice'];
-				$vA->discountPrice = $var1['discountPrice'];
+				$vA->discount_tkt = $discount_tkt;
 				$vA->save();
-				SiteHelpers::voucherActivityLog($record->id,$var1['id'],$var1['discountPrice'],$var1['totalprice'],5);
+				SiteHelpers::voucherActivityLog($record->id,$var1['id'],$var1['discount_tkt'],$var1['totalprice'],5);
 			}
 			
 		
 			$record->status_main = 5;
 			$record->save();
-			$agent->agent_amount_balance -= $grandTotal;
+			$agent->agent_amount_balance -= $grandTotalNet;
 			$agent->save();
+			
+			$discount_tkt = $record->voucheractivity->sum('discount_tkt');
+			$discount_sic_pvt_price = $record->voucheractivity->sum('discount_sic_pvt_price');
+			$total_discount = $discount_tkt + $discount_sic_pvt_price;
 			
 			$agentAmount = new AgentAmount();
 			$agentAmount->agent_id = $record->agent_id;
-			$agentAmount->amount = $grandTotal;
+			$agentAmount->amount = $grandTotal - $total_discount;
 			$agentAmount->date_of_receipt = $record->booking_date;
 			$agentAmount->transaction_type = "Payment";
 			$agentAmount->transaction_from = 5;

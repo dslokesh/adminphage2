@@ -142,6 +142,7 @@ class AgentVouchersController extends Controller
 		return $redirectResponse;
 		}
 		
+		
         $request->validate([
             
 			'travel_from_date'=>'required',
@@ -196,6 +197,8 @@ class AgentVouchersController extends Controller
 		$record->nof_night = $request->input('nof_night');
 		$record->vat_invoice = 1;
 		$record->status = 1;
+		$record->adults = $request->input('adult_quantity');
+		$record->childs = $request->input('child_quantity');
 		$record->created_by = Auth::user()->id;
         $record->save();
 		$code = 'ABT-'.date("Y")."-00".$record->id;

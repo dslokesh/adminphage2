@@ -44,7 +44,8 @@
 					<th>Adult</th>
                     <th>Child</th>
                     <th>Infant</th>
-					<th>Discount</th>
+					<th>Ticket Discount</th>
+					<th>Transfer Discount</th>
 					<th>Amount</th>
 					<th>Total Amount</th>
 					<th>Discount</th>
@@ -53,7 +54,7 @@
 				  @if(!empty($voucherActivity))
 					  @foreach($voucherActivity as $kk => $ap)
 					@php
-					$priceT = $ap->totalprice + $ap->discountPrice;
+					$priceT = $ap->totalprice - ($ap->discount_tkt + $ap->discount_sic_pvt_price);
 					@endphp
 					
 				   <tr>
@@ -76,7 +77,8 @@
 					<td>{{$ap->adult}}</td>
                     <td>{{$ap->child}}</td>
                     <td>{{$ap->infant}}</td>
-					<td>{{$ap->discountPrice}}</td>
+					<td>{{$ap->discount_tkt}}</td>
+					<td>{{$ap->discount_sic_pvt_price}}</td>
 					<td>{{$ap->totalprice}}</td>
 					<td>{{$priceT}}
 					<input type="hidden" id="totalprice{{$kk}}" value="{{$priceT}}"  data-inputnumber="{{$kk}}"   />
