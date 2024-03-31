@@ -46,9 +46,6 @@
                     <th>Infant</th>
 					<th>Ticket Discount</th>
 					<th>Transfer Discount</th>
-					<th>Amount</th>
-					<th>Total Amount</th>
-					<th>Discount</th>
 					<th>Net Amount</th>
                   </tr>
 				  @if(!empty($voucherActivity))
@@ -77,13 +74,12 @@
 					<td>{{$ap->adult}}</td>
                     <td>{{$ap->child}}</td>
                     <td>{{$ap->infant}}</td>
-					<td>{{$ap->discount_tkt}}</td>
-					<td>{{$ap->discount_sic_pvt_price}}</td>
-					<td>{{$ap->totalprice}}</td>
-					<td>{{$priceT}}
-					<input type="hidden" id="totalprice{{$kk}}" value="{{$priceT}}"  data-inputnumber="{{$kk}}"   />
+					<input type="hidden" id="totalprice{{$kk}}" value="{{$ap->totalprice}}"  data-inputnumber="{{$kk}}"   />
+					<input type="hidden" id="discount_tkt_old{{$kk}}" value="{{($ap->discount_tkt>0)?$ap->discount_tkt:0}}"  data-inputnumber="{{$kk}}"   />
+					<input type="hidden" id="discount_sic_pvt_price_old{{$kk}}" value="{{($ap->discount_sic_pvt_price>0)?$ap->discount_sic_pvt_price:0}}"  data-inputnumber="{{$kk}}"   />
 					</td>
-					<td><input type="text" id="discount{{$kk}}" name="discount[{{$ap->id}}]}" class="form-control priceChange" value="0" data-inputnumber="{{$kk}}"   /></td>
+					<td><input type="text" id="discount_tkt{{$kk}}" name="discount_tkt[{{$ap->id}}]}" class="form-control priceChange" value="{{($ap->discount_tkt>0)?$ap->discount_tkt:0}}" data-inputnumber="{{$kk}}"   /></td>
+					<td><input type="text" @if($ap->transfer_option=='Ticket Only') readonly="readonly" @endif id="discount_sic_pvt_price{{$kk}}" name="discount_sic_pvt_price[{{$ap->id}}]}" class="form-control priceChange" value="{{($ap->discount_sic_pvt_price>0)?$ap->discount_sic_pvt_price:0}}" data-inputnumber="{{$kk}}"   /></td>
 					<td>
 					<input type="hidden" id="newPrice{{$kk}}" value="" data-inputnumber="{{$kk}}"   />
 					<span id="price{{$kk}}" style="font-weight:bold">{{$priceT}}</span>
@@ -117,7 +113,9 @@
 	   $(document).on('change', '.priceChange', function(evt) {
 	var inputnumber = $(this).data('inputnumber');
 	var amt = parseFloat($("body #totalprice"+inputnumber).val());
-	var discount = parseFloat($(this).val());
+	var discount1 = parseFloat($("body #discount_tkt"+inputnumber).val());
+	var discount2 = parseFloat($("body #discount_sic_pvt_price"+inputnumber).val());
+	var discount =  discount1+discount2;
 	/* if(discount == null || isNaN(discount) || discount <0)
 	{
 		discount = 0;
@@ -127,7 +125,8 @@
 	
 	if(discount > amt){
 		alert("Discount not greater than total amount.");
-		$("body #discount"+inputnumber).val(0);
+		$("body #discount_tkt"+inputnumber).val($("#discount_tkt_old"+inputnumber).val());
+		$("body #discount_sic_pvt_price"+inputnumber).val($("#discount_sic_pvt_price_old"+inputnumber).val());
 		$("body #price"+inputnumber).text(amt);
 		$("body #newPrice"+inputnumber).val(amt);
 		return false;

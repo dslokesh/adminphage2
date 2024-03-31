@@ -116,8 +116,13 @@ class VouchersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+		$pid = 0;
+		if($request->has('pid')){
+			$pid = $request->pid;
+		}
+		
 		$this->checkPermissionMethod('list.voucher');
 		$countries = Country::where('status', 1)->orderBy('name', 'ASC')->get();
 		$airlines = Airline::where('status', 1)->orderBy('name', 'ASC')->get();
@@ -131,7 +136,7 @@ class VouchersController extends Controller
 			
 			 return view('vouchers.createbyagent', compact('countries','airlines','customerTBA'));
 		}else{ */
-        return view('vouchers.create', compact('countries','airlines','customerTBA'));
+        return view('vouchers.create', compact('countries','airlines','customerTBA','pid'));
 		//}
     }
 
@@ -211,6 +216,7 @@ class VouchersController extends Controller
 		$record->adults = $request->input('adults');
 		$record->childs = $request->input('childs');
 		$record->infants = $request->input('infants');
+		$record->parent_id = $request->input('parent_id');
 		$record->status = 1;
 		$record->created_by = Auth::user()->id;
         $record->save();
@@ -1106,7 +1112,11 @@ class VouchersController extends Controller
         }
 		$voucherHotel = VoucherHotel::where('voucher_id',$voucher->id)->orderBy("check_in_date","ASC")->get();
 		//$voucherActivity = VoucherActivity::where('voucher_id',$voucher->id)->whereIn('status',[0,3,4])->get();
-		$voucherActivity = VoucherActivity::where('voucher_id',$voucher->id)->whereIn('status',[0,3,4])->orderBy("tour_date","ASC")->orderBy("serial_no","ASC")->get();
+		if($voucher->parent_id > 0){
+		$voucherActivity = VoucherActivity::whereIn('voucher_id',[$voucher->id,$voucher->parent_id])->whereIn('status',[0,3,4])->orderBy("tour_date","ASC")->orderBy("serial_no","ASC")->get();
+		} else {
+			$voucherActivity = VoucherActivity::where('voucher_id',$voucher->id)->whereIn('status',[0,3,4])->orderBy("tour_date","ASC")->orderBy("serial_no","ASC")->get();
+		}
 		$discountTotal = 0;
 		$subTotal = 0;
 		$dataArray = [
@@ -1486,26 +1496,32 @@ class VouchersController extends Controller
 		$aData = [];
 		if(!empty($agent))
 		{
-			$discountRecord = $data['discount'];
+			$discountRecord = $data['discount_tkt'];
+			$discount_sic_pvt_price = $data['discount_sic_pvt_price'];
 			
 			foreach($voucherActivityRecord as $var){
 				
-				$dis = (array_key_exists($var->id,$discountRecord))?$discountRecord[$var->id]:0;
-				$dis = (floatval($dis)) ? $dis : 0;
-				$tPrice = $var->totalprice + $var->discountPrice;
-				if($dis > $tPrice){
+				$dis1 = (array_key_exists($var->id,$discountRecord))?$discountRecord[$var->id]:0;
+				$dis2 = (array_key_exists($var->id,$discount_sic_pvt_price))?$discount_sic_pvt_price[$var->id]:0;
+				
+				$dis1 = (floatval($dis1)) ? $dis1 : 0;
+				$dis2 = (floatval($dis2)) ? $dis2 : 0;
+				$totalDis = $dis1+$dis2;
+				$tPrice = $var->totalprice;
+				if($totalDis > $tPrice){
 					 return redirect()->back()->with('error', 'Discount not greater than total amount.');
 				}
 				$tP= $tPrice;
 				$aData[] =[
 				"id" => $var->id,
 				"totalprice" => $tP,
-				"discount_tkt" => $dis,
+				"discount_tkt" => $dis1,
+				"discount_sic_pvt_price" => $dis2,
 				];
 				
 				
 				$grandTotal +=$tP;
-				$grandDis +=$dis;
+				$grandDis +=$totalDis;
 			}
 			//dd($aData);
 			$agentAmountBalance = $agent->agent_amount_balance;
@@ -1514,11 +1530,13 @@ class VouchersController extends Controller
 			{
 			foreach($aData as $var1){
 				$vA = VoucherActivity::find($var1['id']);
-				$discount_tkt = $vA->discount_tkt+$var1['discount_tkt'];
-				$vA->totalprice = $var1['totalprice'];
+				$discount_tkt = $var1['discount_tkt'];
+				$discount_sic_pvt_price = $var1['discount_sic_pvt_price'];
+				//$vA->totalprice = $var1['totalprice'];
 				$vA->discount_tkt = $discount_tkt;
+				$vA->discount_sic_pvt_price = $discount_sic_pvt_price;
 				$vA->save();
-				SiteHelpers::voucherActivityLog($record->id,$var1['id'],$var1['discount_tkt'],$var1['totalprice'],5);
+				SiteHelpers::voucherActivityLog($record->id,$var1['id'],$var1['discount_tkt']+$var1['discount_sic_pvt_price'],$var1['totalprice'],5);
 			}
 			
 		

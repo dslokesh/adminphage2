@@ -21,7 +21,7 @@
       <div class="container-fluid">
   
 <div class="row multistep">
-        <div class="col-md-3 multistep-step complete">
+        <div class="col-md-2 multistep-step complete">
             <div class="text-center multistep-stepname" style="font-size: 16px;">Add to Cart</div>
             <div class="progress"><div class="progress-bar"></div></div>
             <a href="#" class="multistep-dot"></a>
@@ -46,8 +46,12 @@
 					@endif
 								  @endif
 								  
-					<a class="btn btn-info btn-sm float-left" style=" margin-top: 20px;margin-left: 10px;" href="{{ route('voucher.add.discount',$voucher->id) }}" >Add/Edit Discount</a>
-					
+					<a class="btn btn-info btn-sm float-left" style=" margin-top: 20px;margin-left: 5px;" href="{{ route('voucher.add.discount',$voucher->id) }}" >Add/Edit Discount</a>
+					@if($voucher->parent_id > 0)
+						<a class="btn btn-info btn-sm float-right" style=" margin-top: 20px;margin-left: 5px;" href="{{ route('vouchers.show',[$voucher->parent_id]) }}" >View Parent Itinerary</a>
+					@else
+					<a class="btn btn-info btn-sm float-right" style=" margin-top: 20px;margin-left: 5px;" href="{{ route('vouchers.create',['pid'=>$voucher->id]) }}" >Add More Itinerary</a>
+					@endif
 				</div>
         
         

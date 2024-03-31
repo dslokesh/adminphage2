@@ -42,7 +42,7 @@
               </div>
 			   <div class="form-group col-md-12" id="agent_details">
 			   </div>
-			  
+				<input type="hidden" id="parent_id" name="parent_id" value="{{$pid}}"  />
 			    <div class="form-group col-md-6">
                 <label for="inputName">Country: <span class="red">*</span></label>
                 <select name="country_id" id="country_id" class="form-control">
