@@ -1106,17 +1106,29 @@ class VouchersController extends Controller
 		$voucher = Voucher::find($vid);
 		}
 		
+		$voucherIds[$vid] = $vid;
+		$parentVoucher = $voucher->getParent;
+		$childVouchers = $voucher->getChild;
+			if(!empty($parentVoucher)){
+		$voucherIds[$parentVoucher->id] = $parentVoucher->id;
+		}
+
+		if(!empty($childVouchers)){
+			foreach ($childVouchers as $childVoucher) {
+				$voucherIds[$childVoucher->id] = $childVoucher->id;
+			}
+		}
+		
+		
+		
 		
 		if (empty($voucher)) {
             return abort(404); //record not found
         }
 		$voucherHotel = VoucherHotel::where('voucher_id',$voucher->id)->orderBy("check_in_date","ASC")->get();
 		//$voucherActivity = VoucherActivity::where('voucher_id',$voucher->id)->whereIn('status',[0,3,4])->get();
-		if($voucher->parent_id > 0){
-		$voucherActivity = VoucherActivity::whereIn('voucher_id',[$voucher->id,$voucher->parent_id])->whereIn('status',[0,3,4])->orderBy("tour_date","ASC")->orderBy("serial_no","ASC")->get();
-		} else {
-			$voucherActivity = VoucherActivity::where('voucher_id',$voucher->id)->whereIn('status',[0,3,4])->orderBy("tour_date","ASC")->orderBy("serial_no","ASC")->get();
-		}
+		$voucherActivity = VoucherActivity::whereIn('voucher_id',$voucherIds)->whereIn('status',[0,3,4])->orderBy("tour_date","ASC")->orderBy("serial_no","ASC")->get();
+		
 		$discountTotal = 0;
 		$subTotal = 0;
 		$dataArray = [

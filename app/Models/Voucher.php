@@ -52,5 +52,15 @@ class Voucher extends Model
 
     return $this->hasMany(VoucherActivity::class);
 }
+
+	public function getParent()
+    {
+        return $this->belongsTo(Voucher::class, 'parent_id');
+    }
+
+    public function getChild()
+    {
+        return $this->hasMany(Voucher::class, 'parent_id')->where('id', '!=', $this->id);
+    }
    
 }
