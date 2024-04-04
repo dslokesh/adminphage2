@@ -49,6 +49,7 @@ class ReporsController extends Controller
 		$perPage = config("constants.ADMIN_PAGE_LIMIT");
 		$voucherStatus = config("constants.voucherStatus");
 		$twoDaysAgo = date("Y-m-d", strtotime(date("Y-m-d") . " -2 days"));
+		$twoDaysNull = date("Y-m-d", strtotime(date("Y-m-d") . " +2 days"));
 		$supplier_ticket = User::where("service_type",'Ticket')->orWhere('service_type','=','Both')->get();
 		$supplier_transfer = User::where("service_type",'Transfer')->orWhere('service_type','=','Both')->get();
 		
@@ -73,12 +74,10 @@ class ReporsController extends Controller
 		
 				}
 				}
-				else{
-			$query->whereDate('tour_date', '>=', $twoDaysAgo);
-			}
+				
 			}
 			else{
-			 $query->whereDate('tour_date', '>=', $twoDaysAgo);
+			 $query->whereDate('tour_date', '>=', $twoDaysNull);
 		}
         if(isset($data['vouchercode']) && !empty($data['vouchercode'])) {
 			$query->whereHas('voucher', function($q)  use($data){
@@ -108,7 +107,7 @@ class ReporsController extends Controller
         $data = $request->all();
 		$perPage = config("constants.ADMIN_PAGE_LIMIT");
 		$twoDaysAgo = date("Y-m-d", strtotime(date("Y-m-d") . " -2 days"));
-		
+		$twoDaysNull = date("Y-m-d", strtotime(date("Y-m-d") . " +2 days"));
 		$query = VoucherActivity::with(["voucher",'activity','voucher.customer','supplierticket','suppliertransfer'])->whereNotIn('status',[1,2])->where('id','!=', null)->where(function ($query)  {
            $query->where('transfer_option',  "Pvt Transfer")->orWhere('transfer_option',  "Shared Transfer");
        });;
@@ -129,12 +128,10 @@ class ReporsController extends Controller
 				});
 		
 				}
-				}else{
-			 $query->whereDate('tour_date', '>=', $twoDaysAgo);
-			}
+				}
 			}
 			else{
-			 $query->whereDate('tour_date', '>=', $twoDaysAgo);
+			 $query->whereDate('tour_date', '>=', $twoDaysNull);
 		}
 		
 		if(isset($data['vouchercode']) && !empty($data['vouchercode'])) {
