@@ -197,6 +197,7 @@ class VariantsController extends Controller
 		$record->cancellation_policy = $request->input('cancellation_policy');
 		$record->booking_cut_off = $request->input('booking_cut_off');
 		$record->booking_policy = $request->input('booking_policy');
+		$record->terms_conditions = $request->input('terms_conditions');
         $record->status = $request->input('status');
 		$record->created_by = Auth::user()->id;
 		$record->save();
@@ -439,6 +440,7 @@ class VariantsController extends Controller
 		$record->cancellation_policy = $request->input('cancellation_policy');
 		$record->booking_cut_off = $request->input('booking_cut_off');
 		$record->booking_policy = $request->input('booking_policy');
+		$record->terms_conditions = $request->input('terms_conditions');
         $record->status = $request->input('status');
 		$record->updated_by = Auth::user()->id;
         $record->save();
