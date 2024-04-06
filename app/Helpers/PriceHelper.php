@@ -56,7 +56,7 @@ class PriceHelper
     }
 	
 	
-	public static function getActivityPriceSaveInVoucher($transfer_option,$activity_variant_id,$agent_id,$voucher,$u_code,$adult,$child,$infent,$discount,$tourDate)
+	public static function getActivityPriceSaveInVoucher($transfer_option,$activity_variant_id,$agent_id,$voucher,$u_code,$adult,$child,$infant,$discount,$tourDate)
     {
 		$totalPrice = 0;
 		$zonePrice = 0;
@@ -101,8 +101,8 @@ class PriceHelper
 	
 	$adultPriceTotal  = $adultPrice * $adult;
 	$childPriceTotal  = $childPrice * $child;
-	$infentPriceTotal  = $infPrice * $infent;
-	$adult_total_rate = $adultPriceTotal + $childPriceTotal + $infentPriceTotal;
+	$infantPriceTotal  = $infPrice * $infant;
+	$adult_total_rate = $adultPriceTotal + $childPriceTotal + $infantPriceTotal;
 	$adult_total_rate = ($adult_total_rate > 0)?$adult_total_rate:0;
 		if(isset($activityVariant->ucode)){
 		$markup = SiteHelpers::getAgentMarkup($agent_id,$activityVariant->activity_id, $activityVariant->ucode);
@@ -117,8 +117,8 @@ class PriceHelper
 		
 		$adultPriceMarkupTotal = $markup['ticket_only'] * $adult; // ticket_only as adult
 		$childPriceMarkupTotal = $markup['sic_transfer'] * $child; // sic_transfer as child
-		$infentPriceMarkupTotal = $markup['pvt_transfer'] * $infent; // pvt_transfer as infent
-		$markupTotal = $adultPriceMarkupTotal + $childPriceMarkupTotal + $infentPriceMarkupTotal;
+		$infantPriceMarkupTotal = $markup['pvt_transfer'] * $infant; // pvt_transfer as infant
+		$markupTotal = $adultPriceMarkupTotal + $childPriceMarkupTotal + $infantPriceMarkupTotal;
 		 
 			if($variant->sic_TFRS==1){
 				
@@ -137,7 +137,7 @@ class PriceHelper
 			}
 			
 			$totalTransferPrice = 0;
-			$ticketPrice = $adultPriceTotal + $childPriceTotal  + $infentPriceTotal;
+			$ticketPrice = $adultPriceTotal + $childPriceTotal  + $infantPriceTotal;
 			if($transfer_option == 'Ticket Only'){
 				$totalPrice = $ticketPrice;
 			} else {
@@ -188,7 +188,7 @@ class PriceHelper
 		$voucherId = (isset($data['voucherId']))?$data['voucherId']:0;
 		$adult = (isset($data['adult']) && $data['adult'] > 0)?(int)$data['adult']:0;
 		$child = (isset($data['child']) && $data['child'] > 0)?(int)$data['child']:0;
-		$infent = (isset($data['infent']) && $data['infent'] > 0)?$data['infent']:0;
+		$infant = (isset($data['infant']) && $data['infant'] > 0)?$data['infant']:0;
 		$tourDate = (isset($data['tourDate']))?date("Y-m-d",strtotime($data['tourDate'])):0;
 		$discount = (isset($data['discount']))?$data['discount']:0;
 		$zonevalue = (isset($data['zonevalue']))?$data['zonevalue']:0;
@@ -251,15 +251,15 @@ class PriceHelper
 			
 				$adultPriceTotal  = $adultPrice * $adult;
 				$childPriceTotal  = $childPrice * $child;
-				$infentPriceTotal  = $infPrice * $infent;
-				$adult_total_rate = $adultPriceTotal + $childPriceTotal + $infentPriceTotal;
+				$infantPriceTotal  = $infPrice * $infant;
+				$adult_total_rate = $adultPriceTotal + $childPriceTotal + $infantPriceTotal;
 				$adult_total_rate = ($adult_total_rate > 0)?$adult_total_rate:0;
 				
 				
 				$adultPriceMarkupTotal = $markup['ticket_only'] * $adult; // ticket_only as adult
 				$childPriceMarkupTotal = $markup['sic_transfer'] * $child; // sic_transfer as child
-				$infentPriceMarkupTotal = $markup['pvt_transfer'] * $infent; // pvt_transfer as infent
-				$markupTotal = $adultPriceMarkupTotal + $childPriceMarkupTotal + $infentPriceMarkupTotal;
+				$infantPriceMarkupTotal = $markup['pvt_transfer'] * $infant; // pvt_transfer as infant
+				$markupTotal = $adultPriceMarkupTotal + $childPriceMarkupTotal + $infantPriceMarkupTotal;
 				 
 					if($variant->sic_TFRS==1){
 						$zonePrice = $zonevalue * $totalmember;
@@ -273,7 +273,7 @@ class PriceHelper
 							}
 					}
 					
-					$ticketPrice = $adultPriceTotal + $childPriceTotal  + $infentPriceTotal;
+					$ticketPrice = $adultPriceTotal + $childPriceTotal  + $infantPriceTotal;
 					if($transfer_option == 'Ticket Only'){
 						$totalPrice = $ticketPrice;
 					} else {
@@ -302,7 +302,7 @@ class PriceHelper
 		$data = [
 		'adultPrice' =>$adultPrice,
 		'childPrice' =>$childPrice,
-		'infPrice' =>$infPrice,
+		'infPrice' =>$infant,
 		'totalprice' =>$total,
 		'activity_vat' =>$avat,
 		'pvt_traf_val_with_markup' =>$transferPrice,
