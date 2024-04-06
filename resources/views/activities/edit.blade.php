@@ -67,6 +67,8 @@
           <option value="Arrival" @if($record->entry_type == 'Arrival') {{'selected="selected"'}} @endif >Arrival</option>
           <option value="Departure" @if($record->entry_type == 'Departure') {{'selected="selected"'}} @endif >Departure</option>
           <option value="Interhotel" @if($record->entry_type == 'Interhotel') {{'selected="selected"'}} @endif >Interhotel</option>
+		   <option value="Yacht" @if($record->entry_type == 'Yacht') {{'selected="selected"'}} @endif >Yacht</option>
+          <option value="Limo" @if($record->entry_type == 'Limo') {{'selected="selected"'}} @endif >Limo</option>
                  </select>
 				 @if ($errors->has('entry_type'))
                     <span class="text-danger">{{ $errors->first('entry_type') }}</span>

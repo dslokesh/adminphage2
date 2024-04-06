@@ -2,7 +2,7 @@
  <!-- Script -->
 	<script type="text/javascript">
 	$(document).ready(function(){
-	var country = "{{old('country_id')}}";
+	var country = "{{old('country_id')?old('country_id'):1}}";
 	var oldstate = "{{old('state_id')}}";
 	var oldcity = "{{old('city_id')}}";
 	$(".india").css("display", "none");

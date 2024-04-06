@@ -66,6 +66,8 @@
           <option value="Arrival" @if(old('entry_type') == 'Arrival') {{'selected="selected"'}} @endif >Arrival</option>
           <option value="Departure" @if(old('entry_type') == 'Departure') {{'selected="selected"'}} @endif >Departure</option>
           <option value="Interhotel" @if(old('entry_type') == 'Interhotel') {{'selected="selected"'}} @endif >Interhotel</option>
+		   <option value="Yacht" @if(old('entry_type') == 'Yacht') {{'selected="selected"'}} @endif >Yacht</option>
+          <option value="Limo" @if(old('entry_type') == 'Limo') {{'selected="selected"'}} @endif >Limo</option>
                  </select>
 				 @if ($errors->has('entry_type'))
                     <span class="text-danger">{{ $errors->first('entry_type') }}</span>
@@ -75,7 +77,6 @@
 			   <div class="form-group col-md-4">
                 <label for="inputName">Vat %:</label>
                 <select  id="vat" name="vat" class="form-control">
-				<option value="">--select--</option>
                     <option value="5" @if(old('vat') == 5) {{'selected="selected"'}} @endif>5</option>
                  </select>
 				 @if ($errors->has('vat'))
@@ -87,7 +88,11 @@
                 <select name="currency_id" id="currency_id" class="form-control">
 				<option value="">--select--</option>
 				@foreach($currencies as $currency)
-                    <option value="{{$currency->id}}" @if(old('currency_id') == $currency->id) {{'selected="selected"'}} @endif>{{$currency->name}} ({{$currency->code}})</option>
+				@if(old('currency_id') == $currency->id)
+                    <option value="{{$currency->id}}" selected="selected">{{$currency->name}} ({{$currency->code}})</option>
+				@else
+					<option value="{{$currency->id}}" @if($currency->code == 'AED') {{'selected="selected"'}} @endif>{{$currency->name}} ({{$currency->code}})</option>
+				@endif
 				@endforeach
                  </select>
 				 @if ($errors->has('country_id'))
@@ -113,7 +118,12 @@
                 <select name="country_id" id="country_id" class="form-control">
 				<option value="">--select--</option>
 				@foreach($countries as $country)
-                    <option value="{{$country->id}}" @if(old('country_id') == $country->id) {{'selected="selected"'}} @endif>{{$country->name}}</option>
+				@if(old('country_id') == $country->id)
+                    <option value="{{$country->id}}" selected="selected">{{$country->name}}</option>
+				@else
+					<option value="{{$country->id}}" @if($country->id==1) {{'selected="selected"'}} @endif>{{$country->name}}</option>
+				@endif
+				
 				@endforeach
                  </select>
 				 @if ($errors->has('country_id'))

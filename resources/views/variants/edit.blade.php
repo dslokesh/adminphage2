@@ -357,11 +357,19 @@
                 @endif
               </div>
 			   <div class="form-group col-md-6">
-                <label for="inputName">Booking Policy: <span class="red">*</span></label>
+                <label for="inputName">Notes: <span class="red">*</span></label>
 				
-                <textarea placeholder="Booking Policy" name="cancellation_policy" cols="50" rows="5" id="cancellation_policy" class="form-control box-size text-editor-all">{{ old('cancellation_policy')?:$record->cancellation_policy }}</textarea>
+                <textarea placeholder="Notes" name="cancellation_policy" cols="50" rows="5" id="cancellation_policy" class="form-control box-size text-editor-all">{{ old('cancellation_policy')?:$record->cancellation_policy }}</textarea>
                 @if ($errors->has('cancellation_policy'))
                     <span class="text-danger">{{ $errors->first('cancellation_policy') }}</span>
+                @endif
+              </div>
+			  <div class="form-group col-md-12">
+                <label for="inputName">Terms & Conditions: </label>
+				
+                <textarea placeholder="Terms & Conditions" name="terms_conditions" cols="50" rows="5" id="terms_conditions" class="form-control box-size text-editor-all">{{ old('terms_conditions')?:$record->terms_conditions }}</textarea>
+                @if ($errors->has('terms_conditions'))
+                    <span class="text-danger">{{ $errors->first('terms_conditions') }}</span>
                 @endif
               </div>
               <div class="form-group col-md-12">

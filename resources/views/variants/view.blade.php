@@ -218,10 +218,13 @@
                 {!!$variant->booking_cut_off!!}
               </div>
 			   <div class="form-group col-lg-12 mb-3">
-                <label for="inputName">Booking Policy:</label>
+                <label for="inputName">Notes:</label>
                 {!!$variant->cancellation_policy!!}
               </div>
-			   
+			    <div class="form-group col-lg-12 mb-3">
+                <label for="inputName">Terms & Conditions:</label>
+                {!!$variant->terms_conditions!!}
+              </div>
               <div class="form-group col-lg-6 mb-3">
 			        <label for="inputName">Status:</label>
 					{!! SiteHelpers::statusColor($variant->status) !!}
