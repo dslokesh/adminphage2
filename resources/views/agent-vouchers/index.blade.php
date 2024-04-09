@@ -95,7 +95,8 @@
 					<td>Adult</td>
 					<td>Child</td>
 					<td>Infant</td>
-					
+					<td>Invoice</td>
+					<td>Itinerary</td>
 				
 					
                     <td>Status</td>
@@ -123,7 +124,26 @@
 					<td>{{ ($record->adult)}}</td>
 					<td>{{ ($record->child)}}</td>
 					<td>{{ ($record->infant)}}</td>
-					
+					 <td>
+						   @if($record->voucher->status_main >= 4)
+					 <a class="btn btn-info btn-sm" href="{{route('voucherInvoicePdf',$record->voucher->id)}}" >
+           <i class="fas fa-file">
+                              </i>
+                             
+                          </a>
+						  @endif
+						  </td>
+						   <td>
+					 
+						 @if($record->voucher->status_main > 1)
+					 <a class="btn btn-info btn-sm" href="{{route('voucherActivityItineraryPdf',$record->voucher->id)}}">
+                              <i class="fas fa-download">
+                              </i>
+                             
+                          </a>
+						  @endif
+						
+						  </td>
 				
 					
                     <td>{!! SiteHelpers::voucherStatus($record->voucher->status_main) !!}</td>

@@ -52,6 +52,13 @@ class VariantsController extends Controller
             if ($data['is_canellation'] == 2)
                 $query->where('is_canellation', 0);
         }
+		
+		if (isset($data['for_backend_only']) && !empty($data['for_backend_only'])) {
+            if ($data['for_backend_only'] == 1)
+                $query->where('for_backend_only', 1);
+            if ($data['for_backend_only'] == 2)
+                $query->where('for_backend_only', 0);
+        }
 
         $records = $query->orderBy('created_at', 'DESC')->paginate($perPage);
 		//dd($records);
@@ -198,6 +205,7 @@ class VariantsController extends Controller
 		$record->booking_cut_off = $request->input('booking_cut_off');
 		$record->booking_policy = $request->input('booking_policy');
 		$record->terms_conditions = $request->input('terms_conditions');
+		$record->for_backend_only = $request->input('for_backend_only');
         $record->status = $request->input('status');
 		$record->created_by = Auth::user()->id;
 		$record->save();
@@ -441,6 +449,7 @@ class VariantsController extends Controller
 		$record->booking_cut_off = $request->input('booking_cut_off');
 		$record->booking_policy = $request->input('booking_policy');
 		$record->terms_conditions = $request->input('terms_conditions');
+		$record->for_backend_only = $request->input('for_backend_only');
         $record->status = $request->input('status');
 		$record->updated_by = Auth::user()->id;
         $record->save();

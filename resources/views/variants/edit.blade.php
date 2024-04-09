@@ -373,13 +373,19 @@
                 @endif
               </div>
               <div class="form-group col-md-12">
+                <label for="inputName">Backend Only: <span class="red">*</span></label>
+                <select name="for_backend_only" id="for_backend_only" class="form-control">
+                    <option value="1" @if($record->for_backend_only ==1) {{'selected="selected"'}} @endif>Yes</option>
+					  <option value="0" @if($record->for_backend_only ==0) {{'selected="selected"'}} @endif >No</option>
+                 </select>
+              </div>
+			   <div class="form-group col-md-12">
                 <label for="inputName">Status: <span class="red">*</span></label>
                 <select name="status" id="status" class="form-control">
                     <option value="1" @if($record->status ==1) {{'selected="selected"'}} @endif>Active</option>
 					  <option value="0" @if($record->status ==0) {{'selected="selected"'}} @endif >Inactive</option>
                  </select>
               </div>
-			  
             </div>
             <!-- /.card-body -->
           </div>

@@ -46,6 +46,7 @@
                     <th>Status</th>
 					<th>Is Slot</th>
 					<th>Is Canellation</th>
+					<th>Backend Only</th>
                     <th>Created</th>
                     <th>Updated</th>
                     <th width="17%"></th>
@@ -70,6 +71,11 @@
                     <option value="1" @if(request('is_canellation') ==1) {{'selected="selected"'}} @endif>Yes</option>
 					          <option value="2" @if(request('is_canellation') ==2) {{'selected="selected"'}} @endif >No</option>
                  </select></th>
+				  <th><select name="for_backend_only" id="for_backend_only" class="form-control">
+                    <option value="" @if(request('for_backend_only') =='') {{'selected="selected"'}} @endif>Select</option>
+                    <option value="1" @if(request('for_backend_only') ==1) {{'selected="selected"'}} @endif>Yes</option>
+					          <option value="2" @if(request('for_backend_only') ==2) {{'selected="selected"'}} @endif >No</option>
+                 </select></th>
 					<th></th>
                     <th></th>
                    
@@ -89,6 +95,7 @@
                     <td>{!! SiteHelpers::statusColor($record->status) !!}</td>
 					<td>{!! SiteHelpers::statusColorYesNo($record->is_slot) !!}</td>
 					<td>{!! SiteHelpers::statusColorYesNo($record->is_canellation) !!}</td>
+					<td>{!! SiteHelpers::statusColorYesNo($record->for_backend_only) !!}</td>
                     <td>{{ $record->created_at ? date(config('app.date_format'),strtotime($record->created_at)) : null }}</td>
                     <td>{{ $record->updated_at ? date(config('app.date_format'),strtotime($record->updated_at)) : null }}</td>
                      <td>
