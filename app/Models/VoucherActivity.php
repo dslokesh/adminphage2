@@ -48,6 +48,10 @@ class VoucherActivity extends Model
         return $this->belongsTo(Zone::class, 'transfer_zone', 'id');
     }
     
+	public function variant()
+    {
+        return $this->belongsTo(Variant::class,'variant_code','ucode');
+    }
 	
 	
 }

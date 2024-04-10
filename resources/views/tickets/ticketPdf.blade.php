@@ -120,7 +120,7 @@ body p
            
             @endif   
       <h3>General Rules and Regulations</h3>
-						<p style="font-size: 9px!important;">{!! $ticket->terms_and_conditions !!}</p>
+						<p style="font-size: 9px!important;">{!! @$ticket->variant->terms_conditions !!}</p>
           
               
       </div>

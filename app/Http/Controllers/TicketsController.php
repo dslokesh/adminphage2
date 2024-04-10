@@ -207,9 +207,8 @@ class TicketsController extends Controller
 			return redirect($voucherActivity->ticket_pdf);
 		} else {
 		$voucher = Voucher::where('id',$voucherActivity->voucher_id)->first();;
-		$tickets = Ticket::where('activity_id',$voucherActivity->activity_id)->where('activity_variant',$voucherActivity->variant_code)->where('voucher_activity_id',$voucherActivity->id)->where('ticket_generated','1')->get();
-		//dd($voucherActivity->activity);
-		//return view('tickets.ticketPdf', compact('voucherActivity','tickets','voucher'));
+		$tickets = Ticket::where('activity_variant',$voucherActivity->variant_code)->where('voucher_activity_id',$voucherActivity->id)->where('ticket_generated','1')->get();
+		
         $voucherActivity->ticket_downloaded = 1;
 		$voucherActivity->save();
 		foreach($tickets as $ticket){
@@ -218,7 +217,7 @@ class TicketsController extends Controller
 		$ticket->ticket_downloaded = 1;
 		$ticket->save();
 		}
-	//	return view('tickets.ticketPdf', compact('voucherActivity','tickets','voucher'));
+		//return view('tickets.ticketPdf', compact('voucherActivity','tickets','voucher'));
         $pdf = SPDF::loadView('tickets.ticketPdf', compact('voucherActivity','tickets','voucher'));
        $pdf->setPaper('A4')->setOrientation('portrait');
         return $pdf->download('Ticket'.$voucher->code.'-'.$voucherActivity->variant_code.'-'.$voucherActivity->id .'.pdf');
