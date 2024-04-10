@@ -87,7 +87,7 @@ $currency = SiteHelpers::getCurrencyPrice();
 					@if(!empty($voucherActivity))
 					  @foreach($voucherActivity as $ap)
 				  @php
-					$ticketCount = SiteHelpers::getTicketCountByCode($ap->variant_unique_code);
+					$ticketCount = SiteHelpers::getTicketCountByCode($ap->variant_code);
 					@endphp
 					@php
 				$tourDt = date("Y-m-d",strtotime($ap->tour_date));
