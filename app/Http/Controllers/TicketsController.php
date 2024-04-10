@@ -118,7 +118,7 @@ class TicketsController extends Controller
 		$child = $voucherActivity->child;
 		$totalTicketNeed = $adult+$child;
 		$countTotalTicketNeed = $totalTicketNeed;
-		$ticketQuery = Ticket::where('ticket_generated','0')->where('activity_id',$voucherActivity->activity_id)->where('activity_variant',$voucherActivity->variant_unique_code)->whereDate('valid_from', '<=',$voucherActivity->tour_date)->whereDate('valid_till', '>=',$voucherActivity->tour_date)->orderBy("valid_till","ASC");
+		$ticketQuery = Ticket::where('ticket_generated','0')->where('activity_id',$voucherActivity->activity_id)->where('activity_variant',$voucherActivity->variant_code)->whereDate('valid_from', '<=',$voucherActivity->tour_date)->whereDate('valid_till', '>=',$voucherActivity->tour_date)->orderBy("valid_till","ASC");
 		
 		$totalTickets =$ticketQuery->get();
 		$totalTicketCount =$totalTickets->count();
@@ -206,7 +206,7 @@ class TicketsController extends Controller
 			return redirect($voucherActivity->ticket_pdf);
 		} else {
 		$voucher = Voucher::where('id',$voucherActivity->voucher_id)->first();;
-		$tickets = Ticket::where('activity_id',$voucherActivity->activity_id)->where('activity_variant',$voucherActivity->variant_unique_code)->where('voucher_activity_id',$voucherActivity->id)->where('ticket_generated','1')->get();
+		$tickets = Ticket::where('activity_id',$voucherActivity->activity_id)->where('activity_variant',$voucherActivity->variant_code)->where('voucher_activity_id',$voucherActivity->id)->where('ticket_generated','1')->get();
 		//dd($voucherActivity->activity);
 		//return view('tickets.ticketPdf', compact('voucherActivity','tickets','voucher'));
         $voucherActivity->ticket_downloaded = 1;
