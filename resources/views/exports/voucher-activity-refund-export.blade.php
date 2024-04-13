@@ -18,13 +18,21 @@
                     <th>I</th>
 					<th>Tour Date</th>
 					<th>Canceled Date</th>					
-					<th>Total Cost</th>
-					<th>Refund Amount</th>
+					<th>Ticket Cost</th>
+					<th>Transfer Cost</th>
+					<th>Ticket Discount</th>
+					<th>Transfer Discount</th>
+					<th>Total</th>
+					<th>Ticket Refund </th>
+					<th>Transfer Refund </th>
                   </tr>
 				  
                   </thead>
                   <tbody>
 				   @foreach ($records as $record)
+				    @php
+						$allPrice = PriceHelper::getTicketAllTypeCost($record->id)
+					@endphp
                   <tr>
 					<td>{{($record->voucher)?$record->voucher->code:''}}</td>
 					<td>{{($record->voucher->agent)?$record->voucher->agent->company_name:''}}</td>
@@ -38,10 +46,13 @@
                     <td>{{$record->infant}}</td>
 					<td>{{$record->tour_date}}</td>
 					<td>{{$record->canceled_date}}</td>
-					<td>{{ PriceHelper::getTotalTicketCostAllType($record->id) }}</td>
-					<td>
-					{{$record->refund_amount}}
-					</td>
+					<td>{{ $allPrice['tkt_price'] }}</td>
+					<td>{{ $allPrice['trns_price'] }}</td>
+					<td>{{ $allPrice['discounTkt'] }}</td>
+					<td>{{ $allPrice['discountTrns'] }}</td>
+					<td>{{ $allPrice['totalPriceAfDis'] }}</td>
+					<td>{{ $record->refund_amount_tkt }}</td>
+					<td>{{ $record->refund_amount_trans }}</td>
 					
                   </tr>
                  

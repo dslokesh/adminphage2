@@ -186,7 +186,7 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
 		Route::get('voucher-activity-canceled-report', [ReporsController::class, 'voucherActivtyCanceledReport'])->name('voucherActivtyCanceledReport');
 		Route::get('voucher-activity-canceled-report-export', [ReporsController::class, 'voucherActivtyCanceledReportExportExcel'])->name('voucherActivtyCanceledReportExportExcel');
 		Route::post('voucher-activity-refund-save', [ReporsController::class, 'activityRefundSave'])->name('activityRefundSave');
-		Route::get('voucher-activity-final-refund-save/{id?}', [ReporsController::class, 'activityFinalRefundSave'])->name('activityFinalRefundSave');
+		Route::post('voucher-activity-final-refund-save', [ReporsController::class, 'activityFinalRefundSave'])->name('activityFinalRefundSave');
 		Route::get('voucher-activity-refunded-report', [ReporsController::class, 'voucherActivtyRefundedReport'])->name('voucherActivtyRefundedReport');
 		Route::get('voucher-activity-refunded-report-export', [ReporsController::class, 'voucherActivtyRefundedReportExportExcel'])->name('voucherActivtyRefundedReportExportExcel');
 		Route::get('tickets-stock-report', [ReporsController::class, 'ticketStockReport'])->name('ticketStockReport');

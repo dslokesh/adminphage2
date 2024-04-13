@@ -692,7 +692,7 @@ return Excel::download(new LogisticReportExport($records), 'logistic_records'.da
 		if($data['inputname'] == 'refund_amount_tkt'){
 			$totalPrice = $tktPrice;
 			$tkt = 1;
-		} elseif($data['inputname'] == 'refund_amount_tras'){
+		} elseif($data['inputname'] == 'refund_amount_trans'){
 			$totalPrice = $trnsPrice;
 			$tkt = 2;
 		}
@@ -702,8 +702,9 @@ return Excel::download(new LogisticReportExport($records), 'logistic_records'.da
 				if($tkt==1){
 					$record->refund_amount_tkt = $data['val'];
 				} elseif($tkt==2){
-					$record->refund_amount_tkt = $data['val'];
+					$record->refund_amount_trans = $data['val'];
 				}
+				
 				
 				$record->refund_by = Auth::user()->id;
 				$record->save();
@@ -722,22 +723,25 @@ return Excel::download(new LogisticReportExport($records), 'logistic_records'.da
         return response()->json($response);
 	}
 	
-	public function activityFinalRefundSave(Request $request,$id)
+	public function activityFinalRefundSave(Request $request)
     {
 		$data = $request->all();
-		
+		$id = $data['id'];
+		$tktPrice = $data['trans'];
+		$trnsPrice = $data['tkt'];
 		$totalPrice = 0;
 		$tkt = 0;
 		$record = VoucherActivity::where("id",$id)->where('status', '=', 1)->first();
 		
-		$tktPrice = $record->refund_amount_tkt;
-		$trnsPrice = $record->refund_amount_trans;
 		
 		
 			if(!empty($record)){
 			$record->status = 2;
+			$record->refund_amount_tkt = $tktPrice;
+			$record->refund_amount_trans = $trnsPrice;
 			$record->refund_by = Auth::user()->id;
 			$record->save();
+			
 			$voucher = Voucher::where('id',$record->voucher_id)->select(['agent_id','vat_invoice','invoice_number'])->first();
 			$agent = User::find($voucher->agent_id);
 			if(!empty($agent))

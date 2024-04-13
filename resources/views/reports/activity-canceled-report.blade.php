@@ -106,7 +106,10 @@
                   <tbody>
 				  @foreach ($records as $record)
 				  @php
-				  $allPrice = PriceHelper::getTicketAllTypeCost($record->id)
+				  $allPrice = PriceHelper::getTicketAllTypeCost($record->id);
+				  $refundAmount = PriceHelper::getRefundAmountAfterCancellation($record->id);
+				  $trefundAmt = ($record->refund_amount_tkt)?$record->refund_amount_tkt:$refundAmount['refund_tkt_priceAfDis'];
+				  $transrefundAmt = ($record->refund_amount_trans)?$record->refund_amount_trans:$refundAmount['refund_trns_priceAfDis'];
 				  @endphp
                   <tr>
 					<td>{{($record->voucher)?$record->voucher->code:''}}</td>
@@ -128,28 +131,41 @@
 					<td>{{ $allPrice['totalPriceAfDis'] }}</td>
 					<td>
 					@if($record->status == 1)
-						@php
-						$refundAmount = PriceHelper::getRefundAmountAfterCancellation($record->id);
-					@endphp
-					<input type="text" class="form-control inputsave onlynumbrf" id="refund_amount_tkt{{$record->id}}"  data-id="{{$record->id}}" value="{{($record->refund_amount_tkt)?$record->refund_amount_tkt:$refundAmount['refund_tkt_priceAfDis']}}" data-inputname="refund_amount_tkt" placeholder="Refund Amount" />
+					<input type="text" class="form-control inputsave onlynumbrf" id="refund_amount_tkt{{$record->id}}"  data-id="{{$record->id}}" value="{{$trefundAmt}}" data-inputname="refund_amount_tkt" placeholder="Refund Amount" />
 					@else
 					{{$record->refund_amount_tkt}}
 					@endif
 					</td>
 					<td>
 					@if($record->status == 1)
-						@php
-						$refundAmount = PriceHelper::getRefundAmountAfterCancellation($record->id);
-					@endphp
 					
-					<input type="text" class="form-control inputsave onlynumbrf @if($record->transfer_option == 'Ticket Only') hide @endif" id="refund_amount_tras{{$record->id}}"  data-id="{{$record->id}}" data-inputname="refund_amount_trans" value="{{($record->refund_amount_trans)?$record->refund_amount_trans:$refundAmount['refund_trns_priceAfDis']}}" placeholder="Refund Amount" />
+					<input type="text" class="form-control inputsave onlynumbrf @if($record->transfer_option == 'Ticket Only') hide @endif" id="refund_amount_tras{{$record->id}}"  data-id="{{$record->id}}" data-inputname="refund_amount_trans" value="{{$transrefundAmt}}" placeholder="Refund Amount" />
 					
 					@else
 					{{$record->refund_amount_trans}}
 					@endif
 					</td>
 					
-					<td><a class="btn btn-success float-right  btn-sm  d-pdf" href="{{route('activityFinalRefundSave',['id'=>$record->id])}}" >Save</td>
+					<td>
+					<form id="refund-change-form-{{$record->id}}" method="post" action="{{route('activityFinalRefundSave')}}" style="display:none;">
+                                {{csrf_field()}}
+								<input type="hidden"  value="{{$record->id}}" name="id"  /> 
+								<input type="hidden"  value="{{$transrefundAmt}}" name="trans"  /> 
+								<input type="hidden"  value="{{$trefundAmt}}" name="tkt"  /> 
+                            </form>
+							
+					<a class="btn btn-success float-right  btn-sm  d-pdf" href="javascript:void(0)" onclick="
+                                if(confirm('Are you sure?'))
+                                {
+                                    event.preventDefault();
+                                    document.getElementById('refund-change-form-{{$record->id}}').submit();
+                                }
+                                else
+                                {
+                                    event.preventDefault();
+                                }
+                            
+                            " >Save</td>
 					
                   </tr>
                  
