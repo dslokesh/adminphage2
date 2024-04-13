@@ -112,7 +112,7 @@
                     <td>{{$record->infant}}</td>
 					<td>{{$record->tour_date}}</td>
 					<td>{{$record->canceled_date}}</td>
-					<td>{{ PriceHelper::getTotalTicketCostAllType($record->voucher_id) }}</td>
+					<td>{{ PriceHelper::getTotalTicketCostAllType($record->id) }}</td>
 					<td>{{$record->refund_amount}}</td>
 					
 					

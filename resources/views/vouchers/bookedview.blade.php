@@ -242,18 +242,7 @@
 						{{csrf_field()}}
 						</form>
 						
-							<a class="btn btn-primary  float-right  btn-sm ml-2" href="javascript:void(0)" onclick="
-							if(confirm('Are you sure, You want to cancel this?'))
-							{
-							event.preventDefault();
-							document.getElementById('cancel-form-{{$ap->id}}').submit();
-							}
-							else
-							{
-							event.preventDefault();
-							}
-
-							"><i class="fas fa-times"></i> Cancel </a>
+							<a class="btn btn-primary  float-right cancelAct btn-sm ml-2" data-variantcode="{{$ap->variant_code}}" data-apid="{{$ap->id}}" href="javascript:void(0)" ><i class="fas fa-times"></i> Cancel </a>
 						@endif
 				@if((($ap->status == '3') || ($ap->status == '4')) && ($ap->ticket_downloaded == '0'))
 						
@@ -261,18 +250,7 @@
 						{{csrf_field()}}
 						</form>
 						
-							<a class="btn btn-primary  float-right  btn-sm ml-2" href="javascript:void(0)" onclick="
-							if(confirm('Are you sure, You want to cancel this?'))
-							{
-							event.preventDefault();
-							document.getElementById('cancel-form-{{$ap->id}}').submit();
-							}
-							else
-							{
-							event.preventDefault();
-							}
-
-							"><i class="fas fa-times"></i> Cancel </a>
+							<a class="btn btn-primary  float-right cancelAct btn-sm ml-2" data-variantcode="{{$ap->variant_code}}" href="javascript:void(0)" data-apid="{{$ap->id}}" ><i class="fas fa-times"></i> Cancel </a>
 						@endif
                     @if(($voucher->status_main == 5) and ($ap->ticket_generated == '0') and ($ticketCount > '0') and ($ap->status == '3'))
 						<form id="tickets-generate-form-{{$ap->id}}" method="post" action="{{route('tickets.generate',$ap->id)}}" style="display:none;">
@@ -653,6 +631,42 @@
     </section>
   
     <!-- /.content -->
+	
+	<div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Cancellation Chart</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" id="dataCancel">
+                   <table id="cancellationTable" class="table table-bordered table-striped" style="display: none;">
+					<thead>
+						<tr>
+							<th>Duration</th>
+							<th>Ticket Refund Value</th>
+							<th>Transfer Refund Value</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- Table rows will be dynamically added here -->
+					</tbody>
+				</table>
+                   
+                </div>
+            </div>
+           <div class="modal-footer d-flex justify-content-between">
+			<button type="button" class="btn btn-sm btn-primary-flip btn-sm" id="selectCancelBtn"><i class="fa fa-tick"></i> Yes</button>
+			<button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">No</button>
+		</div>
+
+        </div>
+    </div>
+</div>
+
 @endsection
 
 
@@ -669,6 +683,65 @@
         location.reload();
     }, 2000); // Reload after 2 seconds
 });
+ $(document).ready(function() {
+ $(document).on('click', '.cancelAct', function(evt) {
+	 variantcode = $(this).data('variantcode');
+	 formid = $(this).data('apid');
+	  evt.preventDefault();
+	
+		 $.ajax({
+			  url: "{{ route('get.canellation.chart') }}",
+			  type: 'POST',
+			  dataType: "json",
+			  data: {
+				  "_token": "{{ csrf_token() }}",
+				  variantcode:variantcode,
+				  },
+			  success: function(data) {
+				   var cancellationData = data.cancellation;
+				  if(cancellationData.length > 0) {
+						$('#cancellationTable tbody').empty();
+						cancellationData.forEach(function(cancel) {
+							var row = '<tr>' +
+								'<td>' + cancel.duration + '</td>' +
+								'<td>' + cancel.ticket_refund_value + '</td>' +
+								'<td>' + cancel.transfer_refund_value + '</td>' +
+								'</tr>';
+							$('#cancellationTable tbody').append(row);
+						});
+						
+						$('#cancellationTable').show();
+						openModal(data.cancel,formid);
+				} else {
+						 var row = '<tr>' +
+                '<td colspan="3" style="text-align: center;">No Cancellation Chart Found</td>' +
+                '</tr>';
+            $('#cancellationTable tbody').append(row);
+			$('#cancellationTable').show();
+			openModal(data.cancel,formid);
+					}
+				//console.log(data);
+			  },
+			  error: function(error) {
+				console.log(error);
+			  }
+		});
+	
+	
+ });
+ });
+function openModal(cancel,formid) {
+        $('#cancelModal').modal('show');
+        $('#selectCancelBtn').on('click', function() {
+			$("body #cancel-form-"+formid).submit();
+        });
+		
+        $('#cancelModal .close').on('click', function() {
+            $('#cancelModal').modal('hide');
+        });
+   
+}
+
 
 </script>
 @endsection

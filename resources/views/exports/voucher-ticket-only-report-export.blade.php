@@ -42,7 +42,7 @@
                     <td>{{$record->infant}}</td>
 					<td>{{($record->supplierticket)?@$record->supplierticket->company_name:''}}</td>
 					<td>{{$record->ticket_supp_ref_no}}</td>
-					<td>{{ PriceHelper::getTotalCostTicketOnly($record->voucher_id) }}</td>
+					<td>{{ PriceHelper::getTotalCostTicketOnly($record->id) }}</td>
 					<td>{{$record->actual_total_cost}}</td>
 					
 					

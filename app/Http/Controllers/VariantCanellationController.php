@@ -41,6 +41,7 @@ class VariantCanellationController extends Controller
 		
 		if(!empty($durations)){
 			VariantCanellation::where('variant_id', $varidid)->delete();
+			
 			$data = [];
 			foreach($durations as $k=> $duration)
 			{
@@ -66,9 +67,25 @@ class VariantCanellationController extends Controller
 			
 		}
 		
-        return back()->with('success', 'Canellation Chart saved Successfully.');
+        return back()->with('success', 'Cancellation Chart saved Successfully.');
 
     }
-
+	
+	
+	public function getVariantCanellation(Request $request)
+    {
+			$variantcode = $request->input('variantcode');
+		
+			$query = VariantCanellation::where('varidCode', $variantcode);
+			$cancellation = $query->get();
+		if($cancellation){
+		$response = array("status"=>1,'cancellation'=>$cancellation);
+		} else {
+			$response = array("status"=>2,'cancellation'=>[]);
+		}
+		
+		
+        return response()->json($response);
+    }
 	
 }

@@ -317,9 +317,9 @@ class PriceHelper
     }
 	
 	
-	public static function getTotalTicketCostAllType($vid) 
+	public static function getTotalTicketCostAllType($id) 
 	{
-		$voucherActivity = VoucherActivity::where('voucher_id',$vid)->first();
+		$voucherActivity = VoucherActivity::where('id',$id)->first();
 		$returnTotalPrice = 0;
 		if(!empty($voucherActivity)){
 			$totalPrice = $voucherActivity->totalprice;
@@ -343,5 +343,86 @@ class PriceHelper
 		}
 		
 		return $returnTotalPrice;
+	}
+	
+	public static function getTicketAllTypeCost($id) 
+{
+    $voucherActivity = VoucherActivity::where('id', $id)->first();
+    $returnTotalPrice = [
+        'totalPrice' => 0,
+        'tkt_price' => 0,
+        'trns_price' => 0,
+        'discounTkt' => 0,
+        'discountTrns' => 0,
+        'totalPriceAfDis' => 0,
+        'tkt_priceAfDis' => 0,
+        'trns_priceAfDis' => 0,
+        'totalDiscount' => 0,
+    ];
+
+    if (!empty($voucherActivity)) {
+        $totalPrice = $voucherActivity->totalprice;
+        $discounTkt = $voucherActivity->discount_tkt;
+        $discountTrns = $voucherActivity->discount_sic_pvt_price;
+        $totalDiscount = $discounTkt + $discountTrns;
+
+        // Calculate total price after discount
+        $returnTotalPrice['totalPriceAfDis'] = $totalPrice - $totalDiscount;
+        $tkt_priceAfDis = $voucherActivity->original_tkt_rate - $discounTkt;
+		$trns_priceAfDis = $voucherActivity->original_trans_rate - $discountTrns;
+        // Assign values to array keys
+        $returnTotalPrice['totalPrice'] = ($totalPrice)?$totalPrice:0;
+        $returnTotalPrice['tkt_price'] = ($voucherActivity->original_tkt_rate)?$voucherActivity->original_tkt_rate:0;
+        $returnTotalPrice['trns_price'] = ($voucherActivity->original_trans_rate)?$voucherActivity->original_trans_rate:0;
+        $returnTotalPrice['discounTkt'] = ($discounTkt)?$discounTkt:0;
+        $returnTotalPrice['discountTrns'] = ($discountTrns)?$discountTrns:0;
+        $returnTotalPrice['totalDiscount'] = ($totalDiscount)?$totalDiscount:0;
+        $returnTotalPrice['tkt_priceAfDis'] = ($tkt_priceAfDis)?$tkt_priceAfDis:0;
+        $returnTotalPrice['trns_priceAfDis'] = ($trns_priceAfDis)?$trns_priceAfDis:0;
+    }
+
+    return $returnTotalPrice;
+}
+
+	
+	
+	public static function getRefundAmountAfterCancellation($voucherActivityId)
+	{
+    $totalPrice = self::getTicketAllTypeCost($voucherActivityId);
+    $voucherActivity = VoucherActivity::where('id', $voucherActivityId)->first();
+	
+    $cancelData = json_decode($voucherActivity->cancellation_time_data);
+	
+    $bookingDate = Carbon::parse($voucherActivity->booking_date);
+    $cancelDate = Carbon::parse($voucherActivity->canceled_date);
+    $minutesDifference = $bookingDate->diffInMinutes($cancelDate);
+	//dd($cancelDate);
+	$tkt_priceAfDis = 	$totalPrice['tkt_priceAfDis'];
+	$trns_priceAfDis = 	$totalPrice['trns_priceAfDis'];
+    $returnTotalPrice = [
+        'refund_tkt_priceAfDis' => $tkt_priceAfDis,
+        'refund_trns_priceAfDis' => $trns_priceAfDis,
+    ];
+	
+	if(!empty($cancelData)){
+		foreach ($cancelData as $ca) {
+			$durationParts = explode('-', $ca->duration);
+			$startHours = intval($durationParts[0]);
+			$endHours = intval($durationParts[1] ?? PHP_INT_MAX);
+
+			if ($minutesDifference >= $startHours * 60 && $minutesDifference < $endHours * 60) {
+				$ticket_refund_per = $ca->ticket_refund_value;
+				$trns_refund_per = $ca->transfer_refund_value;
+				$ticketPrice = ($tkt_priceAfDis * $ticket_refund_per) / 100;
+				$trnsPrice = ($trns_priceAfDis * $trns_refund_per) / 100;
+				$returnTotalPrice['refund_tkt_priceAfDis'] = $ticketPrice;
+				$returnTotalPrice['refund_trns_priceAfDis'] = $trnsPrice;
+				break; 
+			}
+		}
+	}
+	 
+	//dd($refundAmount);
+    return $returnTotalPrice;
 	}
 }

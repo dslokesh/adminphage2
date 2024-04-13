@@ -21,6 +21,7 @@ use App\Models\VoucherHotel;
 use DB;
 use Illuminate\Support\Facades\Auth;
 use SiteHelpers;
+use PriceHelper;
 use Carbon\Carbon;
 use SPDF;
 
@@ -682,25 +683,72 @@ return Excel::download(new LogisticReportExport($records), 'logistic_records'.da
     {
 		$data = $request->all();
 		
+		$totalPrice = 0;
+		$tkt = 0;
 		$record = VoucherActivity::where("id",$data['id'])->where('status', '=', 1)->first();
-		if($data['val'] <= $record->totalprice){
-			if(!empty($record)){
+		$price = PriceHelper::getRefundAmountAfterCancellation($record->id);
+		$tktPrice = $price['refund_tkt_priceAfDis'];
+		$trnsPrice = $price['refund_trns_priceAfDis'];
+		if($data['inputname'] == 'refund_amount_tkt'){
+			$totalPrice = $tktPrice;
+			$tkt = 1;
+		} elseif($data['inputname'] == 'refund_amount_tras'){
+			$totalPrice = $trnsPrice;
+			$tkt = 2;
+		}
+		
+		/* if($data['val'] <= $totalPrice){ */
+				if(!empty($record)){
+				if($tkt==1){
+					$record->refund_amount_tkt = $data['val'];
+				} elseif($tkt==2){
+					$record->refund_amount_tkt = $data['val'];
+				}
 				
-			$record->refund_amount = $data['val'];
+				$record->refund_by = Auth::user()->id;
+				$record->save();
+				$response[] = array("status"=>1);
+			
+			/* }
+			else{
+			$response[] = array("status"=>3);
+			} */
+			
+		}
+		else{
+			$response[] = array("status"=>4);
+		}
+		
+        return response()->json($response);
+	}
+	
+	public function activityFinalRefundSave(Request $request,$id)
+    {
+		$data = $request->all();
+		
+		$totalPrice = 0;
+		$tkt = 0;
+		$record = VoucherActivity::where("id",$id)->where('status', '=', 1)->first();
+		
+		$tktPrice = $record->refund_amount_tkt;
+		$trnsPrice = $record->refund_amount_trans;
+		
+		
+			if(!empty($record)){
 			$record->status = 2;
 			$record->refund_by = Auth::user()->id;
-			
+			$record->save();
 			$voucher = Voucher::where('id',$record->voucher_id)->select(['agent_id','vat_invoice','invoice_number'])->first();
 			$agent = User::find($voucher->agent_id);
 			if(!empty($agent))
 			{
-				
-				$agent->agent_amount_balance += $data['val'];
+				if($tktPrice > 0){
+				$agent->agent_amount_balance += $tktPrice;
 				$agent->save();
 				
 				$agentAmount = new AgentAmount();
 				$agentAmount->agent_id = $agent->id;
-				$agentAmount->amount = $data['val'];
+				$agentAmount->amount = $tktPrice;
 				$agentAmount->date_of_receipt = date("Y-m-d");
 				$agentAmount->transaction_type = "Receipt";
 				$agentAmount->role_user = 3;
@@ -710,24 +758,40 @@ return Excel::download(new LogisticReportExport($records), 'logistic_records'.da
 				$agentAmount->receipt_no = $voucher->invoice_number;
 				$agentAmount->is_vat_invoice = $voucher->vat_invoice;
 				$agentAmount->save();
-				$record->save();
-				$response[] = array("status"=>1);
+				}
+				
+				if($trnsPrice > 0){
+				$agent->agent_amount_balance += $trnsPrice;
+				$agent->save();
+				
+				$agentAmount = new AgentAmount();
+				$agentAmount->agent_id = $agent->id;
+				$agentAmount->amount = $trnsPrice;
+				$agentAmount->date_of_receipt = date("Y-m-d");
+				$agentAmount->transaction_type = "Receipt";
+				$agentAmount->role_user = 3;
+				$agentAmount->transaction_from = 4;
+				$agentAmount->created_by = Auth::user()->id;
+				$agentAmount->updated_by = Auth::user()->id;
+				$agentAmount->receipt_no = $voucher->invoice_number;
+				$agentAmount->is_vat_invoice = $voucher->vat_invoice;
+				$agentAmount->save();
+				}
+				
+				return redirect()->back()->with('success', 'Activity Canceled Successfully.');
 			}else{
-			$response[] = array("status"=>2);
+			return redirect()->back()->with('error', 'Agent Not Found.');
 			}
 			
 			}
 			else{
-			$response[] = array("status"=>3);
+			return redirect()->back()->with('error', 'Voucher Not Found.');
 			}
 			
-		}
-		else{
-			$response[] = array("status"=>4);
-		}
 		
         return response()->json($response);
 	}
+	
 
 public function voucherActivtyRefundedReport(Request $request)
     {

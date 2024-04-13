@@ -23,6 +23,7 @@ use App\Models\TransferData;
 use Illuminate\Http\Request;
 use App\Models\VoucherActivity;
 use App\Models\VoucherActivityLog;
+use App\Models\VariantCanellation;
 use App\Models\Ticket;
 use App\Models\Variant;
 use DB;
@@ -548,6 +549,8 @@ class VouchersController extends Controller
 			$recordUser->receipt_no = $code;
 			$recordUser->is_vat_invoice = $record->vat_invoice;
 			$recordUser->save(); 
+			
+			VoucherActivity::where('voucher_id', $record->id)->update(['booking_date' => Carbon::now()]);
 			
 			$emailData = [
 			'voucher'=>$record,
@@ -1298,9 +1301,11 @@ class VouchersController extends Controller
 	public function cancelActivityFromVoucher($id)
 	{
 		$record = VoucherActivity::find($id);
+		$cancellation = VariantCanellation::where('varidCode', $record->variant_code)->get();
 		//if($record->ticket_downloaded == '0'){
 		$record->status = 1;
 		$record->canceled_date = Carbon::now()->toDateTimeString();
+		$record->cancellation_time_data = json_encode($cancellation);
 		$record->save();
 		
 		$tc = Ticket::where("voucher_activity_id",$record->id)->where("voucher_id",$record->voucher_id)->where("activity_id",$record->activity_id)->where("ticket_generated",'1')->where("ticket_downloaded",'0')->first();

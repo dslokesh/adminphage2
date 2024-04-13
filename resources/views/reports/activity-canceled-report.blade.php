@@ -92,13 +92,22 @@
                     <th>I</th>
 					<th>Tour Date</th>
 					<th>Canceled Date</th>					
-					<th>Total Cost</th>
-					<th>Refund Amount</th>
+					<th>Ticket Cost</th>
+					<th>Transfer Cost</th>
+					<th>Ticket Discount</th>
+					<th>Transfer Discount</th>
+					<th>Total</th>
+					<th>Ticket Refund </th>
+					<th>Transfer Refund </th>
+					<th></th>
                   </tr>
 				  
                   </thead>
                   <tbody>
 				  @foreach ($records as $record)
+				  @php
+				  $allPrice = PriceHelper::getTicketAllTypeCost($record->id)
+				  @endphp
                   <tr>
 					<td>{{($record->voucher)?$record->voucher->code:''}}</td>
 					<td>{{($record->voucher->agent)?$record->voucher->agent->company_name:''}}</td>
@@ -112,15 +121,35 @@
                     <td>{{$record->infant}}</td>
 					<td>{{$record->tour_date}}</td>
 					<td>{{$record->canceled_date}}</td>
-					<td>{{ PriceHelper::getTotalTicketCostAllType($record->voucher_id) }}</td>
+					<td>{{ $allPrice['tkt_price'] }}</td>
+					<td>{{ $allPrice['trns_price'] }}</td>
+					<td>{{ $allPrice['discounTkt'] }}</td>
+					<td>{{ $allPrice['discountTrns'] }}</td>
+					<td>{{ $allPrice['totalPriceAfDis'] }}</td>
 					<td>
 					@if($record->status == 1)
-					<input type="text" class="form-control inputsave onlynumbrf" id="refund_amount{{$record->id}}"  data-id="{{$record->id}}" value="{{$record->refund_amount}}" placeholder="Refund Amount" />
+						@php
+						$refundAmount = PriceHelper::getRefundAmountAfterCancellation($record->id);
+					@endphp
+					<input type="text" class="form-control inputsave onlynumbrf" id="refund_amount_tkt{{$record->id}}"  data-id="{{$record->id}}" value="{{($record->refund_amount_tkt)?$record->refund_amount_tkt:$refundAmount['refund_tkt_priceAfDis']}}" data-inputname="refund_amount_tkt" placeholder="Refund Amount" />
 					@else
-					{{$record->refund_amount}}
+					{{$record->refund_amount_tkt}}
+					@endif
+					</td>
+					<td>
+					@if($record->status == 1)
+						@php
+						$refundAmount = PriceHelper::getRefundAmountAfterCancellation($record->id);
+					@endphp
+					
+					<input type="text" class="form-control inputsave onlynumbrf @if($record->transfer_option == 'Ticket Only') hide @endif" id="refund_amount_tras{{$record->id}}"  data-id="{{$record->id}}" data-inputname="refund_amount_trans" value="{{($record->refund_amount_trans)?$record->refund_amount_trans:$refundAmount['refund_trns_priceAfDis']}}" placeholder="Refund Amount" />
+					
+					@else
+					{{$record->refund_amount_trans}}
 					@endif
 					</td>
 					
+					<td><a class="btn btn-success float-right  btn-sm  d-pdf" href="{{route('activityFinalRefundSave',['id'=>$record->id])}}" >Save</td>
 					
                   </tr>
                  
@@ -168,7 +197,7 @@ $(document).ready(function() {
             dataType: "json",
             data: {
                id: $(this).data('id'),
-			   inputname: $(this).data('name'),
+			   inputname: $(this).data('inputname'),
 			   val: $(this).val()
             },
             success: function( data ) {
@@ -183,9 +212,10 @@ $(document).ready(function() {
 				 //location.reload(true);
 			  }
 			  if(data[0].status==4){
-				  alert("The refund price cannot be greater than the Totral price.");
+				  alert("The refund price cannot be greater than the refund eligible price.");
 				 //location.reload(true);
 			  }
+			  
 			  location.reload(true);
             }
           });

@@ -123,7 +123,9 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
 		Route::post('variant/slots-save', [SlotsController::class, 'saveSlot'])->name('variant.slots.save'); 
 		Route::post('variant/slots/get', [SlotsController::class, 'variantSlotGet'])->name('get.variant.slots'); 
 		Route::get('variant/canellation-chart-create/{varid}', [VariantCanellationController::class, 'index'])->name('variant.canellation');
-		Route::post('variant/canellation-chart-save', [VariantCanellationController::class, 'saveCanellation'])->name('variant.canellation.save'); 
+		Route::post('variant/canellation-chart-save', [VariantCanellationController::class, 'saveCanellation'])->name('variant.canellation.save');
+
+		Route::post('variant/canellation-chart/get', [VariantCanellationController::class, 'getVariantCanellation'])->name('get.canellation.chart'); 		
 		
         Route::get('activity-prices-create/{id?}', [ActivitiesController::class, 'createPriceForm'])->name('activity.prices.create');
         Route::get('activity-prices-edit/{id?}', [ActivitiesController::class, 'editPriceForm'])->name('activity.prices.edit');
@@ -184,6 +186,7 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
 		Route::get('voucher-activity-canceled-report', [ReporsController::class, 'voucherActivtyCanceledReport'])->name('voucherActivtyCanceledReport');
 		Route::get('voucher-activity-canceled-report-export', [ReporsController::class, 'voucherActivtyCanceledReportExportExcel'])->name('voucherActivtyCanceledReportExportExcel');
 		Route::post('voucher-activity-refund-save', [ReporsController::class, 'activityRefundSave'])->name('activityRefundSave');
+		Route::get('voucher-activity-final-refund-save/{id?}', [ReporsController::class, 'activityFinalRefundSave'])->name('activityFinalRefundSave');
 		Route::get('voucher-activity-refunded-report', [ReporsController::class, 'voucherActivtyRefundedReport'])->name('voucherActivtyRefundedReport');
 		Route::get('voucher-activity-refunded-report-export', [ReporsController::class, 'voucherActivtyRefundedReportExportExcel'])->name('voucherActivtyRefundedReportExportExcel');
 		Route::get('tickets-stock-report', [ReporsController::class, 'ticketStockReport'])->name('ticketStockReport');
