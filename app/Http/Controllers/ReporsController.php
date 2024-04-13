@@ -742,35 +742,18 @@ return Excel::download(new LogisticReportExport($records), 'logistic_records'.da
 			$record->refund_by = Auth::user()->id;
 			$record->save();
 			
+			$totalPrice = $tktPrice + $trnsPrice;
 			$voucher = Voucher::where('id',$record->voucher_id)->select(['agent_id','vat_invoice','invoice_number'])->first();
 			$agent = User::find($voucher->agent_id);
 			if(!empty($agent))
 			{
-				if($tktPrice > 0){
-				$agent->agent_amount_balance += $tktPrice;
+				if($totalPrice > 0){
+				$agent->agent_amount_balance += $totalPrice;
 				$agent->save();
 				
 				$agentAmount = new AgentAmount();
 				$agentAmount->agent_id = $agent->id;
-				$agentAmount->amount = $tktPrice;
-				$agentAmount->date_of_receipt = date("Y-m-d");
-				$agentAmount->transaction_type = "Receipt";
-				$agentAmount->role_user = 3;
-				$agentAmount->transaction_from = 4;
-				$agentAmount->created_by = Auth::user()->id;
-				$agentAmount->updated_by = Auth::user()->id;
-				$agentAmount->receipt_no = $voucher->invoice_number;
-				$agentAmount->is_vat_invoice = $voucher->vat_invoice;
-				$agentAmount->save();
-				}
-				
-				if($trnsPrice > 0){
-				$agent->agent_amount_balance += $trnsPrice;
-				$agent->save();
-				
-				$agentAmount = new AgentAmount();
-				$agentAmount->agent_id = $agent->id;
-				$agentAmount->amount = $trnsPrice;
+				$agentAmount->amount = $totalPrice;
 				$agentAmount->date_of_receipt = date("Y-m-d");
 				$agentAmount->transaction_type = "Receipt";
 				$agentAmount->role_user = 3;
