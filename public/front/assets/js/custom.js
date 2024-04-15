@@ -132,11 +132,12 @@
 			var years = moment().diff(start, 'years');
 		});
 
-
+		var tomorrow = new Date();
+tomorrow.setDate(tomorrow.getDate() + 1);
 		$('input[name="travel_from_date"]').daterangepicker({
 			singleDatePicker: true,
 			showDropdowns: false,
-			minDate:new Date(),
+			minDate:tomorrow,
 			minYear: 2023,
 			locale: {
 				format: 'DD-MM-YYYY'

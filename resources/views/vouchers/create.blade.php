@@ -109,7 +109,7 @@
               </div>
 			  <div class="form-group col-md-3">
                 <label for="inputName">Travel Date From: <span class="red">*</span></label>
-               <input type="text" id="travel_from_date" name="travel_from_date" value="{{ old('travel_from_date')?:date('Y-m-d') }}" class="form-control datepickerdiscurdate"  placeholder="Travel Date From" />
+               <input type="text" id="travel_from_date" name="travel_from_date" value="{{ old('travel_from_date', date('Y-m-d', strtotime('+1 day'))) }}" class="form-control datepickerdiscurdate"  placeholder="Travel Date From" />
 				  @if ($errors->has('travel_from_date'))
                     <span class="text-danger">{{ $errors->first('travel_from_date') }}</span>
                 @endif

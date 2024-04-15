@@ -119,7 +119,7 @@
                                                     <div class="custom-select-dropdown">
                                                         <div class="select-input">
                                                           <input name="nof_night" id="nof_night" value="7" type="hidden" />
-                                                            <input type="text" name="travel_from_date" readonly value="{{ old('travel_from_date')?:date('d-m-Y') }}">
+                                                            <input type="text" name="travel_from_date" readonly value="{{ old('travel_from_date', date('Y-m-d', strtotime('+1 day'))) }}">
                                                             <i class="bi bi-chevron-down"></i>
                                                         </div>
                                                         <!-- <div class="custom-select-wrap two">

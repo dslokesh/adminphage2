@@ -54,8 +54,8 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                         <form>
-                                            <input type="hidden" name="min-value" id="min-value"  value="">
-                                            <input type="hidden" name="max-value" id="max-value" value="">
+                                            <input type="text" name="min-value" id="min-value"  value="">
+                                            <input type="text" name="max-value" id="max-value" value="">
                                         </form>
                                         </div>
                                     </div>

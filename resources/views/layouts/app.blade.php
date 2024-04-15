@@ -132,13 +132,13 @@ $('.timepicker').datetimepicker({
   
   
   $('.datepickerdiscurdate').datepicker({
-        weekStart: 1,
-		minDate: 0,
-        daysOfWeekHighlighted: "6,0",
-        autoclose: true,
-        todayHighlight: true,
-		dateFormat: 'yy-mm-dd'
-    });
+    weekStart: 1,
+    minDate: 1, // Aaj ke baad ki tareekh
+    daysOfWeekHighlighted: "6,0",
+    autoclose: true,
+    todayHighlight: true,
+    dateFormat: 'yy-mm-dd'
+});
   
  $('.datepickerAgent').datepicker({
         weekStart: 1,

@@ -462,7 +462,6 @@ class AgentVouchersController extends Controller
        
        $query->whereHas('activityVariants.prices', function ($query) use($startDate,$endDate) {
            $query->where('rate_valid_from', '<=', $startDate)->where('rate_valid_to', '>=', $endDate);
-		   $query->where('rate_valid_from', '<=', $startDate)->where('rate_valid_to', '>=', $endDate);
        });
 	   
 	   
@@ -561,16 +560,18 @@ class AgentVouchersController extends Controller
 			});
 		}
 		
-		if (!empty($data['minPrice']) && !empty($data['maxPrice'])) {
-			$query->where('min_price', '>=' ,trim($data['minPrice']))->where('min_price', '<=' ,trim($data['maxPrice']));
-		}
-		
-		
-		
 		$query->whereHas('activityVariants.prices', function ($query) use($startDate,$endDate) {
-			$query->where('rate_valid_from', '<=', $startDate)->where('rate_valid_to', '>=', $endDate);
-			$query->where('rate_valid_from', '<=', $startDate)->where('rate_valid_to', '>=', $endDate);
+		$query->where('rate_valid_from', '<=', $startDate)->where('rate_valid_to', '>=', $endDate);
 		});
+		
+			if (!empty($data['minPrice']) && !empty($data['maxPrice'])) {
+			$minPrice = (int) $data['minPrice'];
+			$maxPrice = (int) $data['maxPrice'];
+
+			$query->where('min_price', '>=' , $minPrice)->where('min_price', '<=' , $maxPrice);
+			}
+		
+		
 		
 		if (!empty($data['porder']) && !empty($data['porder'])) {
 			$records = $query->orderByRaw('CAST(min_price AS DECIMAL) '.$data['porder'])->paginate($perPage);
