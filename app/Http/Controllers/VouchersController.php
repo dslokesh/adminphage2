@@ -1000,6 +1000,7 @@ class VouchersController extends Controller
 		$k  = $request->input('ucode');
 		$timeslot  = $request->input('timeslot');
 		$activitySelectNew[$k] = $k;
+		
 		if(!empty($k)){
 		foreach($activitySelectNew as $k => $v)
 		{
@@ -1011,6 +1012,7 @@ class VouchersController extends Controller
 			$getAvailableDateList = SiteHelpers::getDateList($voucher->travel_from_date,$voucher->travel_to_date,$variant->black_out,$variant->sold_out);
 			$totalmember = $adult[$k] + $child[$k];
 			$tour_dt = date("Y-m-d",strtotime($tour_date[$k]));
+			
 			$priceCal = PriceHelper::getActivityPriceSaveInVoucher($transfer_option[$k],$activity_variant_id[$k],$voucher->agent_id,$voucher,$activityVariant->ucode,$adult[$k],$child[$k],$infant[$k],$discount[$k],$tour_dt);
 				
 			if($priceCal['totalprice'] > 0){

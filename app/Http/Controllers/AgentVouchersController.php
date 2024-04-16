@@ -678,6 +678,7 @@ class AgentVouchersController extends Controller
 	
 	public function activitySaveInVoucher(Request $request)
     {
+		
 		$redirectResponse = $this->chekAgentLogin();
 		if ($redirectResponse) {
 		return $redirectResponse;

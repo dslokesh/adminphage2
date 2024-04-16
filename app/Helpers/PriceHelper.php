@@ -58,6 +58,9 @@ class PriceHelper
 	
 	public static function getActivityPriceSaveInVoucher($transfer_option,$activity_variant_id,$agent_id,$voucher,$u_code,$adult,$child,$infant,$discount,$tourDate)
     {
+		$adult = ($adult == null) ? 0 : $adult;
+		$child = ($child == null) ? 0 : $child;
+		$infant = ($infant == null) ? 0 : $infant;
 		$totalPrice = 0;
 		$zonePrice = 0;
 		$transferPrice = 0;

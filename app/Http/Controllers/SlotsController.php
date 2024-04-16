@@ -106,7 +106,7 @@ class SlotsController extends Controller
 		$variantId = $request->input('variant_id');
 		$transferOption = $request->input('transferOptionName');
 		$variant = Variant::find($variantId);
-		$data[''] = 'select';
+		$data= [] ;
 		if($variant->is_slot == 1){
 		
 		if(!empty($variantId)){

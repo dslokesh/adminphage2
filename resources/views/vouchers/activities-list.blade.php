@@ -264,11 +264,8 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <label for="timeSlotDropdown">Choose a time slot:</label>
-                    <select class="form-control" required id="timeSlotDropdown">
-                        <!-- Time slots will be dynamically added here -->
-                    </select>
+                <div class="form-group" id="radioSlotGroup">
+                    <!-- Radio buttons will be dynamically added here -->
                 </div>
             </div>
             <div class="modal-footer">
@@ -278,6 +275,7 @@
         </div>
     </div>
 </div>
+
 
 @endsection
 
@@ -501,47 +499,36 @@ function adultChildReq(a,c,inputnumber) {
   function openTimeSlotModal(slots, selectedSlot) {
     var isValid = $('body #cartForm').valid();
     if (isValid) {
-		$("body #timeSlotDropdown").removeClass('error-rq');
+		$("body #cartForm").removeClass('error-rq');
         $('#timeSlotModal').modal('show');
 
-        var dropdown = $('#timeSlotDropdown');
-        dropdown.empty();
+        var radioGroup = $('#radioSlotGroup');
+        radioGroup.empty();
 
         $.each(slots, function(index, slot) {
-            var option = $('<option></option>').attr('value', slot).text(slot);
-            if (slot === selectedSlot) {
-                option.attr('selected', 'selected');
-            }
-            dropdown.append(option);
-        });
-
-        dropdown.on('change', function() {
-            var selectedValue = dropdown.val();
-			$('body #timeslot').val('');
-            if (selectedValue !== 'select') {
-                $('#timeslot').val(selectedValue);
-				$("body #timeSlotDropdown").removeClass('error-rq');
-            }
+            var radio = $('<input type="radio" name="timeSlotRadio">')
+                .attr('value', slot)
+                .prop('checked', slot === selectedSlot);
+            var label = $('<label>').text(slot).prepend(radio);
+            radioGroup.append(label);
         });
 
         $('#selectTimeSlotBtn').on('click', function() {
-				var timeslot = $('body #timeslot').val();
-				$("body #timeSlotDropdown").removeClass('error-rq');
-				//if(timeslot==''){
-				//$("body #timeSlotDropdown").addClass('error-rq');
-				//} else { 
-					$("body #cartForm").submit();
-				//}
-						
-            
+            var selectedValue = $('input[name="timeSlotRadio"]:checked').val();
+            if (selectedValue) {
+                $('#timeslot').val(selectedValue);
+                $("body #cartForm").submit();
+            } else {
+                $("body #cartForm").addClass('error-rq');
+            }
         });
 
         $('#timeSlotModal .close').on('click', function() {
-            $('body #timeslot').val('');
             $('#timeSlotModal').modal('hide');
         });
     }
 }
+
 
 $(document).on('keypress', '.onlynumbrf', function(evt) {
    var charCode = (evt.which) ? evt.which : evt.keyCode
