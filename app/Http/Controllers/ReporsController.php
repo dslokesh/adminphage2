@@ -165,6 +165,7 @@ return Excel::download(new LogisticReportExport($records), 'logistic_records'.da
            $query->where('entry_type',  "Ticket Only");
        });
 		$twoDaysAgo = date("Y-m-d", strtotime(date("Y-m-d") . " -2 days"));
+		$twoDaysNull = date("Y-m-d", strtotime(date("Y-m-d") . " +2 days"));
 		if(isset($data['booking_type']) && !empty($data['booking_type'])) {
 			
 			if (isset($data['from_date']) && !empty($data['from_date']) &&  isset($data['to_date']) && !empty($data['to_date'])) {
@@ -181,12 +182,10 @@ return Excel::download(new LogisticReportExport($records), 'logistic_records'.da
 				});
 		
 				}
-				}else{
-			$query->whereDate('tour_date', '>=', $twoDaysAgo);
-			}
+				}
 			}
 		else{
-			$query->whereDate('tour_date', '>=', $twoDaysAgo);
+			$query->whereDate('tour_date', '>=', $twoDaysNull);
 		}
 		
         if(isset($data['vouchercode']) && !empty($data['vouchercode'])) {

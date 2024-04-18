@@ -162,7 +162,7 @@
               </div>
 			   <div class="form-group col-md-4">
                 <label for="inputName">End Time (In 24 hrs): <span class="red">*</span></label>
-                <input type="text" id="end_time" name="end_time" value="{{ old('end_time')?:$record->end_time }}" class="form-control timepicker24"  placeholder=End Time" />
+                <input type="text" id="end_time" name="end_time" value="{{ old('end_time')?:$record->end_time }}" class="form-control timepicker24"  placeholder="End Time" />
                 @if ($errors->has('end_time'))
                     <span class="text-danger">{{ $errors->first('end_time') }}</span>
                 @endif
