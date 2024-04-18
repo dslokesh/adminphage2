@@ -1469,6 +1469,7 @@ class VouchersController extends Controller
 	
 	public function invoicePriceChangeView(Voucher $voucher)
     {
+		
 		$this->checkPermissionMethod('list.invoiceEditList');
 		$this->checkPermissionMethod('list.voucher');
 		$voucherHotel = VoucherHotel::where('voucher_id',$voucher->id)->get();

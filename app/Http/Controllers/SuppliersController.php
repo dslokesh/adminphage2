@@ -41,13 +41,14 @@ class SuppliersController extends Controller
         if (isset($data['city_id']) && !empty($data['city_id'])) {
             $query->where('city_id', $data['city_id']);
         }
-        if (isset($data['status']) && !empty($data['status'])) {
-            if ($data['status'] == 1)
-                $query->where('status', 1);
-            if ($data['status'] == 2)
-                $query->where('status', 0);
+         if(isset($data['status']) && !empty($data['status']))
+        {
+            if($data['status']==1)
+            $query->where('is_active',1);
+            if($data['status']==2)
+            $query->where('is_active',0);
         }
-
+		
         $records = $query->orderBy('created_at', 'DESC')->paginate($perPage);
 
         $countries = Country::where('status', 1)->orderBy('name', 'ASC')->get();

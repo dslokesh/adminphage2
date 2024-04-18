@@ -24,7 +24,7 @@ use SiteHelpers;
 use PriceHelper;
 use Carbon\Carbon;
 use SPDF;
-
+use App\Models\Variant;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\LogisticReportExport;
 use App\Exports\AccountsReceivablesReportExcelExport;
@@ -863,9 +863,9 @@ public function voucherActivtyRefundedReport(Request $request)
 		$data = $request->all();
 		$perPage = config("constants.ADMIN_PAGE_LIMIT");
 		$activities = Activity::where('status', 1)->orderBy('title', 'ASC')->get();
-		$query = Ticket::with(['activity','variant'])
+		$variants = Variant::where('status', 1)->orderBy('title', 'ASC')->get();
+		$query = Ticket::with(['variant'])
             ->select(
-                'activity_id',
                 'activity_variant',
                 'valid_till',
                 DB::raw('SUM(CASE WHEN id != "0" AND ticket_for = "Adult" THEN 1 ELSE 0 END) as stock_uploaded_adult'),
@@ -893,30 +893,26 @@ public function voucherActivtyRefundedReport(Request $request)
 			$query->where('serial_number', 'like', '%' . $data['serial_number']);
 	}
 
-		if (isset($data['activity_id']) && !empty($data['activity_id'])) {
-				 $query->where('activity_id',  $data['activity_id']);
-		}
 		
 		if (isset($data['activity_variant']) && !empty($data['activity_variant'])) {
 				 $query->where('activity_variant',  $data['activity_variant']);
 		}
 				
-            $query->groupBy('activity_id', 'activity_variant', 'valid_till');
+            $query->groupBy('activity_variant', 'valid_till');
            $records = $query->paginate($perPage);
 			
 		
-	//dd($records);
-		return view('reports.ticket-report', compact('records','activities'));
+	
+		return view('reports.ticket-report', compact('records','variants'));
 	}
 	
 	public function ticketStockReportExportExcel(Request $request)
     {
 		$data = $request->all();
 		$perPage = config("constants.ADMIN_PAGE_LIMIT");
-		$activities = Activity::where('status', 1)->orderBy('title', 'ASC')->get();
-		$query = Ticket::with(['activity','voucheractivity'])
+		$variants = Variant::where('status', 1)->orderBy('title', 'ASC')->get();
+		$query = Ticket::with(['variant'])
             ->select(
-                'activity_id',
                 'activity_variant',
                 'valid_till',
                 DB::raw('SUM(CASE WHEN id != "0" AND ticket_for = "Adult" THEN 1 ELSE 0 END) as stock_uploaded_adult'),
@@ -944,7 +940,7 @@ public function voucherActivtyRefundedReport(Request $request)
 				 $query->where('activity_variant',  $data['activity_variant']);
 		}
 				
-            $query->groupBy('activity_id', 'activity_variant', 'valid_till');
+            $query->groupBy('activity_variant', 'valid_till');
            $records = $query->get();
 			
 		

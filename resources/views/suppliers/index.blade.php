@@ -65,12 +65,12 @@
                     <th></th>
                   
                  <th></th>
-                 <th></th>
-					 <th><select name="status" id="status" class="form-control">
+                 <th><select name="status" id="status" class="form-control">
                     <option value="" @if(request('status') =='') {{'selected="selected"'}} @endif>Select</option>
                     <option value="1" @if(request('status') ==1) {{'selected="selected"'}} @endif>Active</option>
 					          <option value="2" @if(request('status') ==2) {{'selected="selected"'}} @endif >Inactive</option>
                  </select></th>
+					 <th></th>
 					<th></th>
                     
                    

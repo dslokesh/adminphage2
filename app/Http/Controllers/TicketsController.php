@@ -78,9 +78,6 @@ class TicketsController extends Controller
         }if (isset($data['valid_till']) && !empty($data['valid_till'])) {
             $query->whereDate('valid_till', '<=',$data['valid_till']);
         }
-		if (isset($data['activity_id']) && !empty($data['activity_id'])) {
-				 $query->where('activity_id',  $data['activity_id']);
-		}
 		
 		if (isset($data['activity_variant']) && !empty($data['activity_variant'])) {
 				 $query->where('activity_variant',  $data['activity_variant']);
@@ -102,8 +99,8 @@ class TicketsController extends Controller
         $records = $query->where('ticket_generated','1')->orderBy('created_at', 'DESC')->paginate($perPage);
 		$agetid = '';
 		$agetName = '';
-		$activities = Activity::where('status', 1)->orderBy('title', 'ASC')->get();
-        return view('tickets.generated-tickets-list', compact('records','activities'));
+		$variants = Variant::where('status', 1)->orderBy('title', 'ASC')->get();
+        return view('tickets.generated-tickets-list', compact('records','variants'));
 
     }
 

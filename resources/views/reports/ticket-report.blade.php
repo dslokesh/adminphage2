@@ -39,22 +39,15 @@
 			  <div class="">
             <form id="filterForm" class="form-inline" method="get" action="{{ route('ticketStockReport') }}" style="width:100%" >
               <div class="form-row" style="width:100%">
-			 <div class="col-auto col-md-3">
-                  <div class="input-group mb-2">
-                    <div class="input-group-prepend"><div class="input-group-text">Activity</div></div>
-                  <select name="activity_id"  id="activity_id" class="form-control">
-				<option value="">--select--</option>
-				@foreach($activities as $activity)
-                    <option value="{{$activity->id}}" @if(request('activity_id') == $activity->id) {{'selected="selected"'}} @endif>{{$activity->title}}</option>
-				@endforeach
-                 </select>
-                  </div>
-                </div>
+			 
 				 <div class="col-auto col-md-3">
                   <div class="input-group mb-2">
                     <div class="input-group-prepend"><div class="input-group-text">Variant</div></div>
                   <select name="activity_variant"  id="activity_variant" class="form-control">
 				<option value="">--select--</option>
+				@foreach($variants as $variant)
+                    <option value="{{$variant->ucode}}" @if(request('activity_variant') == $variant->ucode) {{'selected="selected"'}} @endif>{{$variant->title}}</option>
+				@endforeach
 				</select>
                   </div>
                 </div>
@@ -91,7 +84,6 @@
                   </tr>
 				  
 				   <tr>
-                    <th>Activity</th>
 					<th>Variant Name</th>
 					<th>Expiry Date</th>
 					<th>LOT</th>
@@ -114,7 +106,6 @@
 				 
 				  @foreach ($records as $record)
                   <tr>
-                    <td>{{ @$record->activity->title}}</td>
 					<td>{{ @$record->variant->title}}</td>
 					<td>{{ $record->valid_till ? date(config('app.date_format'),strtotime($record->valid_till)) : null }}</td>
 					<td></td>
@@ -157,7 +148,7 @@
 @section('scripts')
 	<script type="text/javascript">
  $(document).ready(function(){
-	var activity_id = "{{request('activity_id')}}";
+	//var activity_id = "{{request('activity_id')}}";
 	var oldactivity_variant = "{{request('activity_variant')}}";
 	
 	$("body #activity_id").on("change", function () {
@@ -180,9 +171,7 @@
                 }
             });
         });
-		if(activity_id){
-					$("body #activity_id").trigger("change");
-					}
+		
 					
 		if(oldactivity_variant){
 					$("body #activity_id").trigger("change");

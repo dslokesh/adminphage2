@@ -28,7 +28,7 @@
 	   
 	   <div class="card-body">
 		
-			@if(!empty($voucherActivity) && $voucher->is_activity == 1)
+			@if(!empty($voucherActivity))
 				<div class="row p-2">
 			 
 			  <div class="col-md-12">
@@ -44,6 +44,8 @@
 					<th>Adult</th>
                     <th>Child</th>
                     <th>Infant</th>
+					<th>Ticket Cost</th>
+					<th>Transfer Cost</th>
 					<th>Ticket Discount</th>
 					<th>Transfer Discount</th>
 					<th>Net Amount</th>
@@ -52,6 +54,7 @@
 					  @foreach($voucherActivity as $kk => $ap)
 					@php
 					$priceT = $ap->totalprice - ($ap->discount_tkt + $ap->discount_sic_pvt_price);
+					$allPrice = PriceHelper::getTicketAllTypeCost($ap->id)
 					@endphp
 					
 				   <tr>
@@ -61,7 +64,7 @@
 						@php
 					$zone = SiteHelpers::getZoneName($ap->transfer_zone);
 					@endphp
-						- <b>Zone :</b> {{$zone->name}}
+						- <b>Zone :</b> {{@$zone->name}}
 					@endif
 					
 					@if($ap->transfer_option == 'Shared Transfer')
@@ -74,6 +77,8 @@
 					<td>{{$ap->adult}}</td>
                     <td>{{$ap->child}}</td>
                     <td>{{$ap->infant}}</td>
+					<td>{{ $allPrice['tkt_price'] }}</td>
+					<td>{{ $allPrice['trns_price'] }}</td>
 					<input type="hidden" id="totalprice{{$kk}}" value="{{$ap->totalprice}}"  data-inputnumber="{{$kk}}"   />
 					<input type="hidden" id="discount_tkt_old{{$kk}}" value="{{($ap->discount_tkt>0)?$ap->discount_tkt:0}}"  data-inputnumber="{{$kk}}"   />
 					<input type="hidden" id="discount_sic_pvt_price_old{{$kk}}" value="{{($ap->discount_sic_pvt_price>0)?$ap->discount_sic_pvt_price:0}}"  data-inputnumber="{{$kk}}"   />
@@ -82,7 +87,7 @@
 					<td><input type="text" @if($ap->transfer_option=='Ticket Only') readonly="readonly" @endif id="discount_sic_pvt_price{{$kk}}" name="discount_sic_pvt_price[{{$ap->id}}]}" class="form-control priceChange" value="{{($ap->discount_sic_pvt_price>0)?$ap->discount_sic_pvt_price:0}}" data-inputnumber="{{$kk}}"   /></td>
 					<td>
 					<input type="hidden" id="newPrice{{$kk}}" value="" data-inputnumber="{{$kk}}"   />
-					<span id="price{{$kk}}" style="font-weight:bold">{{$priceT}}</span>
+					<span id="price{{$kk}}" style="font-weight:bold">{{ $allPrice['totalPriceAfDis'] }}</span>
 					</td>
                   </tr>
 				  @endforeach

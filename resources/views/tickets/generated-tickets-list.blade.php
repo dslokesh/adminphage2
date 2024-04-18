@@ -49,7 +49,6 @@
 					<th>Serial Number</th>
 					<th>Valid From</th>
 					<th>Valid Till</th>
-					<th>Activity</th>
 					<th>Variant</th>
 					<th>Ticket For</th>
 					<th>Type Of Ticket</th>
@@ -70,14 +69,12 @@
                      <th><input type="text" name="serial_number" value="{{request('serial_number')}}" class="form-control"  placeholder="Serial Number" autocomplete="off" /></th>
                     <th><input type="text" name="valid_from" value="{{request('valid_from')}}" class="form-control datepicker"  placeholder="Valid From" autocomplete="off" /></th>
 					 <th><input type="text" name="valid_till" value="{{request('valid_till')}}" class="form-control datepicker"  placeholder="Valid Till" autocomplete="off" /></th>
-					 <th> <select name="activity_id"  id="activity_id" class="form-control">
-				<option value="">--select--</option>
-				@foreach($activities as $activity)
-                    <option value="{{$activity->id}}" @if(request('activity_id') == $activity->id) {{'selected="selected"'}} @endif>{{$activity->title}}</option>
-				@endforeach
-                 </select></th>
+					
                     <th> <select name="activity_variant"  id="activity_variant" class="form-control">
 				<option value="">--select--</option>
+				@foreach($variants as $variant)
+                    <option value="{{$variant->ucode}}" @if(request('activity_variant') == $variant->ucode) {{'selected="selected"'}} @endif>{{$variant->title}}</option>
+				@endforeach
 				</select></th>
 					  <th> <select name="ticket_for"  id="ticket_for" class="form-control">
 				<option value="">--select--</option>
@@ -107,8 +104,7 @@
 					<td>{{ $record->serial_number}}</td>
 					<td>{{ $record->valid_from ? date(config('app.date_format'),strtotime($record->valid_from)) : null }}</td>
                     <td>{{ $record->valid_till ? date(config('app.date_format'),strtotime($record->valid_till)) : null }}</td>
-					<td>{{ ($record->activity)?$record->activity->title:''}}</td>
-                    <td>{{ ($record->voucheractivity)?$record->voucheractivity->variant_name:''}}</td>
+                    <td>{{ @$record->variant->title}}</td>
 					<td>{{ $record->ticket_for}}</td>
                     <td>{{ $record->type_of_ticket}}</td>
 				

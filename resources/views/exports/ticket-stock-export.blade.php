@@ -7,7 +7,6 @@
       <table>
     <thead>
         <tr>
-            <th>Activity</th>
             <th>Variant Name</th>
             <th>Expiry Date</th>
             <th>LOT</th>
@@ -28,8 +27,7 @@
     <tbody>
         @foreach ($records as $record)
         <tr>
-            <td>{{ @$record->activity->title }}</td>
-            <td>{{ @$record->voucheractivity->variant_name }}</td>
+            <td>{{ @$record->variant->title}}</td>
             <td>{{ $record->valid_till ? date(config('app.date_format'), strtotime($record->valid_till)) : '' }}</td>
             <td></td>
             <td>{{ @$record->stock_uploaded_adult }}</td>

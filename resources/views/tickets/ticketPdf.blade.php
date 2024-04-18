@@ -29,11 +29,11 @@ body p
   <div style = "display:block; clear:both; page-break-after:always;"></div>
   <div class="width:100%; padding: 10px 0px;">
             <div style="width: 35%;float: left;">
-                @if(file_exists(public_path('uploads/activities/'.$voucherActivity->activity->brand_logo)) && !empty($voucherActivity->activity->brand_logo))
-                  <img src="{{asset('uploads/activities/thumb/'.$voucherActivity->activity->brand_logo)}}" style="max-height: 150px;max-width: 150px; display: block !important; height: auto; width: auto;" alt="logo-top" border="0" hspace="0" vspace="0" height="auto">
+                @if(file_exists(public_path('uploads/variants/'.$ticket->variant->brand_logo)) && !empty($ticket->variant->brand_logo))
+                  <img src="{{asset('uploads/variants/thumb/'.$ticket->variant->brand_logo)}}" style="max-height: 150px;max-width: 150px; display: block !important; height: auto; width: auto;" alt="logo-top" border="0" hspace="0" vspace="0" height="auto">
                   @else
                   {{-- Code to show a placeholder or alternate image --}}
-                  <img src="{{ asset('uploads/activities/thumb/no-image.png') }}" style="max-width: 200px;width: 200px;height: 150px" alt="no-image">
+                  <img src="{{ asset('uploads/variants/thumb/no-image.png') }}" style="max-width: 200px;width: 200px;height: 150px" alt="no-image">
                   @endif
             </div>
             <div style="width: 55%;float: right;margin-top: 15px;;padding:15px 10px 0px 10px;text-align: right;">
@@ -115,8 +115,8 @@ body p
       </div>
       <div style="clear:both; width: 100%;height: 10px;border-bottom: 2px #000 solid;">&nbsp;</div>
       <div style="width: 98%;margin-top:10px;text-align:justify;" style="">
-      @if(file_exists(public_path('uploads/activities/'.$voucherActivity->activity->image)) && !empty($voucherActivity->activity->image))
-            <img src="{{asset('uploads/activities/'.$voucherActivity->activity->image)}}"  alt="logo-top" border="0" hspace="0" vspace="0" height="auto" style="max-width: 100%;width: 100%;height: auto;max-height: 250px;border-radius:5px;">
+      @if(file_exists(public_path('uploads/variants/'.$ticket->variant->ticket_footer_image)) && !empty($ticket->variant->ticket_footer_image))
+            <img src="{{asset('uploads/variants/'.$ticket->variant->ticket_footer_image)}}"  alt="" border="0" hspace="0" vspace="0" height="auto" style="max-width: 100%;width: 100%;height: auto;max-height: 250px;border-radius:5px;">
            
             @endif   
       <h3>General Rules and Regulations</h3>
