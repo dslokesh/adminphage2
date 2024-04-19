@@ -124,7 +124,7 @@ $('.timepicker').datetimepicker({
         });
 		
 		$('.timepicker24').datetimepicker({
-            format: 'hh:mm'
+            format: 'HH:mm'
         });
 		
   });
