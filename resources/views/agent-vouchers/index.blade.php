@@ -126,7 +126,7 @@
 					<td>{{ ($record->infant)}}</td>
 					 <td>
 						   @if($record->voucher->status_main > 4)
-					 <a class="btn btn-info btn-sm" href="{{route('voucherInvoicePdf',$record->voucher->id)}}" >
+					 <a class="btn btn-success btn-sm" href="{{route('voucherInvoicePdf',$record->voucher->id)}}" >
            <i class="fas fa-file">
                               </i>
                              

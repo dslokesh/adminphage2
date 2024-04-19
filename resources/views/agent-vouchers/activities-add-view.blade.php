@@ -42,9 +42,7 @@
 					<input type="radio"  name="activity_select" required id="activity_select{{$kk}}" value="{{ $ap->ucode }}" @if($kk == '0')  @endif class="actcsk" data-inputnumber="{{$kk}}" /> {{$ap->variant->title}} 
 					</td>
 					<td> <select name="transfer_option[{{$ap->ucode}}]" id="transfer_option{{$kk}}" class="form-control priceChange" data-inputnumber="{{$kk}}" @if($kk > '0') disabled="disabled" @endif >
-						@if($kk > '0')
-						<option value="">--Select--</option>
-						@endif
+						
 						@if(($ap->activity->entry_type=='Ticket Only') && ($ap->prices->adult_rate_without_vat > 0))
 						<option value="Ticket Only" data-id="1">Ticket Only</option>
 						@endif

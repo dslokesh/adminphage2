@@ -115,14 +115,17 @@ body p
       </div>
       <div style="clear:both; width: 100%;height: 10px;border-bottom: 2px #000 solid;">&nbsp;</div>
       <div style="width: 98%;margin-top:10px;text-align:justify;" style="">
-      @if(file_exists(public_path('uploads/variants/'.$ticket->variant->ticket_footer_image)) && !empty($ticket->variant->ticket_footer_image))
-            <img src="{{asset('uploads/variants/'.$ticket->variant->ticket_footer_image)}}"  alt="" border="0" hspace="0" vspace="0" height="auto" style="max-width: 100%;width: 100%;height: auto;max-height: 250px;border-radius:5px;">
+      @if(file_exists(public_path('uploads/variants/'.$ticket->variant->ticket_banner_image)) && !empty($ticket->variant->ticket_banner_image))
+            <img src="{{asset('uploads/variants/'.$ticket->variant->ticket_banner_image)}}"  alt="" border="0" hspace="0" vspace="0" height="auto" style="max-width: 100%;width: 100%;height: auto;max-height: 250px;border-radius:5px;">
            
             @endif   
       <h3>General Rules and Regulations</h3>
 						<p style="font-size: 9px!important;">{!! @$ticket->variant->terms_conditions !!}</p>
           
-              
+               @if(file_exists(public_path('uploads/variants/'.$ticket->variant->ticket_footer_image)) && !empty($ticket->variant->ticket_footer_image))
+            <img src="{{asset('uploads/variants/'.$ticket->variant->ticket_footer_image)}}"  alt="" border="0" hspace="0" vspace="0" height="auto" style="max-width: 100%;width: 100%;height: auto;max-height: 250px;border-radius:5px;">
+           
+            @endif   
       </div>
      
 
