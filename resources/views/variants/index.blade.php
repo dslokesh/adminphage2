@@ -99,11 +99,10 @@
                     <td>{{ $record->created_at ? date(config('app.date_format'),strtotime($record->created_at)) : null }}</td>
                     <td>{{ $record->updated_at ? date(config('app.date_format'),strtotime($record->updated_at)) : null }}</td>
                      <td>
-					 @if($record->slot_type == 1)
+					 
 					  <a class="btn btn-info btn-sm" href="{{route('variant.slots',$record->id)}}">
                              Slots
                           </a>
-						  @endif
 					<a class="btn btn-info btn-sm" href="{{route('variant.canellation',$record->id)}}">
                              Canellation Chart
                           </a>
