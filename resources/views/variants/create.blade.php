@@ -124,6 +124,7 @@
                 <label for="inputName">Slot Type: <span class="red">*</span></label>
                <select name="slot_type" id="slot_type" class="form-control">
 					<option value="" @if(old('slot_type') =='') {{'selected="selected"'}} @endif>Select</option>
+					<option value="3" @if(old('slot_type') == 3) {{'selected="selected"'}} @endif>No Slot</option>
 					<option value="1" @if(old('slot_type') == 1) {{'selected="selected"'}} @endif>Custom</option>
 					<option value="2" @if(old('slot_type') == 2) {{'selected="selected"'}} @endif>Auto</option>
 				</select>

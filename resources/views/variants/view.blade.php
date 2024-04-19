@@ -117,7 +117,7 @@
 			  
 			   <div class="col-lg-6 mb-3">
                 <label for="inputName">Slot Type:</label>
-               {{ $variant->slot_type }}
+               {!! SiteHelpers::slotType($variant->slot_type) !!}
               </div>
 			  
 			   <div class="col-lg-6 mb-3">

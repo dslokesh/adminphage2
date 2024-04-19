@@ -193,8 +193,8 @@ class VariantsController extends Controller
 		$record->pick_up_required = $request->input('pick_up_required');
 		$record->transfer_plan = ($request->input('pvt_TFRS')==1)?$request->input('transfer_plan'):0;
 		$record->slot_type = $request->input('slot_type');
-		$record->available_slots = $request->input('available_slots');
-		$record->slot_duration = $request->input('slot_duration');
+		$record->available_slots = ($request->slot_type == 3)?'':$request->input('available_slots');
+		$record->slot_duration = ($request->slot_type == 3)?'':$request->input('slot_duration');
 		$record->activity_duration = $request->input('activity_duration');
 		$record->start_time = $request->input('start_time');
 		$record->end_time = $request->input('end_time');
@@ -437,8 +437,8 @@ class VariantsController extends Controller
 		$record->pick_up_required = $request->input('pick_up_required');
 		$record->transfer_plan = ($request->input('pvt_TFRS')==1)?$request->input('transfer_plan'):0;
 		$record->slot_type = $request->input('slot_type');
-		$record->available_slots = $request->input('available_slots');
-		$record->slot_duration = $request->input('slot_duration');
+		$record->available_slots = ($request->slot_type == 3)?'':$request->input('available_slots');
+		$record->slot_duration = ($request->slot_type == 3)?'':$request->input('slot_duration');
 		$record->activity_duration = $request->input('activity_duration');
 		$record->start_time = $request->input('start_time');
 		$record->end_time = $request->input('end_time');

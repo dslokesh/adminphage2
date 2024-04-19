@@ -321,6 +321,19 @@ class SiteHelpers
 		 return $color;
 	}
 	
+	public static function slotType($val)
+    {
+		$color = '';
+		if($val ==3){
+			$color = '<span class="badge bg-secondary">No Slot</span>';
+		} else if($val == 1) {
+			$color = '<span class="badge bg-success">Vouchered</span>';
+		} else if($val == 2) {
+			$color = '<span class="badge bg-danger">Canceled</span>';
+		}
+		 return $color;
+	}
+	
 	public static function voucherActivityStatus($val)
     {
 		$color = '';
