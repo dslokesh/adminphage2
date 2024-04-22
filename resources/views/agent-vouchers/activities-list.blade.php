@@ -137,32 +137,23 @@
         </div>
     </div>
 </div>
-<!-- 
-
-    <div class="modal fade" id="timeSlotModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="PriceModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Select Time Slot</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Price</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <label for="timeSlotDropdown">Choose a time slot:</label>
-                    <select class="form-control" required id="timeSlotDropdown">
-                        Time slots will be dynamically added here 
-                    </select>
-                </div>
+               <span id="pad" class="row"></span>
+			   <span id="pchd" class="row"></span>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-primary-flip btn-sm" id="selectTimeSlotBtn"><i class="fa fa-cart-plus"></i></button>
-               You can add a button here for further actions if needed 
-            </div>
+            
         </div>
     </div>
-</div> -->
+</div>
 
     <!-- /.content -->
 @endsection
@@ -279,6 +270,69 @@ $(document).on('click', '.loadvari', function(evt) {
     .then(function(price) {
       $("body #price" + inputnumber).html(price.variantData.totalprice);
 	  $("body #totalprice" + inputnumber).val(price.variantData.totalprice);
+    })
+    .catch(function(error) {
+      console.error('Error:', error);
+    })
+    .finally(function() {
+      loaderOverlay.hide();
+    });
+});
+
+$(document).on('click', '.priceModalBtn', function(evt) {
+  const inputnumber = $(this).data('inputnumber');
+  const activityVariantId = $("body #activity_variant_id" + inputnumber).val();
+  const adult = parseInt($("body #adult" + inputnumber).val());
+  const child = parseInt($("body #child" + inputnumber).val());
+  const infant = parseInt($("body #infant" + inputnumber).val());
+  const discount = parseFloat($("body #discount" + inputnumber).val());
+  const tourDate = $("body #tour_date" + inputnumber).val();
+  const transferOption = $("body #transfer_option" + inputnumber).find(':selected').data("id");
+  const transferOptionName = $("body #transfer_option" + inputnumber).find(':selected').val();
+  const variantId = $("body #transfer_option" + inputnumber).find(':selected').data("variant");
+  let zonevalue = 0;
+  const agentId = "{{$voucher->agent_id}}";
+  const voucherId = "{{$voucher->id}}";
+  let grandTotal = 0;
+
+  const transferZoneTd = $("body #transfer_zone_td" + inputnumber);
+  const colTd = $("body .coltd");
+  const transferZone = $("body #transfer_zone" + inputnumber);
+  const loaderOverlay = $("body #loader-overlay");
+
+  transferZoneTd.css("display", "none");
+  colTd.css("display", "none");
+  transferZone.prop('required', false);
+
+  if (transferOption == 2) {
+    transferZoneTd.css("display", "block");
+    colTd.css("display", "block");
+    transferZone.prop('required', true);
+    zonevalue = parseFloat(transferZone.find(':selected').data("zonevalue"));
+  } else if (transferOption == 3) {
+    colTd.css("display", "block");
+  }
+
+  loaderOverlay.show();
+	adultChildReq(adult,child,inputnumber);
+  const argsArray = {
+    transfer_option: transferOptionName,
+    activity_variant_id: activityVariantId,
+    agent_id: agentId,
+    voucherId: voucherId,
+    adult: adult,
+    infant: infant,
+    child: child,
+    discount: discount,
+    tourDate: tourDate,
+    zonevalue: zonevalue
+  };
+
+  getPrice(argsArray)
+    .then(function(price) {
+		$("body #pad").html("AED "+price.variantData.adultTotalPrice+" /Adult");
+		$("body #pchd").html("AED "+price.variantData.childTotalPrice+" /Child");
+     $('#PriceModal').modal('show');
     })
     .catch(function(error) {
       console.error('Error:', error);
@@ -423,7 +477,9 @@ $(document).on('keypress', '.onlynumbrf', function(evt) {
    return true;
  
  });
-
+ $('#PriceModal .close').on('click', function() {
+            $('#PriceModal').modal('hide');
+        });
 $(document).on('keypress', '.tagsinput', function(evt) {
   searchActivity()
  });

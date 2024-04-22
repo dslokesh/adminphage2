@@ -135,7 +135,7 @@
 						<input type="hidden" id="discount{{$kk}}" style="width: 50px;" value="0"  name="discount[{{$ap->ucode}}]" data-inputnumber="{{$kk}}" class="form-control onlynumbrf priceChangedis"    />
 						
 						<td class="text-center" >
-						
+						<button type="button" class="priceModalBtn" data-inputnumber="{{$kk}}" data-variantid="{{$ap->variant_id}}"  name="save"><i class="fa fa-info"></i> </button>
 						<span id="price{{$kk}}" class="priceclass" style="font-weight:bold">0</span>
 						<input type="hidden" id="totalprice{{$kk}}" value="0"  name="totalprice[{{$ap->ucode}}]"    />
 						</td>

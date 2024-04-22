@@ -197,6 +197,9 @@ class PriceHelper
 		$zonevalue = (isset($data['zonevalue']))?$data['zonevalue']:0;
 		
 		
+		$adultTotalPrice = 0;
+		$childTotalPrice = 0;
+		$infantTotalPrice = 0;
 		$totalPrice = 0;
 		$zonePrice = 0;
 		$transferPrice = 0;
@@ -263,9 +266,11 @@ class PriceHelper
 				$childPriceMarkupTotal = $markup['sic_transfer'] * $child; // sic_transfer as child
 				$infantPriceMarkupTotal = $markup['pvt_transfer'] * $infant; // pvt_transfer as infant
 				$markupTotal = $adultPriceMarkupTotal + $childPriceMarkupTotal + $infantPriceMarkupTotal;
-				 
+				$zonePricePerMember = 0;
+				$transferPricePerMember = 0;
 					if($variant->sic_TFRS==1){
 						$zonePrice = $zonevalue * $totalmember;
+						$zonePricePerMember = $zonevalue;
 					}
 					
 					if($variant->pvt_TFRS==1){
@@ -273,18 +278,29 @@ class PriceHelper
 							if(!empty($td))
 							{
 							 $transferPrice = $td->price * $totalmember ;
+							 $transferPricePerMember = $td->price;
 							}
 					}
 					
 					$ticketPrice = $adultPriceTotal + $childPriceTotal  + $infantPriceTotal;
+					$adultTotalPrice = $adultPrice+$markup['ticket_only'];
+				$childTotalPrice = $childPrice+$markup['sic_transfer'];
+				$infantTotalPrice = $infPrice+$markup['pvt_transfer'];
+				
 					if($transfer_option == 'Ticket Only'){
 						$totalPrice = $ticketPrice;
 					} else {
 					if($transfer_option == 'Shared Transfer'){
 						$totalPrice =  $ticketPrice + $zonePrice;
+						$adultTotalPrice += $zonePricePerMember;
+						$childTotalPrice += $zonePricePerMember;
+						$infantTotalPrice += $zonePricePerMember;
 					}elseif($transfer_option == 'Pvt Transfer'){
 
 						  $totalPrice = $ticketPrice + $transferPrice;
+						  $adultTotalPrice += $transferPricePerMember;
+						  $childTotalPrice += $transferPricePerMember;
+						$infantTotalPrice += $transferPricePerMember;
 					}
 					}
 					
@@ -299,6 +315,8 @@ class PriceHelper
 				//$subTotal = $grandTotal+round($vatPrice,2);
 				$priceConvert = $subTotal * round(($currency['value']),2);
 				$total = round(($priceConvert),2);
+				
+				
 		}
 		
 		
@@ -313,6 +331,9 @@ class PriceHelper
 		'markup_p_ticket_only' =>$markup['ticket_only'],
 		'markup_p_sic_transfer' =>$markup['sic_transfer'],
 		'markup_p_pvt_transfer' =>$markup['pvt_transfer'],
+		'adultTotalPrice' =>$adultTotalPrice,
+		'childTotalPrice' =>$childTotalPrice,
+		'infTotalPrice' =>$infantTotalPrice,
 		];
 		
 		return $data;
