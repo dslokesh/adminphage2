@@ -89,7 +89,7 @@
 					</td>
 					<td><select name="adult[{{$ap->ucode}}]" id="adult{{$kk}}" class="form-control priceChange"  data-inputnumber="{{$kk}}" @if($kk > '0') disabled="disabled" @endif>
 						@if($ap->prices->adult_min_no_allowed == 0 || empty($ap->prices->adult_min_no_allowed))
-						<option value="">{{$ap->prices->adult_min_no_allowed}}</option>
+						<option value="0">{{$ap->prices->adult_min_no_allowed}}</option>
 						@endif
 						@for($a=$ap->prices->adult_min_no_allowed; $a<=$ap->prices->adult_max_no_allowed; $a++)
 						@if($ap->prices->adult_max_no_allowed > 0)
@@ -103,7 +103,7 @@
 						</select></td>
                     <td><select name="child[{{$ap->ucode}}]" id="child{{$kk}}" class="form-control priceChange" data-inputnumber="{{$kk}}" @if($kk > '0') disabled="disabled" @endif>
 						@if($ap->prices->child_min_no_allowed == 0  || empty($ap->prices->child_min_no_allowed))
-						<option value="">{{$ap->prices->child_min_no_allowed}}</option>
+						<option value="0">{{$ap->prices->child_min_no_allowed}}</option>
 						@endif
 						
 						@for($child=$ap->prices->child_min_no_allowed; $child<=$ap->prices->child_max_no_allowed; $child++)
@@ -118,10 +118,10 @@
 						</select></td>
                     <td><select name="infant[{{$ap->ucode}}]" id="infant{{$kk}}" class="form-control priceChange" data-inputnumber="{{$kk}}" @if($kk > '0') disabled="disabled" @endif>
 					@if($ap->prices->infant_min_no_allowed == 0 || empty($ap->prices->infant_min_no_allowed))
-						<option value="">{{$ap->prices->infant_min_no_allowed}}</option>
+						<option value="0">{{$ap->prices->infant_min_no_allowed}}</option>
 						@endif
 						@if($ap->prices->infant_max_no_allowed == 0 )
-						<option value="">{{$ap->prices->infant_max_no_allowed}}</option>
+						<option value="0">{{$ap->prices->infant_max_no_allowed}}</option>
 						@endif
 						@for($inf=$ap->prices->infant_min_no_allowed; $inf<=$ap->prices->infant_max_no_allowed; $inf++)
 						<option value="{{$inf}}" @if($voucher->infants==$inf && $voucher->infants > 0) selected="selected" @endif>{{$inf}}</option>
