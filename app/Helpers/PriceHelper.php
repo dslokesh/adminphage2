@@ -191,7 +191,7 @@ class PriceHelper
 		$voucherId = (isset($data['voucherId']))?$data['voucherId']:0;
 		$adult = (isset($data['adult']) && $data['adult'] > 0)?(int)$data['adult']:0;
 		$child = (isset($data['child']) && $data['child'] > 0)?(int)$data['child']:0;
-		$infant = (isset($data['infant']) && $data['infant'] > 0)?$data['infant']:0;
+		$infant = (isset($data['infant']) && $data['infant'] > 0)?(int)$data['infant']:0;
 		$tourDate = (isset($data['tourDate']))?date("Y-m-d",strtotime($data['tourDate'])):0;
 		$discount = (isset($data['discount']))?$data['discount']:0;
 		$zonevalue = (isset($data['zonevalue']))?$data['zonevalue']:0;
