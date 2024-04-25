@@ -103,6 +103,7 @@
 						@endif
 						@endfor
 						</select></td>
+						
                     <td><select name="child[{{$ap->ucode}}]" id="child{{$kk}}" class="form-control priceChange" data-inputnumber="{{$kk}}" @if($kk > '0') disabled="disabled" @endif>
 						@if($ap->prices->child_min_no_allowed == 0  || empty($ap->prices->child_min_no_allowed))
 						<option value="0">{{$ap->prices->child_min_no_allowed}}</option>
