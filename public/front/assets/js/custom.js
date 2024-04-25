@@ -132,18 +132,21 @@
 			var years = moment().diff(start, 'years');
 		});
 
-		var tomorrow = new Date();
-tomorrow.setDate(tomorrow.getDate() + 1);
+		var today = new Date(); // Get today's date
+		var tomorrow = new Date(today);
+		tomorrow.setDate(today.getDate() + 1); // Set tomorrow's date
+
 		$('input[name="travel_from_date"]').daterangepicker({
-			singleDatePicker: true,
-			showDropdowns: false,
-			minDate:tomorrow,
-			minYear: 2023,
-			locale: {
-				format: 'DD-MM-YYYY'
-			}
+		singleDatePicker: true,
+		showDropdowns: false,
+		minDate: tomorrow,
+		minYear: today.getFullYear(),
+		startDate: today, // Set default date to today
+		locale: {
+		format: 'DD-MM-YYYY'
+		}
 		}, function (start, end, label) {
-			var years = moment().diff(start, 'years');
+		var years = moment().diff(start, 'years');
 		});
 
 		$('input[name="travel_from_to_date"]').daterangepicker({
