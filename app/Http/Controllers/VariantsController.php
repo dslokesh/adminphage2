@@ -144,10 +144,12 @@ class VariantsController extends Controller
 			$zoneArray = [];
 			foreach($zones as $k => $z)
 			{
+				$zv = @$zoneValue[$k];
+				$zvC = @$zoneValueChild[$k];
 				$zoneArray[] = [
 				'zone' => $z,
-				'zoneValue' => $zoneValue[$k],
-				'zoneValueChild' => $zoneValueChild[$k],
+				'zoneValue' => (!empty($zv))?$zv:0,
+				'zoneValueChild' => (!empty($zvC))?$zvC:0,
 				'pickup_time' => $pickup_time[$k],
 				'dropup_time' => $dropup_time[$k],
 				];
@@ -404,10 +406,12 @@ class VariantsController extends Controller
 			$zoneArray = [];
 			foreach($zones as $k => $z)
 			{
+				$zv = @$zoneValue[$k];
+				$zvC = @$zoneValueChild[$k];
 				$zoneArray[] = [
 				'zone' => $z,
-				'zoneValue' => $zoneValue[$k],
-				'zoneValueChild' => $zoneValueChild[$k],
+				'zoneValue' => (!empty($zv))?$zv:0,
+				'zoneValueChild' => (!empty($zvC))?$zvC:0,
 				'pickup_time' => $pickup_time[$k],
 				'dropup_time' => $dropup_time[$k],
 				];
