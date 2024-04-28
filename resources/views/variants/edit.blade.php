@@ -233,7 +233,8 @@
 				<table id="myTable" class="table">
 					  <tr>
 						<th>Zone</th>
-						<th>Value</th>
+						<th>Adult</th>
+						<th>Child</th>
 						<th>Pick Up Time</th>
 						<th>Drop Up Time</th>
 						<th><a id="add-row" class="btn btn-success btn-sm">Add</a></th>
@@ -248,6 +249,7 @@
 						@endforeach
                  </select></td>
 						<td><input type="text" id="zone_val{{$k}}" value="{{$z->zoneValue}}" class="form-control" name="zoneValue[]"></td>
+						<td><input type="text" id="zone_value_child{{$k}}" value="{{@$z->zoneValueChild}}" class="form-control" name="zoneValueChild[]"></td>
 						<td><input type="text" id="pickup_time{{$k}}" value="{{(isset($z->pickup_time))?$z->pickup_time:''}}" class="form-control " name="pickup_time[]"></td>
 						<td><input type="text" id="dropup_time{{$k}}" value="{{(isset($z->dropup_time))?$z->dropup_time:''}}" class="form-control " name="dropup_time[]"></td>
 						<td>@if($k > 0)<a class="delete-row btn btn-danger btn-sm">Delete</a>@endif</td>
@@ -262,6 +264,7 @@
 				@endforeach
                  </select></td>
 						<td><input type="text" id="zone_val" class="form-control" name="zoneValue[]"></td>
+						<td><input type="text" id="zone_value_child" class="form-control" name="zoneValueChild[]"></td>
 						<td><input type="text" id="pickup_time" value="" class="form-control " name="pickup_time[]"></td>
 						<td><input type="text" id="dropup_time" value="" class="form-control " name="dropup_time[]"></td>
 						<td></td>
@@ -469,10 +472,12 @@
       $('.zones_div').show();
 	  $('#zones').prop('required', true);
 	  $('#zone_val').prop('required', true);
+	  $('#zone_value_child').prop('required', true);
     } else {
       // Otherwise, hide the text input
 	  $('#zones').prop('required', false);
 	  $('#zone_val').prop('required', false);
+	  $('#zone_value_child').prop('required', false);
       $('.zones_div').hide();
     }
   });
@@ -484,6 +489,7 @@ $("#add-row").on("click", function() {
   var cols = "";
   cols += '<td><select name="zones[]"  class="form-control"><option value="">--select--</option>@foreach($zones as $zone)<option value="{{$zone->id}}" >{{$zone->name}}</option>@endforeach                </select></td>';
   cols += '<td><input type="text"  class="form-control" name="zoneValue[]"></td>';
+  cols += '<td><input type="text"  class="form-control" name="zoneValueChild[]"></td>';
   cols += '<td><input type="text"  class="form-control " name="pickup_time[]"></td>';
   cols += '<td><input type="text"  class="form-control " name="dropup_time[]"></td>';
   cols += '<td><a class="delete-row btn btn-danger btn-sm">Delete</a></td>';

@@ -3,8 +3,8 @@
 	<script type="text/javascript">
 	$(document).ready(function(){
 	var country = "{{old('country_id')?old('country_id'):1}}";
-	var oldstate = "{{old('state_id')}}";
-	var oldcity = "{{old('city_id')}}";
+	var oldstate = "{{old('state_id') ?: @$record->state_id}}";
+	var oldcity = "{{old('city_id')?: @$record->city_id}}";
 	$(".india").css("display", "none");
 	$(".uae").css("display", "none");
 	$("body #country_id").on("change", function () {

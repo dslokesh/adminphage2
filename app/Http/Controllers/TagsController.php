@@ -74,6 +74,7 @@ class TagsController extends Controller
 		}
 		
         $record->name = $request->input('name');
+        $record->icon_css = $request->input('icon_css');
         $record->status = $request->input('status');
         $record->save();
         return redirect('tags')->with('success', 'Tag Created Successfully.');
@@ -145,6 +146,7 @@ class TagsController extends Controller
 		}
 		
         $record->name = $request->input('name');
+        $record->icon_css = $request->input('icon_css');
         $record->status = $request->input('status');
         $record->save();
         return redirect('tags')->with('success', 'Tag Updated.');

@@ -23,15 +23,20 @@
 										@endif
                                     </div>
                                 </div>
-                               <div class="col-lg-12 mb-20">
-                                    <div class="form-inner">
-                                        <label></label>
-                                        <input type="password" id="password" class="form-control" name="password" placeholder="Password" required>
+                              <div class="col-lg-12 mb-20">
+								<div class="form-inner">
+									<label></label>
+									<div class="input-group">
+										<input type="password" id="password" class="form-control" name="password" placeholder="Password" required>
+										<button type="button" class="btn btn-outline-secondary form-inner" id="toggleButton" onclick="togglePasswordVisibility()">
+											Show Password
+										</button>
+									</div>
 									@if ($errors->has('password'))
-									<span class="text-danger">{{ $errors->first('password') }}</span>
+										<span class="text-danger">{{ $errors->first('password') }}</span>
 									@endif
-                                    </div>
-                                </div>
+								</div>
+							</div>
                               
                                 <div class="col-lg-12 mb-20">
                                     <div class="form-inner">

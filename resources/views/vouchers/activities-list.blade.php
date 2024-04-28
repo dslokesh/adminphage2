@@ -369,6 +369,7 @@ $(document).on('click', '.loadvari', function(evt) {
   const transferOptionName = $("body #transfer_option" + inputnumber).find(':selected').val();
   const variantId = $("body #transfer_option" + inputnumber).find(':selected').data("variant");
   let zonevalue = 0;
+  let zoneValueChild = 0;
   const agentId = "{{$voucher->agent_id}}";
   const voucherId = "{{$voucher->id}}";
   let grandTotal = 0;
@@ -387,6 +388,7 @@ $(document).on('click', '.loadvari', function(evt) {
     colTd.css("display", "block");
     transferZone.prop('required', true);
     zonevalue = parseFloat(transferZone.find(':selected').data("zonevalue"));
+	zoneValueChild = parseFloat(transferZone.find(':selected').data("zonevaluechild"));
   } else if (transferOption == 3) {
     colTd.css("display", "block");
   }
@@ -403,7 +405,8 @@ $(document).on('click', '.loadvari', function(evt) {
     child: child,
     discount: discount,
     tourDate: tourDate,
-    zonevalue: zonevalue
+    zonevalue: zonevalue,
+	zoneValueChild: zoneValueChild
   };
 
   getPrice(argsArray)
@@ -495,6 +498,7 @@ $(document).on('click', '.loadvari', function(evt) {
   const transferOptionName = $("body #transfer_option" + inputnumber).find(':selected').val();
   const variantId = $("body #transfer_option" + inputnumber).find(':selected').data("variant");
   let zonevalue = 0;
+  let zoneValueChild = 0;
   const agentId = "{{$voucher->agent_id}}";
   const voucherId = "{{$voucher->id}}";
   let grandTotal = 0;
@@ -513,6 +517,7 @@ $(document).on('click', '.loadvari', function(evt) {
     colTd.css("display", "block");
     transferZone.prop('required', true);
     zonevalue = parseFloat(transferZone.find(':selected').data("zonevalue"));
+	zoneValueChild = parseFloat(transferZone.find(':selected').data("zonevaluechild"));
   } else if (transferOption == 3) {
     colTd.css("display", "block");
   }
@@ -529,7 +534,8 @@ $(document).on('click', '.loadvari', function(evt) {
     child: child,
     discount: discount,
     tourDate: tourDate,
-    zonevalue: zonevalue
+    zonevalue: zonevalue,
+	zoneValueChild: zoneValueChild
   };
 
   getPrice(argsArray)

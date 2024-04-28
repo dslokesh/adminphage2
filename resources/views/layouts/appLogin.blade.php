@@ -39,6 +39,7 @@
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
 	 <meta name="csrf-token" content="{{ csrf_token() }}" />
      <script src="{{asset('front/assets/js/jquery-3.7.1.min.js')}}"></script>
+	 
 </head>
 
 <body>
@@ -73,8 +74,13 @@
         <div class="company-logo d-lg-flex d-none">
             <a href="/"><img src="{{asset('Abatera_logo.jpg')}}" style="max-width:167; height:80px; margin: 10px 0px;" alt=""></a>
         </div>
+		@if(auth()->check())
         <div class="" style="width: 300px;">
         </div>
+		@else 
+			 <div class="" style="width: 940px;">
+        </div>
+		@endif
         <div class="main-menu nav-right  jsutify-content-end">
             <div class="mobile-logo-area d-lg-none d-flex justify-content-between align-items-center">
                 <div class="mobile-logo-wrap">
@@ -105,7 +111,7 @@
                    
                   
                 <img alt="image"  src="{{asset('front/assets/img/exchange.png')}}">
-                        
+                         Currency
                    <ul class="sub-menu">
                    @foreach($currencyDD as $currency)
                     @if($currencyGet['code'] == $currency->code)
@@ -120,7 +126,7 @@
 		
 
            
-			    <li><a href="javascript:void(0);"><img alt="image"  src="{{asset('front/assets/img/wallet.png')}}"> </a>
+			    <li><a href="javascript:void(0);"><img alt="image"  src="{{asset('front/assets/img/wallet.png')}}"> Wallet </a>
                 <ul class="sub-menu">
                     <li><a href="#">AED {{\Auth::user()->agent_amount_balance}}</a></li>
 </ul>
@@ -208,7 +214,7 @@
 				@endif
 				@endif
 
-      
+      @if(auth()->check())
             <div class="hotline-area d-xl-flex d-none">
                 <div class="icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
@@ -220,11 +226,13 @@
                             d="M15.865 10.267C17.1528 10.2686 18.1964 11.3122 18.198 12.6C18.198 12.7238 18.2472 12.8424 18.3347 12.9299C18.4222 13.0174 18.5409 13.0666 18.6646 13.0666C18.7883 13.0666 18.907 13.0174 18.9945 12.9299C19.082 12.8424 19.1312 12.7238 19.1312 12.6C19.1291 10.797 17.668 9.33589 15.865 9.33386C15.6073 9.33386 15.3984 9.54274 15.3984 9.80044C15.3984 10.0581 15.6073 10.267 15.865 10.267Z" />
                     </svg>
                 </div>
+				
                 <div class="content">
                     <span>Contact Us</span>
                     <h6><a href="tel:+971 4 591 7098">+971 4 591 7098</a></h6>
                 </div>
-            </div>
+				
+            </div>@endif
             <div class="sidebar-button mobile-menu-btn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25">
                     <path
@@ -313,7 +321,7 @@ PO BOX 117900
             <div class="footer-bottom">
                 <div class="row">
                     <div class="col-lg-12 d-flex flex-md-row flex-column align-items-center justify-content-md-between justify-content-center flex-wrap gap-3">
-                        <ul class="social-list">
+                       <!-- <ul class="social-list">
                             <li>
                                 <a href="https://www.facebook.com/"><i class="bx bxl-facebook"></i></a>
                             </li>
@@ -328,12 +336,12 @@ PO BOX 117900
                             <li>
                                 <a href="https://www.instagram.com/"><i class="bx bxl-instagram"></i></a>
                             </li>
-                        </ul>
+                        </ul>-->
                         <p>©Copyright {!! config('app.name', 'newname') !!} <?php echo date('Y'); ?></p> 
                         <div class="footer-right">
                             <ul>
-                                <li><a href="#">Privacy Policy</a></li>
-                                <li><a href="#">Terms &amp; Condition</a></li>
+                                <li><a href="{{route('privacyPolicy')}}">Privacy Policy</a></li>
+                                <li><a href="{{route('termsAndConditions')}}">Terms &amp; Condition</a></li>
                             </ul>
                         </div>
                     </div>
@@ -400,7 +408,20 @@ PO BOX 117900
         });
 		});
     </script>
+<script>
+    function togglePasswordVisibility() {
+        var passwordField = document.getElementById("password");
+        var toggleButton = document.getElementById("toggleButton");
 
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            toggleButton.textContent = "Hide Password";
+        } else {
+            passwordField.type = "password";
+            toggleButton.textContent = "Show Password";
+        }
+    }
+</script>
  @yield('scripts')
 </body>
 

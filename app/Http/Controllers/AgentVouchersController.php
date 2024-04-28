@@ -464,9 +464,13 @@ class AgentVouchersController extends Controller
            $query->where('rate_valid_from', '<=', $startDate)->where('rate_valid_to', '>=', $endDate);
        });
 	   
-	   
+	   $totalCount = $query->count();
 		if (!empty($data['porder']) && !empty($data['porder'])) {
+			if($data['porder']=='popularity'){
+				$records = $query->where('popularity', 1)->orderBy('created_at', 'DESC')->paginate($perPage);
+			} else {
 			$records = $query->orderByRaw('CAST(min_price AS DECIMAL) '.$data['porder'])->paginate($perPage);
+			}
 		} else { 
 			$records = $query->orderBy('created_at', 'DESC')->paginate($perPage);
 		}
@@ -508,7 +512,7 @@ class AgentVouchersController extends Controller
 		
 		//dd($maxPrice);
 		$voucherActivityCount = VoucherActivity::where('voucher_id',$vid)->count();
-        return view('agent-vouchers.activities-list', compact('records','typeActivities','vid','voucher','voucherActivityCount','voucherActivity','tags','minPrice','maxPrice'));
+        return view('agent-vouchers.activities-list', compact('records','typeActivities','vid','voucher','voucherActivityCount','voucherActivity','tags','minPrice','maxPrice','totalCount'));
     }
 	
 	public function searchActivityList(Request $request)
@@ -571,10 +575,15 @@ class AgentVouchersController extends Controller
 			$query->where('min_price', '>=' , $minPrice)->where('min_price', '<=' , $maxPrice);
 			}
 		
-		
+		$totalCount = $query->count();
 		
 		if (!empty($data['porder']) && !empty($data['porder'])) {
+			if($data['porder']=='1'){
+				$records = $query->where('popularity', 1)->orderBy('created_at', 'DESC')->paginate($perPage);
+			} else {
 			$records = $query->orderByRaw('CAST(min_price AS DECIMAL) '.$data['porder'])->paginate($perPage);
+			}
+			
 		} else { 
 			$records = $query->orderBy('created_at', 'DESC')->paginate($perPage);
 		}		
@@ -588,7 +597,8 @@ class AgentVouchersController extends Controller
 
 		$response = [
 			'html' => view('agent-vouchers.activities-list-ajax', compact('records','typeActivities','vid','voucher','voucherActivityCount','voucherActivity'))->render(), // Include HTML content
-			'pagination' => $records->links()->toHtml(), // Include pagination links
+			'pagination' => $records->links()->toHtml(), 
+			'totalCount' => $totalCount,// Include pagination links
 		];
 		
 		return response()->json($response);

@@ -128,7 +128,9 @@ class PriceHelper
 				 $actZone = SiteHelpers::getZone($variant->zones,$variant->sic_TFRS);
 				 if(!empty($actZone))
 				 {
-					  $zonePrice = $actZone[0]['zoneValue'] * $totalmember;
+					 $zonePriceAd = $actZone[0]['zoneValue'] * $adult;
+					 $zonePriceCh = @$actZone[0]['zoneValueChild'] * $child;
+					  $zonePrice = (int) $zonePriceAd + (int) $zonePriceCh;
 				 }
 			}
 			if($variant->pvt_TFRS==1){
@@ -195,7 +197,7 @@ class PriceHelper
 		$tourDate = (isset($data['tourDate']))?date("Y-m-d",strtotime($data['tourDate'])):0;
 		$discount = (isset($data['discount']))?$data['discount']:0;
 		$zonevalue = (isset($data['zonevalue']))?$data['zonevalue']:0;
-		
+		$zoneValueChild = (isset($data['zoneValueChild']))?$data['zoneValueChild']:0;
 		
 		$adultTotalPrice = 0;
 		$childTotalPrice = 0;
@@ -267,10 +269,14 @@ class PriceHelper
 				$infantPriceMarkupTotal = $markup['pvt_transfer'] * $infant; // pvt_transfer as infant
 				$markupTotal = $adultPriceMarkupTotal + $childPriceMarkupTotal + $infantPriceMarkupTotal;
 				$zonePricePerMember = 0;
+				$zonePricePerMemberCH = 0;
 				$transferPricePerMember = 0;
 					if($variant->sic_TFRS==1){
-						$zonePrice = $zonevalue * $totalmember;
+						$zonePriceAD = (int)$zonevalue * $adult;
+						$zonePriceCH = (int)$zoneValueChild * $child;
+						$zonePrice = $zonePriceAD + $zonePriceCH;
 						$zonePricePerMember = $zonevalue;
+						$zonePricePerMemberCH = (int)$zoneValueChild;
 					}
 					
 					if($variant->pvt_TFRS==1){
@@ -293,7 +299,7 @@ class PriceHelper
 					if($transfer_option == 'Shared Transfer'){
 						$totalPrice =  $ticketPrice + $zonePrice;
 						$adultTotalPrice += $zonePricePerMember;
-						$childTotalPrice += $zonePricePerMember;
+						$childTotalPrice += $zonePricePerMemberCH;
 						$infantTotalPrice += $zonePricePerMember;
 					}elseif($transfer_option == 'Pvt Transfer'){
 
@@ -321,7 +327,7 @@ class PriceHelper
 		
 		
 		$data = [
-		'adultPrice' =>$adultPrice,
+		'adultPrice' =>$zonePricePerMemberCH,
 		'childPrice' =>$childPrice,
 		'infPrice' =>$infant,
 		'totalprice' =>$total,

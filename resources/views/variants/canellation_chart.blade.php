@@ -49,7 +49,8 @@
 												<select name="duration[]" class="form-control" required>
 													<option value="0-24" @if($record->duration =='0-24') {{'selected="selected"'}} @endif>0-24</option>
 													<option value="24-48" @if($record->duration =='24-48') {{'selected="selected"'}} @endif>24-48</option>
-													<option value="48+" @if($record->duration =='48+') {{'selected="selected"'}} @endif>48+</option>
+													<option value="48-72" @if($record->duration =='48-72') {{'selected="selected"'}} @endif>48-72</option>
+													<option value="72+" @if($record->duration =='72+') {{'selected="selected"'}} @endif>72+</option>
 												</select>
 											</td>
 											<td><input type="text" name="ticket_refund_value[]"  value="{{ $record->ticket_refund_value }}" class="form-control" placeholder="Ticket (Refund Value)" required /></td>
@@ -69,7 +70,8 @@
                                                 <select name="duration[]" class="form-control" required>
                                                     <option value="0-24" @if(request('duration') =='0-24') {{'selected="selected"'}} @endif>0-24</option>
                                                     <option value="24-48" @if(request('duration') =='24-48') {{'selected="selected"'}} @endif>24-48</option>
-                                                    <option value="48+" @if(request('duration') =='48+') {{'selected="selected"'}} @endif>48+</option>
+                                                   <option value="48-72" @if(request('duration') =='48-72') {{'selected="selected"'}} @endif>48-72</option>
+													<option value="72+" @if(request('duration') =='72+') {{'selected="selected"'}} @endif>72+</option>
                                                 </select>
                                             </td>
                                             <td><input type="text" name="ticket_refund_value[]" value="" class="form-control" placeholder="Ticket (Refund Value)" required /></td>
@@ -101,7 +103,7 @@
     function addRow() {
         var tableBody = document.querySelector("#example1 tbody");
         // Check if the number of existing rows is less than 3 before inserting a new row
-        if (tableBody.rows.length < 3) {
+        if (tableBody.rows.length < 4) {
             var newRow = tableBody.insertRow(tableBody.rows.length);
 
             var cell1 = newRow.insertCell(0);
@@ -109,7 +111,7 @@
             var cell3 = newRow.insertCell(2);
             var cell4 = newRow.insertCell(3);
 
-            cell1.innerHTML = '<select name="duration[]" class="form-control" required><option value="0-24" selected>0-24</option><option value="24-48">24-48</option><option value="48+">48+</option></select>';
+            cell1.innerHTML = '<select name="duration[]" class="form-control" required><option value="0-24" selected>0-24</option><option value="24-48">24-48</option><option value="48-72">48-72</option><option value="72+">72+</option></select>';
             cell2.innerHTML = '<input type="text" name="ticket_refund_value[]" value="" class="form-control" placeholder="Ticket (Refund Value)" required />';
             cell3.innerHTML = '<input type="text" name="transfer_refund_value[]" value="" class="form-control" placeholder="Transfer (Refund Value)" required />';
             cell4.innerHTML = '<button type="button" class="btn btn-danger btn-sm remove-row"><i class="fas fa-trash"></i></button>';

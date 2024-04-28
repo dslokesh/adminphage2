@@ -447,6 +447,7 @@ class AuthController extends Controller
      */
     public function forgotPasswordValidate($token)
     {
+		$email = "dsdSD";
 		return view('auth.passwords.change-password', compact('email'));
         //$user = User::where('remember_token', $token)->where('is_active', 0)->first();
         $user = User::where('remember_token', $token)->first();

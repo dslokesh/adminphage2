@@ -144,11 +144,18 @@
 		startDate: today, // Set default date to today
 		locale: {
 		format: 'DD-MM-YYYY'
-		}
+		},autoApply: true
 		}, function (start, end, label) {
 		var years = moment().diff(start, 'years');
 		});
-
+	
+	 $('.select-input').on('click', '.travel_from_date', function() {
+        // Trigger the Date Range Picker to show
+        $(this).siblings('input[name="travel_from_date"]').data('daterangepicker').show();
+    });
+	
+	
+	
 		$('input[name="travel_from_to_date"]').daterangepicker({
 			opens: 'left',
 			minYear: '2023',

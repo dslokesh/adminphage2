@@ -108,6 +108,11 @@ class ActivitiesController extends Controller
 			$record->tags = $tags;
         }
 		
+		if($request->has('tagsforshow') && !empty($request->tagsforshow)){
+           $tagsforshow = implode(",",$request->tags);
+			$record->tagsforshow = $tagsforshow;
+        }
+		
         $record->title = $request->input('title');
 		$record->city_id = $request->input('city_id');
 		$record->state_id = $request->input('state_id');
@@ -124,6 +129,7 @@ class ActivitiesController extends Controller
 		$record->min_price = $request->input('min_price');
 		$record->description = $request->input('description');
         $record->status = $request->input('status');
+		$record->popularity = $request->input('popularity');
 		$record->created_by = Auth::user()->id;
 		$record->save();
 		
@@ -258,10 +264,15 @@ class ActivitiesController extends Controller
 		$record->description = $request->input('description');
 		$record->min_price = $request->input('min_price');
         $record->status = $request->input('status');
+		$record->popularity = $request->input('popularity');
 		$record->updated_by = Auth::user()->id;
 		if($request->has('tags') && !empty($request->tags)){
            $tags = implode(",",$request->tags);
 			$record->tags = $tags;
+        }
+		if($request->has('tagsforshow') && !empty($request->tagsforshow)){
+           $tagsforshow = implode(",",$request->tagsforshow);
+			$record->tagsforshow = $tagsforshow;
         }
         $record->save();
 		

@@ -32,8 +32,8 @@
                                               </li>
                                             @endif
                                             <li>
-                                                
-                                           {!!$cutoffTime!!}</li>
+                                             <span style="color: green;">    
+                                           {!!$cutoffTime!!}</span></li>
                                            
                                         </ul>
                                     </div>

@@ -114,6 +114,7 @@ class SiteHelpers
 					'zone_id' => $zone->id,
 					'zone' => $zone->name,
 					'zoneValue' => $z->zoneValue,
+					'zoneValueChild' => @$z->zoneValueChild,
 					'pickup_time' => (!empty($z->pickup_time))?$z->pickup_time:'',
 					'dropup_time' => (!empty($z->dropup_time))?$z->dropup_time:'',
 					];

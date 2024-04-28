@@ -38,6 +38,13 @@
                 @endif
               </div>
 			   <div class="form-group">
+                <label for="inputName">Icon Css: <span class="red">*</span></label>
+                <input type="text" id="icon_css" name="icon_css" value="{{ old('icon_css') }}" class="form-control"  placeholder="Icon Css" />
+                @if ($errors->has('icon_css'))
+                    <span class="text-danger">{{ $errors->first('icon_css') }}</span>
+                @endif
+              </div>
+			   <div class="form-group">
                 <label for="inputName">Image:</label>
                 <input type="file" id="image" name="image"  class="form-control"  />
                 @if ($errors->has('image'))
@@ -46,7 +53,8 @@
 				
               </div>
 			   
-			   <div class="form-group">
+			   
+			  <div class="form-group">
                 <label for="inputName">Status: <span class="red">*</span></label>
                 <select name="status" id="status" class="form-control">
                     <option value="1" @if(old('status') ==1) {{'selected="selected"'}} @endif>Active</option>

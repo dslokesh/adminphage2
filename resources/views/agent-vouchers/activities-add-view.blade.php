@@ -63,7 +63,7 @@
 						
 						
 						@foreach($actZone as $z)
-						<option value="{{$z['zone_id']}}" data-zonevalue="{{$z['zoneValue']}}" data-zoneptime="{{$z['pickup_time']}}">{{$z['zone']}}</option>
+						<option value="{{$z['zone_id']}}" data-zonevalue="{{$z['zoneValue']}}" data-zonevaluechild="{{@$z['zoneValueChild']}}" data-zoneptime="{{$z['pickup_time']}}">{{$z['zone']}}</option>
 						@endforeach
 						@else
 							<input type="hidden" id="transfer_zone{{$kk}}" value=""  name="transfer_zone[{{$ap->ucode}}]"    />

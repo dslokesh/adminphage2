@@ -138,6 +138,7 @@ class VariantsController extends Controller
 		{
 			$zones = $request->input('zones');
 			$zoneValue = $request->input('zoneValue');
+			$zoneValueChild = $request->input('zoneValueChild');
 			$pickup_time = $request->input('pickup_time');
 			$dropup_time = $request->input('dropup_time');
 			$zoneArray = [];
@@ -146,6 +147,7 @@ class VariantsController extends Controller
 				$zoneArray[] = [
 				'zone' => $z,
 				'zoneValue' => $zoneValue[$k],
+				'zoneValueChild' => $zoneValueChild[$k],
 				'pickup_time' => $pickup_time[$k],
 				'dropup_time' => $dropup_time[$k],
 				];
@@ -243,6 +245,7 @@ class VariantsController extends Controller
 				$zoneArray[] = [
 				'zone' => $zone->name,
 				'zoneValue' => $z->zoneValue,
+				'zoneValueChild' => $z->zoneValueChild,
 				'pickup_time' => (!empty($z->pickup_time))?$z->pickup_time:'',
 				'dropup_time' => (!empty($z->dropup_time))?$z->dropup_time:'',
 				];
@@ -395,6 +398,7 @@ class VariantsController extends Controller
 		{
 			$zones = $request->input('zones');
 			$zoneValue = $request->input('zoneValue');
+			$zoneValueChild = $request->input('zoneValueChild');
 			$pickup_time = $request->input('pickup_time');
 			$dropup_time = $request->input('dropup_time');
 			$zoneArray = [];
@@ -403,6 +407,7 @@ class VariantsController extends Controller
 				$zoneArray[] = [
 				'zone' => $z,
 				'zoneValue' => $zoneValue[$k],
+				'zoneValueChild' => $zoneValueChild[$k],
 				'pickup_time' => $pickup_time[$k],
 				'dropup_time' => $dropup_time[$k],
 				];

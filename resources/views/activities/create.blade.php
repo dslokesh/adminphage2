@@ -153,6 +153,15 @@
 					@endforeach
 					</select>
               </div>
+			  
+			   <div class="form-group col-md-12">
+                <label for="inputName">Tags For Show: <span class="red">*</span></label>
+               <select name="tagsforshow[]" id="tagsforshow" class="form-control select2" multiple>
+					@foreach($tags as  $vs)
+					<option value="{{ $vs->name }}" @if(in_array($vs->name, (array)old('tagsforshow'))) selected="selected" @endif>{{ $vs->name }}</option>
+					@endforeach
+					</select>
+              </div>
 			
               </div>
 			  <!--form-group-->
@@ -208,11 +217,17 @@
                 @endif
               </div>
 			  
-			   
+			    <div class="form-group col-md-6">
+                <label for="inputName">Popularity: <span class="red">*</span></label>
+                <select name="popularity" id="popularity" class="form-control">
+                    <option value="1" @if(old('popularity') ==1) {{'selected="selected"'}} @endif>Yes</option>
+					          <option value="0" @if(old('popularity') ==0) {{'selected="selected"'}} @endif >No</option>
+                 </select>
+              </div>
 			  
 			 
 			  
-			 <div class="form-group col-md-12">
+			 <div class="form-group col-md-6">
                 <label for="inputName">Status: <span class="red">*</span></label>
                 <select name="status" id="status" class="form-control">
                     <option value="1" @if(old('status') ==1) {{'selected="selected"'}} @endif>Active</option>
