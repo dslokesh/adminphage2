@@ -988,7 +988,7 @@ class AgentVouchersController extends Controller
 	public function cancelActivityFromVoucher($id)
 	{
 		$record = VoucherActivity::find($id);
-		if($record->ticket_downloaded == '0'){
+		//if($record->ticket_downloaded == '0'){
 		$record->status = 1;
 		$record->canceled_date = Carbon::now()->toDateTimeString();
 		$record->save();
@@ -1009,10 +1009,10 @@ class AgentVouchersController extends Controller
 			$voucher->save();		
 		}
 		return redirect()->back()->with('success', 'Activity Canceled Successfully.');
-		}
-		else{
-		return redirect()->back()->with('error', "Ticket already downloaded you can not cancel this.");	
-		}
+		//}
+		//else{
+		//return redirect()->back()->with('error', "Ticket already downloaded you can not cancel this.");	
+		//}
 	}
 	
 	public function chekAgentLogin(){

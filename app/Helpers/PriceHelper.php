@@ -422,9 +422,16 @@ class PriceHelper
     $voucherActivity = VoucherActivity::where('id', $voucherActivityId)->first();
 	
     $cancelData = json_decode($voucherActivity->cancellation_time_data);
-	
-    $bookingDate = Carbon::parse($voucherActivity->booking_date);
-    $cancelDate = Carbon::parse($voucherActivity->canceled_date);
+	$timeSlot = $voucherActivity->time_slot;
+	if (!empty($timeSlot)) {
+	$bookingDate = Carbon::parse($voucherActivity->booking_date);
+	list($hours, $minutes) = explode(':', $timeSlot);
+	$bookingDate->setTime($hours, $minutes, 0);
+	$cancelDate = Carbon::parse($voucherActivity->canceled_date);
+	} else {
+	$bookingDate = Carbon::parse($voucherActivity->booking_date);
+	$cancelDate = Carbon::parse($voucherActivity->canceled_date);
+	}
     $minutesDifference = $bookingDate->diffInMinutes($cancelDate);
 	//dd($cancelDate);
 	$tkt_priceAfDis = 	$totalPrice['tkt_priceAfDis'];
@@ -445,7 +452,12 @@ class PriceHelper
 				$trns_refund_per = $ca->transfer_refund_value;
 				$ticketPrice = ($tkt_priceAfDis * $ticket_refund_per) / 100;
 				$trnsPrice = ($trns_priceAfDis * $trns_refund_per) / 100;
-				$returnTotalPrice['refund_tkt_priceAfDis'] = $ticketPrice;
+				if($voucherActivity->ticket_downloaded == 1){
+					$returnTotalPrice['refund_tkt_priceAfDis'] = 0;
+				} else {
+					$returnTotalPrice['refund_tkt_priceAfDis'] = $ticketPrice;
+				}
+				
 				$returnTotalPrice['refund_trns_priceAfDis'] = $trnsPrice;
 				break; 
 			}
